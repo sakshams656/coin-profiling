@@ -15,9 +15,10 @@ export const coinBanner = css({
   justifyContent: "space-between",
   alignItems: "center",
   width: "100%",
-  padding: "1.5rem 2.5rem",
-  backgroundColor: colors.Zeb_Gradient_Dark_Blue,
+  padding: "1.5rem 1.5rem",
+  backgroundColor: colors.Zeb_BG_Blue,
   borderRadius: "0.5rem",
+  maxHeight: utils.remConverter(110)
 });
 
 export const coinInfo = css({
@@ -86,9 +87,7 @@ export const statValue = css({
 
 export const leftContainer = css({
   flex: "3.8",
-  backgroundColor: colors.Zeb_Solid_Dark_Blue,
-  padding: "1.5rem",
-  borderRadius: "0.5rem",
+  backgroundColor: colors.Zeb_Solid_BG_Blue,
   color: colors.Zeb_Solid_White,
   height: "100%", 
   display: "flex",
@@ -100,20 +99,21 @@ export const leftContainer = css({
 export const rightContainer = css({
   flex: "1.2",
   backgroundColor: colors.Zeb_Solid_Dark_Blue,
-  padding: "1.5rem",
+  padding: "1rem",
   borderRadius: "0.5rem",
   color: colors.Zeb_Solid_White,
   height: "fit-content",
   position: "sticky",
   top: "1.5rem",
-  marginBottom: "2rem"
+  marginBottom: "2rem",
+  maxWidth: utils.remConverter(312)
 });
 
 /* Add to contentWrapper for sticky positioning context */
 export const contentWrapper = css({
   display: "flex",
   gap: "1rem",
-  marginTop: "2rem",
+  marginTop: "1.5rem",
   marginBottom: "2rem",
   width: "100%",
   flexGrow: 1,
@@ -123,7 +123,8 @@ export const contentWrapper = css({
 
 export const returnsTitle = css({
   fontSize: utils.remConverter(16),
-  fontWeight: utils.remConverter(700)
+  fontWeight: utils.remConverter(700),
+  paddingTop: "0.5rem"
 })
 
 export const formContainer = css({
@@ -133,13 +134,57 @@ export const formContainer = css({
   padding: "1rem",
   boxSizing: "border-box", 
   width: "100%",
+  marginBottom: "1rem",
+  maxHeight: utils.remConverter(254)
 });
 
 export const pastButton = css({
-  padding: "0.25rem 1.25rem",
+  padding: "0.25rem 1.2rem",
   borderRadius: "0.25rem",
   backgroundColor: colors.Zeb_Solid_BG_Blue,
   border: "1px solid #C0C0EE",
   color: colors.Zeb_Solid_Light_Blue, 
   cursor: "pointer"
 })
+
+export const investmentBox = css({
+  display: "flex",
+  flexDirection: "column",
+  background: colors.Zeb_Solid_Dark_Blue,
+  borderRadius: "8px",
+  padding: "1rem",
+  width: "100%",
+  maxWidth: "300px",
+  border: `1px solid ${colors.Zeb_BG_Blue}`,
+  marginBottom: "1rem"
+});
+
+export const IBlabel = css({
+  fontSize: utils.remConverter(12),
+  color: colors.Zeb_Solid_Light_Blue,
+  fontWeight: "400",
+  marginBottom: "0.5rem"
+});
+
+export const IBvalue = css({
+  fontSize: utils.remConverter(14),
+  fontWeight: "600",
+  color: colors.Zeb_Solid_White,
+});
+
+export const percentageBox = css({
+  background: "#C0C0EE33",
+  padding: "0.25rem 0.5rem",
+  borderRadius: "4px",
+  fontSize: "0.875rem",
+  color: colors.Zeb_Solid_White,
+  alignSelf: "flex-end",
+});
+
+export const statisticsContainer = css({
+  backgroundColor: colors.Zeb_Solid_Dark_Blue,
+  padding: "1.5rem",
+  borderRadius: "0.5rem",
+}) 
+
+

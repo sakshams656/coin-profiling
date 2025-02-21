@@ -1,11 +1,12 @@
 import { css } from "@emotion/react";
+import { utils } from "zebpay-ui";
 
 export const header = css({
     display: "flex",
     justifyContent: "space-between", 
     alignItems: "center", 
     width: "100%",
-    paddingTop: "1rem", 
+    paddingTop: "0.5rem", 
     paddingLeft: "2.5rem",
     marginBottom: "-1.4rem",
     boxSizing: "border-box", 

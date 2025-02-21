@@ -16,10 +16,15 @@ import {
   rightContainer, 
   returnsTitle,
   formContainer,
-  pastButton
+  pastButton,
+  investmentBox,
+  IBlabel,
+  IBvalue,
+  percentageBox,
 } from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
-import { colors, Input, InputDropDown, utils } from "zebpay-ui";
+import { Button, colors, Divider, Input, InputDropDown, utils } from "zebpay-ui";
+import Statistics from "./statistics/Statistics";
 
 const Overview = () => {
   return (
@@ -54,7 +59,7 @@ const Overview = () => {
       {/* Below Coin Banner - Two Columns */}
       <div css={contentWrapper}>
         <div css={leftContainer}>
-          
+          <Statistics/>
         </div>
         <div css={rightContainer}>
           <div css={returnsTitle}>
@@ -73,6 +78,9 @@ const Overview = () => {
                   placeholder="Enter Amount"
                   type="number"
                   value={undefined} 
+                  style={{
+                    'margin-bottom': '1rem'
+                  }}
               />
 
               <span css={{ fontSize: utils.remConverter(14), color: colors.Zeb_Solid_Light_Blue}}>Investment Frequency</span>
@@ -96,14 +104,37 @@ const Overview = () => {
                   value: ''
                 }}
                 selected="" maxRows={4}            />
-                <span css={{ fontSize: utils.remConverter(14), color: colors.Zeb_Solid_Light_Blue}}>Over the Past</span>
+                <div css={{marginTop: "1rem"}}>
+                <span css={{fontSize: utils.remConverter(14), color: colors.Zeb_Solid_Light_Blue}}>Over the Past</span>
                 <div css={{display: "flex", justifyContent: "space-between"}}>
                   <button css={pastButton}>6M</button>
                   <button css={pastButton}>1Y</button>
                   <button css={pastButton}>2Y</button>
                   <button css={pastButton}>3Y</button>
                 </div>
+                </div>
+                
           </div>
+          <div css={investmentBox}>
+                  <div css={{display: "flex", justifyContent: "space-between", maxHeight: utils.remConverter(106)}}>
+                    <Image src="/icons/investmenticons/02@3x.png" alt="Investment Icon" width={63} height={63} />
+                    <div>
+                      <p css={IBlabel}>Current Value</p>
+                      <p css={IBvalue}>₹0.00</p>
+                    </div>
+                    <div css={percentageBox}>- 0.00%</div>
+                  </div>
+                  <Divider spacing={2} />
+                  <p css={IBlabel}>Invested Amount: <span css={IBvalue}>₹0.00</span></p>
+                </div>
+
+                <Button
+                  onClick={function noRefCheck(){}}
+                  size="full-width"
+                  type="primary"
+                >
+                  CALCULATE RETURNS
+                </Button>
         </div>
       </div>
     </div>

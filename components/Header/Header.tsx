@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { Button, Tabs } from "zebpay-ui";
+import { Button, Tabs, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 import { useState } from "react";
 import { header, headerButton, tabs } from "./styles";
