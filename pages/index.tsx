@@ -1,10 +1,9 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-import { useState } from "react";
+import CoinProfiling from "@components/CoinProfiling";
+import Header from "@components/Header/Header";
+import Overview from "@components/overview";
+import { main } from "@styles/styles";
+import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
-import { main } from "../styles/styles";
-import Header from "../components/Header/Header";
-import Overview from "../components/overview/Overview";
 
 export default function Home() {
   // Set default selectedTab to "overview" to make it the default tab

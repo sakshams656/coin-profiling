@@ -79,7 +79,7 @@ const Overview = () => {
                   type="number"
                   value={undefined} 
                   style={{
-                    'margin-bottom': '1rem'
+                    'margin-bottom': "1rem"
                   }}
               />
 
@@ -117,7 +117,7 @@ const Overview = () => {
           </div>
           <div css={investmentBox}>
                   <div css={{display: "flex", justifyContent: "space-between", maxHeight: utils.remConverter(106)}}>
-                    <Image src="/icons/investmenticons/02@3x.png" alt="Investment Icon" width={63} height={63} />
+                    <Image src=".." alt="Investment Icon" width={63} height={63} />
                     <div>
                       <p css={IBlabel}>Current Value</p>
                       <p css={IBvalue}>₹0.00</p>
@@ -142,4 +142,3 @@ const Overview = () => {
 };
 
 export default Overview;
-

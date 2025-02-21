@@ -198,7 +198,7 @@ const Statistics: React.FC = () => {
           </div>
           <div css={statsSubRow}>
             <div css={statsValue} style={{ color: colors.Zeb_Solid_Red }}>₹48,64,887.52</div>
-            <div css={statsValue} style={{ color: colors.Zeb_Solid_Green_02 }}>₹51,18,683.57</div>
+            <div css={statsValue} style={{ color: colors.Zeb_Solid_Green }}>₹51,18,683.57</div>
           </div>
         </div>
 

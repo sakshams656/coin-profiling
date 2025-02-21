@@ -1,14 +1,22 @@
-import type { AppProps } from 'next/app';
-import '../styles/home.module.css'; 
-import '../styles/global.css'; 
-import "zebpay-ui/dist/icons/icons.css"; 
-import '../styles/font.css';
+/// <reference types="@emotion/react/types/css-prop" />
+import "zebpay-ui/dist/icons/icons.css";
+import type { AppProps } from "next/app";
+import { Global } from "@emotion/react";
+import * as styles from "@styles/shared/global";
+import { toastifyToastStyle } from "@styles/shared/toast";
+import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import { getOrCreateStore } from "@utils/redux/createStore";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+const store = getOrCreateStore();
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div>
-      {/* You can add global layouts or context providers here */}
-      <Component {...pageProps} /> {/* This renders the current page (e.g., index.tsx) */}
-    </div>
+    <Provider store={store}>
+      <div css={toastifyToastStyle}>
+        <ToastContainer limit={3} />
+      </div>
+      <Global styles={styles.globalStyles} />
+      <Component {...pageProps} />
+    </Provider>
   );
 }

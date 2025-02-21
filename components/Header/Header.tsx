@@ -15,7 +15,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
       <div css={tabs}>
         <Tabs
           dropdownPlaceHolder="Select a Tab"
-          hideTick
+          //hideTick
           loadingParam={{ height: 26, width: 220 }}
           onChange={(tab: string) => setSelectedTab(tab)}
           selectedTab={selectedTab}
