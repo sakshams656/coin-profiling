@@ -25,6 +25,7 @@ import {
 import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, colors, Divider, Input, InputDropDown, utils } from "zebpay-ui";
 import Statistics from "./statistics/Statistics";
+import AssetsImg from "@public/images";
 
 const Overview = () => {
   return (
@@ -32,7 +33,7 @@ const Overview = () => {
       {/* Coin Banner */}
       <div css={coinBanner}>
         <div css={coinInfo}>
-          <Image src="/icons/btc_coin.svg" alt="coin" width={56} height={56} />
+          <Image src={AssetsImg.ic_btc_coin} alt="coin" width={56} height={56} />
           <div>
             <h3>{dummyCoinData.name}</h3>
             <div css={priceInfo}>
@@ -117,7 +118,7 @@ const Overview = () => {
           </div>
           <div css={investmentBox}>
                   <div css={{display: "flex", justifyContent: "space-between", maxHeight: utils.remConverter(106)}}>
-                    <Image src=".." alt="Investment Icon" width={63} height={63} />
+                    <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
                     <div>
                       <p css={IBlabel}>Current Value</p>
                       <p css={IBvalue}>₹0.00</p>

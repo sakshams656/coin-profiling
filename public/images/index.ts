@@ -8,6 +8,23 @@ import ic_arrow_left from "./Icons/arrow_left.svg";
 import ic_arrow_right from "./Icons/arrow_right.svg";
 import ic_tick from "./Icons/tick.svg";
 import ic_tick_blue from "./Icons/tick_blue.svg";
+import ic_star from "./Icons/star.svg";
+import ic_bars from "./Icons/bars.svg";
+import ic_lineschart from "./Icons/lineschart.svg";
+import ic_btc_coin from "./icons/btc_coin.svg";
+import ic_TP_new from "./icons/TP-new.png";
+import ic_SL_new from "./icons/SL-new.png";
+import ic_investmentIcon from "./icons/investmentIcon.png";
+import ic_filter from "./icons/filter.png";
+import ic_sorter from "./icons/Sorter.png";
+import ic_playstore from "./icons/playStore.svg";
+import ic_appstore from "./icons/AppStore.svg";
+import ic_zebpayCoin from "./icons/zebpayCoinImg.svg";
+import ic_zebra from "./icons/zebra.svg";
+import ic_mail from "./icons/mailIcon.png";
+import ic_NoNews from "./icons/NoNewsFound.svg";
+import ic_kyc from "./icons/KYC.svg";
+import ic_info from "./icons/info.png"
 
 // illustrations
 import i_zebpay_logo from "./illustrations/zebpay-logo.png";
@@ -45,7 +62,24 @@ const AssetsImg = {
   i_404,
   i_blocker_background,
   i_blocker_background_2,
-  i_404_bg
+  i_404_bg,
+  ic_star,
+  ic_bars,
+  ic_lineschart,
+  ic_btc_coin,
+  ic_TP_new,
+  ic_SL_new,
+  ic_investmentIcon,
+  ic_filter,
+  ic_sorter,
+  ic_playstore,
+  ic_appstore,
+  ic_zebpayCoin,
+  ic_zebra,
+  ic_NoNews,
+  ic_mail,
+  ic_kyc,
+  ic_info
 };
 
 export default AssetsImg;

@@ -1,5 +1,6 @@
 import CoinProfiling from "@components/CoinProfiling";
 import Header from "@components/Header/Header";
+import NewsPage from "@components/News";
 import Overview from "@components/overview";
 import { main } from "@styles/styles";
 import React, { useState } from "react";
@@ -17,7 +18,7 @@ export default function Home() {
       case "pricePredictor":
         return <div>This is Tab 2</div>;
       case "news":
-        return <div>Here’s content for Tab 3</div>;
+        return <NewsPage />;
       case "blogs":
         return <div>You're viewing Tab 4</div>;
       default:
