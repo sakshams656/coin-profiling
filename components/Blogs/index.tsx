@@ -5,7 +5,7 @@ import "../../styles/shared/global.ts";
 
 const Blogs = () => {
   return (
-    <div style={{ fontFamily: 'Lato' }}>
+    <div >
       <NewsPage />
     </div>
   );
