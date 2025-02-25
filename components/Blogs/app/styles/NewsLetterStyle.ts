@@ -33,10 +33,10 @@ export const Subscribed = css({
   justify-content: center;
   align-items: center;
 
-  button {
-    background: ${isValid ? colors.Zeb_Gradient_Blue_01 : "#C2C2DD"} !important;
-    cursor: ${isValid ? "pointer" : "not-allowed"};
-  }
+  // button {
+  //   background: ${isValid ? colors.Zeb_Gradient_Blue_01 : "#C2C2DD"} !important;
+  //   cursor: ${isValid ? "pointer" : "not-allowed"};
+  // }
 
   @media (max-width: 768px) {
     max-width: 130px;
@@ -50,8 +50,8 @@ export const Subscribed = css({
 
 
   export const newsletter = css({
-    height: "10vh",
-    display: "flex",
+    height: "10",
+    // display: "10%",
     // width: "inherit",
     // height: "8.5rem",
     padding: "0.75rem",
@@ -139,7 +139,7 @@ export const Subscribed = css({
     align-items: flex-start;
     gap: 0.5rem;
     align-self: stretch;
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.6rem;
     padding-top: 1rem;
     "@media (max-width: 768px)": {
       height: "auto",

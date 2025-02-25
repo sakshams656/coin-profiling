@@ -9,8 +9,8 @@ export const main = css({
   alignItems: "flex-start",
   gap: "1.25rem",
   width: "100%",
-  padding: "1.25rem",
-  height: "100vh",
+  // padding: "1.25rem",
+  height: "90vh",
   flexShrink: 0,
   alignSelf: "stretch",
   background: colors.Zeb_Solid_BG_Blue,
@@ -31,14 +31,15 @@ export const container = css({
   background: colors.Zeb_Solid_Dark_Blue,
   "@media (max-width: 768px)": {
     width: "100%",
-    height: "39.75rem",
+    // height: "39.75rem",
+    height:"100%"
   },
 });
 
 export const headerFrame = (isScrolled: boolean) =>
   css({
     display: "flex",
-    padding: "1rem 0",
+    paddingTop: "1rem",
     flexDirection: "column",
     alignItems: "flex-start",
     gap: "1rem",
@@ -49,9 +50,11 @@ export const headerFrame = (isScrolled: boolean) =>
     borderRadius: "8px",
     zIndex: 10,
     ...(isScrolled && {
+      paddingBottom:"1rem;",
       boxShadow: "0px 8px 8px -4px #0C0C1D",
     }),
     "@media (max-width: 768px)": {
+      
       gap: "0.5rem",
     },
   });
@@ -72,7 +75,8 @@ export const header = css({
 export const section = css({
   display: "flex",
   flexWrap: "wrap",
-  height: "39.75rem",
+  // height: "39.75rem",
+  height:"100%",
   width: "100%",
   padding: "1rem",
   paddingBottom: "1rem",
@@ -129,7 +133,8 @@ export const innerCard = css({
   flexShrink: "0",
   "@media (max-width: 768px)": {
     width: "25%",
-    height: "39.75rem",
+    // height: "39.75rem",
+    height:"100%"
   },
 });
 
@@ -147,7 +152,8 @@ export const innerDiv = css({
   background: colors.Zeb_Solid_Dark_Blue,
   "@media (max-width: 768px)": {
     width: "25%",
-    height: "39.75rem",
+    // height: "39.75rem",
+    height:"100%"
   },
   // "@media (min-width: 768px)": {
   //   width: "25%;"
@@ -176,7 +182,7 @@ export const Email = styled.input`
 export const InsideSection = css({
   display: "flex",
   flexWrap: "wrap",
-  gap: "16px",
+  gap: "1rem",
   width: "100%",
 });
 

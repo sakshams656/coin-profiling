@@ -13,7 +13,6 @@ export const ButtonStyle = css({
   background: "none",
   border: "none",
   cursor: "pointer",
-  padding: "0",
 
   "@media (max-width: 768px)": {
     maxWidth: "130px",
@@ -26,7 +25,7 @@ export const ButtonStyle = css({
 });
 
 export const Image = css({
-  height: "36px",
+  height: "2.4rem",
   width: "100%",
   maxWidth: "100%",
 
@@ -42,11 +41,11 @@ export const Image = css({
 export const tradingBanner = css({
     display: "flex",
     width: "100%",
-  
+    // height:"60%",
     padding: "0.75rem",
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: "0.25rem",
+    // gap: "0.25rem",
     flexShrink: "0",
     borderRadius: "8px",
     background: colors.Zeb_Gradient_Dark_Blue,
@@ -77,7 +76,7 @@ export const tradingBanner = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "left",
-    gap: "1.25rem",
+    gap: "1rem",
     alignSelf: "stretch",
     "@media (max-width: 768px)": {
       gap: "0.75rem",
@@ -101,7 +100,7 @@ export const tradingBanner = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: "0.25rem",
+    // gap: "0.25rem",
     alignSelf: "stretch",
     "@media (max-width: 768px)": {
       gap: "0.125rem",
@@ -113,10 +112,10 @@ export const tradingBanner = css({
     alignSelf: "stretch",
     color: "var(--Zeb_Solid-White, #FFF)",
     fontFeatureSettings: "'liga' off, 'clig' off",
-    fontFamily: "Lato",
-    fontSize: "1rem",
-    fontStyle: "normal",
-    fontWeight: "700",
+    // fontFamily: "Lato",
+    // fontSize: "1rem",
+    // fontStyle: "normal",
+    // fontWeight: "700",
     lineHeight: "1.75rem", // 175%
     letterSpacing: "0.05rem",
     "@media (max-width: 768px)": {

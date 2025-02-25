@@ -7,7 +7,7 @@ import { typography, colors, utils } from "zebpay-ui";
 
 export const CardContainer = styled.div`
   display: flex;
-  height:39vh;
+  height:39vh
   flex-direction: column;
   align-items: center;
   padding: 0.75rem;  // 12px
@@ -43,13 +43,13 @@ export const InsideFrame = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 0.75rem;  // 12px
+  gap: 0.6rem;  // 12px
 `;
 
 
 export const CardImage = styled.div`
   display: flex;
-  height: 6.75rem;  // 108px
+  height: 14.5vh;  // 108px
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -70,7 +70,7 @@ export const CardInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;  // 16px
+  gap: 0.7rem;  // 16px
   align-self: stretch;
   flex-grow: 1;  
   justify-content: space-between; 
