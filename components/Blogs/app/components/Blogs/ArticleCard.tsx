@@ -1,9 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
-import calendar from "../../images/calendar.svg";
-import show from "../../images/show.svg";
-import seperator from "../../images/seperator.svg";
 import Image from "next/image";
+import AssetsImg from "@public/images";
 
 import {
   CardContainer,
@@ -62,16 +60,16 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           <CardInfoFooter>
             <Date>
               <DateIcon>
-                <Image src={calendar.src} alt="Calendar" width={14} height={14} />
+                <Image src={AssetsImg.ic_calendar} alt="Calendar" width={14} height={14} />
               </DateIcon>
               <DateText>{date}</DateText>
             </Date>
 
-            <Image src={seperator.src} alt="Separator" width={16} height={16} />
+            <Image src={AssetsImg.ic_seperator} alt="Separator" width={16} height={16} />
 
             <ReadingTime>
               <ReadingTimeIcon>
-                <Image src={show.src} alt="Show" width={16} height={16} />
+                <Image src={AssetsImg.ic_views} alt="Show" width={16} height={16} />
               </ReadingTimeIcon>
               <ReadingTimeText>{totalViews}</ReadingTimeText>
             </ReadingTime>

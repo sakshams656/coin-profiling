@@ -5,9 +5,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { css } from "@emotion/react";
 import { Popper } from "react-popper";
 import UpDownIcon from "../../icons/UpDownIcon";
-import tick from "../../images/tick.svg";
 import Image from "next/image";
-import { DropdownOuter, DropdownStyle, upDownIcon,optionStyles, buttonStyles } from "../../styles/dropdown";
+import { DropdownStyle, upDownIcon,optionStyles, buttonStyles } from "../../styles/dropdown";
+import AssetsImg from "@public/images";
 
 interface DropdownOption {
   label: React.ReactNode;
@@ -27,7 +27,6 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
   };
@@ -66,7 +65,6 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
 
   return (
     <div
-      // css={DropdownOuter}
     >
       <div
         ref={buttonRef}
@@ -110,7 +108,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
                     <span>{option.label}</span>
                     {selectedOption?.value === option.value && (
                       <Image
-                        src={typeof tick === "object" && tick.src ? tick.src : tick}
+                        src={AssetsImg.ic_tick}
                         alt="tick"
                         width={20}
                         height={20}

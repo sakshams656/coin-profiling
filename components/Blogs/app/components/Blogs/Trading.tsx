@@ -2,13 +2,13 @@
 "use client";
 
 import React from "react";
-import crypto from "../../images/crypto.svg";
 import { css } from "@emotion/react";
-import googlePlay from "../../images/googlePlay.svg";
-import appStore from "../../images/appStore.svg";
+import AssetsImg from "@public/images";
+import Image from "next/image";
+
 import {
   ButtonStyle,
-  Image,
+  image,
   tradingBanner,
   frame,
   anotherFrame,
@@ -25,7 +25,7 @@ const Tradingbanner = () => {
       <div css={frame}>
         <div css={anotherFrame}>
           <div css={zebpayImageDiv}>
-            <img src={crypto.src} alt="Crypto" />
+            <img src={AssetsImg.ic_crypto.src} alt="Crypto" />
           </div>
           <div css={textWrapper}>
             <div css={title}>Crypto Knowledge Hub</div>
@@ -41,10 +41,10 @@ const Tradingbanner = () => {
               rel="noopener noreferrer"
             >
               <button css={ButtonStyle}>
-                <img
-                  src={appStore.src}
-                  alt="Get it on Google Play"
-                  css={Image}
+                <Image
+                  src={AssetsImg.ic_app_store}
+                  alt="Get it on App Store"
+                  css={image}
                 />
               </button>
             </a>
@@ -55,10 +55,10 @@ const Tradingbanner = () => {
               rel="noopener noreferrer"
             >
               <button css={ButtonStyle}>
-                <img
-                  src={googlePlay.src}
+                <Image
+                  src={AssetsImg.ic_google_play}
                   alt="Get it on Google Play"
-                  css={Image}
+                  css={image}
                 />
               </button>
             </a>

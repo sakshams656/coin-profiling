@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
 import { CardContainer } from "../../styles/articleStyle";
-import noBlogsFound from "../../images/noBlogsFound.svg";
 import { typography, colors, utils, Button } from "zebpay-ui";
 import { Heading, Main, subHeading } from "../../styles/NoBlogFoundStyle";
+import AssetsImg from "@public/images";
+import Image from "next/image";
 
 interface NoBlogsFoundProps {
   onReset: () => void;  
@@ -20,8 +21,8 @@ const NoBlogsFound: React.FC<NoBlogsFoundProps> = ({ onReset }) => {
     <div
       css={Main}
     >
-      <img
-        src={noBlogsFound.src}
+      <Image
+        src={AssetsImg.ic_no_blogs_found}
         alt="No Blogs Found"
         css={{
           maxWidth: "200px",

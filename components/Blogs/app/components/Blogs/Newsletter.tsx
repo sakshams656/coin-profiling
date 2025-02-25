@@ -4,10 +4,8 @@
 import { useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Icon, Input, Button, CircularLoader } from "zebpay-ui";
-import mail from "../../images/mail.svg";
 import { css } from "@emotion/react";
-import subscribed from "../../images/subscribed.svg";
-import subscribed2 from "../../images/subscribed2.svg";
+import AssetsImg from "@public/images";
 import {
   ErrorText,
   ButtonStyle,
@@ -21,6 +19,8 @@ import {
   Form,
   Subscribe
 } from "../../styles/NewsLetterStyle";
+import Image from "next/image";
+
 
 
 const NewsLetter = () => {
@@ -69,8 +69,8 @@ const NewsLetter = () => {
         <div>
           <div css={newsHeader}>
             <MailIcon>
-              <img
-                src={isSubscribed ? subscribed.src : mail.src}
+              <Image
+                src={isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.ic_mail}
                 alt={isSubscribed ? "Subscribed" : "Mail"}
               />
             </MailIcon>
@@ -126,8 +126,8 @@ const NewsLetter = () => {
 
         {isSubscribed && (
           <div css={Subscribed}>
-            <img
-              src={subscribed2.src}
+            <Image
+              src={AssetsImg.ic_zebpay}
               alt="Subscribed Confirmation"
               style={{ opacity: 0.05 }}
             />

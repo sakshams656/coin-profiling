@@ -24,7 +24,7 @@ export const ButtonStyle = css({
   },
 });
 
-export const Image = css({
+export const image = css({
   height: "2.4rem",
   width: "100%",
   maxWidth: "100%",
