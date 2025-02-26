@@ -1,0 +1,19 @@
+/* Noto-serif */
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url(../fonts/Lato/Lato-Regular.ttf) format('woff2');
+    unicode-range: U+0000-00FF; /* Basic Latin and Latin-1 Supplement */
+  }
+  
+  /* Noto-serif Greek */
+  @font-face {
+    font-family: 'Noto-serif';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url(../fonts/Noto_Serif/static/NotoSerif-Regular.ttf) format('woff2');
+    unicode-range: U+0370-03FF; /* Greek range */
+  }
