@@ -1,6 +1,7 @@
 import { css, CSSObject } from "@emotion/react";
 
-import { colors, typography, utils, ZIndexLevels } from "@styles/shared";
+import { colors, typography, utils } from "zebpay-ui";
+import { ZIndexLevels } from "@components/Shared/ZCustomSelect/styles";
 
 const toRem4 = "0.25rem";
 const toRem20 = utils.remConverter(20);
