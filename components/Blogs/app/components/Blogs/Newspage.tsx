@@ -9,6 +9,8 @@ import dummyArticles from "../../data/dummyArticles";
 import NewsLetter from "./Newsletter";
 import Tradingbanner from "./Trading";
 import NoBlogsFound from "./NoBlogsFound";
+import { Button,Divider } from "zebpay-ui";
+import Image from "next/image";
 
 import {
   main,
@@ -28,6 +30,7 @@ import {
   closeIcon,
   headerBelow,
 } from "../../styles/newPage";
+import AssetsImg from "@public/images";
 
 interface Article {
   title: string;
@@ -192,7 +195,6 @@ const NewsPage: React.FC = () => {
   const handleRemoveDate = (dateToRemove: string) => {
     setDateRange("");
   };
-  
 
   return (
     <div css={main}>
@@ -209,14 +211,17 @@ const NewsPage: React.FC = () => {
               onReset={handleReset}
             />
           </div>
-          {(selectedCategories.length>0 || selectedDurations.length>0 || dateRange)&&<div css={headerBelow}>
+          {(selectedCategories.length > 0 ||
+            selectedDurations.length > 0 ||
+            dateRange) && (
+            <div css={headerBelow}>
               <div css={selectedCategoriesContainer}>
                 {selectedCategories.map((category) => (
                   <button key={category} css={categoryButton}>
-                    <i className="icon icon-calendar" css={clockIcon} />
+                    <Image src={AssetsImg.ic_category_white} css={clockIcon}/>
                     <span css={categoryText}>{category}</span>
-                    <i
-                      className="icon icon-cross"
+                    <Image
+                      src={AssetsImg.ic_cross_blue}
                       css={closeIcon}
                       onClick={() => handleRemoveCategory(category)}
                     />
@@ -224,10 +229,10 @@ const NewsPage: React.FC = () => {
                 ))}
                 {selectedDurations.map((duration) => (
                   <button key={duration} css={categoryButton}>
-                    <i className="icon icon-calendar" css={clockIcon} />
+                    <Image src={AssetsImg.ic_clock_white} css={clockIcon} />
                     <span css={categoryText}>{duration}</span>
-                    <i
-                      className="icon icon-cross"
+                    <Image
+                      src={AssetsImg.ic_cross_blue}
                       css={closeIcon}
                       onClick={() => handleRemoveDuration(duration)}
                     />
@@ -235,19 +240,28 @@ const NewsPage: React.FC = () => {
                 ))}
                 {dateRange && (
                   <button key={dateRange} css={categoryButton}>
-                    <i className="icon icon-calendar" css={clockIcon} />
+                    <i className="icon icon-calendar" css={clockIcon}/>
                     <span css={categoryText}>{dateRange}</span>
-                    <i
-                      className="icon icon-cross"
+                    <Image
+                      src={AssetsImg.ic_cross_blue}
                       css={closeIcon}
                       onClick={() => handleRemoveDate(dateRange)}
                     />
                   </button>
                 )}
               </div>
-            }
-          </div>
-}
+              <Button
+                onClick={handleReset}
+                size="small"
+                type="secondary"
+                style={{marginLeft:"1rem"}}
+              >
+                Reset
+              </Button>
+              
+            </div>
+            
+          )}
         </div>
         <div css={section}>
           {error ? (

@@ -24,6 +24,8 @@ import {
 } from "../../styles/iconsPanel";
 import { css } from "@emotion/react";
 import Dropdown from "./Dropdown";
+import AssetsImg from "@public/images";
+import Image from "next/image";
 
 interface IconsPanelProps {
   onCategoryChange: (categories: string[]) => void;
@@ -199,12 +201,9 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             onToggle={() => handleAccordionToggle("category")}
             title={
               <div css={Title(isCategoryOpen)}>
-                <i
-                  className="icon icon-deactivate"
-                  css={css`
+                <Image src={AssetsImg.ic_reports} css={css`
                     margin-right: 0.5rem;
-                  `}
-                />
+                  `}/>
                 Category
                 {selectedCategories.length > 0 && (
                   <span css={Added}>({selectedCategories.join(", ")})</span>
@@ -289,12 +288,9 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             onToggle={() => handleAccordionToggle("duration")}
             title={
               <div css={Title(isDurationOpen)}>
-                <i
-                  className="icon icon-deactivate"
-                  css={css`
+                <Image src={AssetsImg.ic_duration} css={css`
                     margin-right: 0.5rem;
-                  `}
-                />
+                  `}/>
                 Duration
                 {selectedDurations.length > 0 && (
                   <span css={Added}>({selectedDurations.join(", ")})</span>

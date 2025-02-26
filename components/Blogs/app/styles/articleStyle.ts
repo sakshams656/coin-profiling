@@ -5,9 +5,9 @@ import { typography, colors, utils } from "zebpay-ui";
 
 
 
-export const CardContainer = styled.div`
+export const CardContainer = css`
   display: flex;
-  height:39vh
+  height:36.8vh;
   flex-direction: column;
   align-items: center;
   padding: 0.75rem;  // 12px
@@ -37,7 +37,7 @@ export const CardContainer = styled.div`
 
 
 
-export const InsideFrame = styled.div`
+export const InsideFrame = css`
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -47,9 +47,9 @@ export const InsideFrame = styled.div`
 `;
 
 
-export const CardImage = styled.div`
+export const CardImage = css`
   display: flex;
-  height: 14.5vh;  // 108px
+  height: 14vh;  // 108px
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -66,7 +66,7 @@ export const CardImage = styled.div`
 `;
 
 
-export const CardInfo = styled.div`
+export const CardInfo = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -77,7 +77,7 @@ export const CardInfo = styled.div`
 `;
 
 
-export const CardInfoHeader = styled.div`
+export const CardInfoHeader = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -86,7 +86,7 @@ export const CardInfoHeader = styled.div`
 `;
 
 
-export const DomainName = styled.div`
+export const DomainName = css`
   display: flex;
   padding: 0.125rem 0.25rem;  // 2px 4px
   justify-content: center;
@@ -98,7 +98,7 @@ export const DomainName = styled.div`
 `;
 
 
-export const Title = styled.div`
+export const Title = css`
   height: 18px;
   display: flex;
   flex-direction: column;
@@ -116,7 +116,7 @@ export const Title = styled.div`
 `;
 
 
-export const Description = styled.div`
+export const Description = css`
   font-size:0.9rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -130,7 +130,7 @@ export const Description = styled.div`
 `;
 
 
-export const CardInfoFooter = styled.div`
+export const CardInfoFooter = css`
   display: flex;
   align-items: center;
   gap: 1.25rem;  // 20px
@@ -140,14 +140,14 @@ export const CardInfoFooter = styled.div`
 `;
 
 
-export const ReadingTime = styled.div`
+export const ReadingTime = css`
   display: flex;
   align-items: center;
   gap: 0.375rem;  // 6px
 `;
 
 
-export const ReadingTimeIcon = styled.div`
+export const ReadingTimeIcon = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,19 +156,19 @@ export const ReadingTimeIcon = styled.div`
 `;
 
 
-export const ReadingTimeText = styled.div`
+export const ReadingTimeText = css`
   color: ${colors.Zeb_Solid_Light_Blue};
 `;
 
 
-export const Date = styled.div`
+export const Date = css`
   display: flex;
   align-items: center;
   gap: 0.375rem;  // 6px
 `;
 
 
-export const DateIcon = styled.div`
+export const DateIcon = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,7 +177,7 @@ export const DateIcon = styled.div`
 `;
 
 
-export const DateText = styled.div`
+export const DateText = css`
   font-size: 0.875rem;  // 14px
   line-height: 1;
   color: ${colors.Zeb_Solid_Light_Blue};

@@ -44,39 +44,39 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   const handleClick = () => window.open(link, "_blank", "noopener,noreferrer");
 
   return (
-    <CardContainer onClick={handleClick} style={{ cursor: "pointer" }}>
-      <InsideFrame>
-        <CardImage>
+    <div css={CardContainer} onClick={handleClick} style={{ cursor: "pointer" }}>
+      <div css={InsideFrame}>
+        <div css={CardImage}>
           <img src={imageUrl} alt={title} />
-        </CardImage>
+        </div>
 
-        <CardInfo>
-          <CardInfoHeader>
-            <DomainName>{category}</DomainName>
-            <Title>{title}</Title>
-            {description && <Description>{description}</Description>}
-          </CardInfoHeader>
+        <div css={CardInfo}>
+          <div css={CardInfoHeader}>
+            <div css={DomainName}>{category}</div>
+            <div css={Title}>{title}</div>
+            {description && <div css={Description}>{description}</div>}
+          </div>
 
-          <CardInfoFooter>
-            <Date>
-              <DateIcon>
+          <div css={CardInfoFooter}>
+            <div css={Date}>
+              <div css={DateIcon}>
                 <Image src={AssetsImg.ic_calendar} alt="Calendar" width={14} height={14} />
-              </DateIcon>
-              <DateText>{date}</DateText>
-            </Date>
+              </div>
+              <div css={DateText}>{date}</div>
+            </div>
 
             <Image src={AssetsImg.ic_seperator} alt="Separator" width={16} height={16} />
 
-            <ReadingTime>
-              <ReadingTimeIcon>
+            <div css={ReadingTime}>
+              <div css={ReadingTimeIcon}>
                 <Image src={AssetsImg.ic_views} alt="Show" width={16} height={16} />
-              </ReadingTimeIcon>
-              <ReadingTimeText>{totalViews}</ReadingTimeText>
-            </ReadingTime>
-          </CardInfoFooter>
-        </CardInfo>
-      </InsideFrame>
-    </CardContainer>
+              </div>
+              <div css={ReadingTimeText}>{totalViews}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

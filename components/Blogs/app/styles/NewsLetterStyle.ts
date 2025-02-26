@@ -95,7 +95,7 @@ export const Subscribed = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: "0.5rem",
+    gap: "0.3rem",
     alignSelf: "stretch",
   });
   
@@ -112,8 +112,8 @@ export const Subscribed = css({
   
   export const MailIcon = styled.div`
     display: flex;
-    width: 5rem;
-    height: 5rem;
+    width: 4.5rem;
+    height: 4.5rem;
     // padding: 1.0625rem 0.234rem;
     justify-content: center;
     align-items: center;

@@ -10,7 +10,7 @@ export const main = css({
   gap: "1.25rem",
   width: "100%",
   // padding: "1.25rem",
-  height: "90vh",
+  height: "88vh",
   flexShrink: 0,
   alignSelf: "stretch",
   background: colors.Zeb_Solid_BG_Blue,
@@ -22,7 +22,7 @@ export const main = css({
 
 export const container = css({
   display: "flex",
-  width: "75%",
+  width: "76%",
   height: "100%",
   paddingBottom: "1rem",
   flexDirection: "column",
@@ -43,6 +43,7 @@ export const headerFrame = (isScrolled: boolean) =>
     flexDirection: "column",
     alignItems: "flex-start",
     gap: "1rem",
+    width:"100%",
     alignSelf: "stretch",
     background: colors.Zeb_Solid_Dark_Blue,
     position: "sticky",
@@ -62,7 +63,8 @@ export const headerFrame = (isScrolled: boolean) =>
 export const header = css({
   display: "flex",
   justifyContent: "space-between",
-  padding: "0 1rem",
+  // padding: "0 1rem",
+  paddingLeft:"1rem",
   alignItems: "center",
   alignSelf: "stretch",
   "@media (max-width: 768px)": {
@@ -140,7 +142,7 @@ export const innerCard = css({
 
 export const innerDiv = css({
   display: "flex",
-  width: "25%",
+  width: "23%",
   height: "100%",
   padding: "1rem",
   fontFamily: "Lato",
@@ -227,7 +229,18 @@ export const Button = styled.button`
 `;
 
 export const headerBelow = css({
-  paddingLeft:"1rem"
+  display:"flex",
+  paddingLeft:"1rem",
+  overflowX:"auto",
+  whiteSpace:"nowrap",
+  overflowY:"hidden",
+  width: "100%",
+  scrollbarWidth:"none",
+  alignItems:"stretch",
+  justifyContent:"space-between",
+  paddingRight:"1.1rem"
+
+  
 });
 
 export const categoryWrapper = css`
@@ -240,11 +253,14 @@ export const categoryWrapper = css`
 export const selectedCategoriesContainer = css`
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   overflow-x: auto;
   white-space: nowrap; 
   padding-bottom: 5px;
-  scrollbar-width: thin;
+  // scrollbar-width: thin;
+  whiteSpace: "nowrap", 
+  overflowX: "auto",
+  scrollbarWidth:"none"
 `;
 
 export const categoryButton = css`
@@ -258,8 +274,8 @@ export const categoryButton = css`
   font-weight: 500;
   border: none;
   cursor: pointer;
+  scrollbarWidth:"none";
   
-
 `;
 
 export const clockIcon = css`

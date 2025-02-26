@@ -2,11 +2,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { css } from "@emotion/react";
-import { Popper } from "react-popper";
+import { Global,css } from "@emotion/react";
 import UpDownIcon from "../../icons/UpDownIcon";
+import tick from "../../images/tick.svg";
 import Image from "next/image";
-import { DropdownStyle, upDownIcon,optionStyles, buttonStyles } from "../../styles/dropdown";
+import { DropdownStyle, upDownIcon, optionStyles, buttonStyles } from "../../styles/dropdown";
+import { Popper } from "zebpay-ui";
 import AssetsImg from "@public/images";
 
 interface DropdownOption {
@@ -26,33 +27,26 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownOption | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
   const handleOptionSelect = (value: string) => {
-    if (selectedOption?.value === value) {
-      setSelectedOption(null); 
-      onSortChange(""); 
-    } else {
-      const option = options.find((option) => option.value === value);
-      if (option) {
-        setSelectedOption(option);
-        onSortChange(option.value);
-      }
+    const option = options.find((opt) => opt.value === value);
+    
+    if (option) {
+      const isDeselecting = selectedOption?.value === value;
+      setSelectedOption(isDeselecting ? null : option);
+      onSortChange(isDeselecting ? "" : value);
     }
+    
     setIsDropdownOpen(false);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
+      if (buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
@@ -64,63 +58,34 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
   }, []);
 
   return (
-    <div
-    >
-      <div
-        ref={buttonRef}
-        onClick={handleDropdownToggle}
-        css={upDownIcon}
-      >
-        <UpDownIcon filled={!!selectedOption} />
-      </div>
-
-      {isDropdownOpen && (
-        <Popper
-          placement="bottom-end"
-          referenceElement={buttonRef.current}
-          modifiers={[
-            {
-              name: "offset",
-              options: {
-                offset: [0,8],
-              },
-            },
-          ]}
-        >
-          {({ ref, style }) => (
-            <div
-              ref={(node) => {
-                ref(node);
-                dropdownRef.current = node;
-              }}
-              css={DropdownStyle}
-              style={style}
-            >
+    <div ref={buttonRef}>
+      <Popper
+        content={
+          isDropdownOpen ? (
+            <div css={DropdownStyle}>
               {options.map((option) => (
-                <div
-                  key={option.value}
-                  css={optionStyles(selectedOption?.value === option.value)}
-                >
+                <div key={option.value} css={optionStyles(selectedOption?.value === option.value)}>
                   <button
                     css={buttonStyles(selectedOption?.value === option.value)}
                     onClick={() => handleOptionSelect(option.value)}
                   >
                     <span>{option.label}</span>
                     {selectedOption?.value === option.value && (
-                      <Image
-                        src={AssetsImg.ic_tick}
-                        alt="tick"
-                        width={20}
-                        height={20}
-                      />
+                      <Image src={AssetsImg.ic_tick} alt="tick" width={20} height={20} />
                     )}
                   </button>
                 </div>
               ))}
             </div>
-          )}
-        </Popper>
-      )}
+          ) : null
+        }
+        position="bottom-end"
+        
+      >
+        <div onClick={handleDropdownToggle} css={upDownIcon}>
+          <UpDownIcon filled={!!selectedOption} />
+        </div>
+      </Popper>
     </div>
   );
 };

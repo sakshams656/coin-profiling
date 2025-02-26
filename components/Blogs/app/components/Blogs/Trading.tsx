@@ -25,7 +25,7 @@ const Tradingbanner = () => {
       <div css={frame}>
         <div css={anotherFrame}>
           <div css={zebpayImageDiv}>
-            <img src={AssetsImg.ic_crypto.src} alt="Crypto" />
+            <Image src={AssetsImg.ic_crypto} alt="Crypto" />
           </div>
           <div css={textWrapper}>
             <div css={title}>Crypto Knowledge Hub</div>

@@ -25,7 +25,7 @@ export const ButtonStyle = css({
 });
 
 export const image = css({
-  height: "2.4rem",
+  height: "2.rem",
   width: "100%",
   maxWidth: "100%",
 
@@ -65,7 +65,7 @@ export const tradingBanner = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "1.25rem",
+    // gap: "1.25rem",
     alignSelf: "stretch",
     "@media (max-width: 768px)": {
       gap: "0.75rem",
@@ -143,8 +143,8 @@ export const tradingBanner = css({
   
   export const buttonGroup = css({
     display: "flex",
-    justifyContent: "space-around",
-    alignItems: "flex-start",
+    justifyContent: "space",
+    // alignItems: "flex-start",
     gap: "0.75rem",
     alignSelf: "stretch",
     "@media (max-width: 768px)": {

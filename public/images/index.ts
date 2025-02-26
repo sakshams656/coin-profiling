@@ -21,6 +21,10 @@ import ic_subscribed from "./icons/subscribed.svg";
 import ic_views from "./icons/views.svg";
 import ic_zebpay from "./icons/zebpay.svg"; 
 import ic_crypto from "./icons/crypto.svg"
+import ic_reports from "./icons/reports.svg"
+import ic_cross_blue from "./icons/cross_blue.svg";
+import ic_clock_white from "./icons/clock_white.svg";
+import ic_category_white from "./icons/category_white.svg";
 
 // illustrations
 import i_zebpay_logo from "./illustrations/zebpay-logo.png";
@@ -71,7 +75,11 @@ const AssetsImg = {
   ic_subscribed,
   ic_views,
   ic_zebpay,
-  ic_crypto
+  ic_crypto,
+  ic_reports,
+  ic_cross_blue,
+  ic_clock_white,
+  ic_category_white
 };
 
 export default AssetsImg;
