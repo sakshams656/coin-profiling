@@ -21,3 +21,27 @@ export const resetButton = css({
       paddingRight: "0.5rem",
     },
   });
+
+  export const filterStyle = css({
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+  });
+  
+  export const accordionWrapper = css({
+    width: "90%",
+    margin: "0 auto",
+    marginBottom: "0.75rem",
+    border: "none",
+  });
+  
+  export const buttonWrapper = css({
+    position: "absolute",
+    bottom: "20px",
+    right: "30px",
+    display: "flex",
+    gap: "10px",
+  });
+  

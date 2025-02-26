@@ -1,34 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { useState } from "react";
 import { css } from "@emotion/react";
-import { Button, Checkbox, Divider, Icon, Radio, SearchInput, SidePanel } from "zebpay-ui";
+import { Button, Checkbox, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
 import { Accordion, utils } from "zebpay-ui";
 import Image from "next/image";
-import { resetButton } from "./styles";
+import { accordionWrapper, buttonWrapper, filterStyle, resetButton } from "./styles";
 import AssetsImg from "@public/images";
-
-const filterStyle = css`
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-`;
-
-const accordionWrapper = css`
-  width: 90%;
-  margin: 0 auto;
-  margin-bottom: 0.75rem;
-  border: none;
-`;
-
-const buttonWrapper = css`
-  position: absolute;
-  bottom: 20px;
-  right: 30px;
-  display: flex;
-  gap: 10px;
-`;
 
 const FilterSidePanel = ({ onApplyFilters, onResetFilters }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);

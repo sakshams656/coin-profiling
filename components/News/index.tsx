@@ -41,7 +41,6 @@ import { getCryptoNews } from "./APIservice/apiService";
 import ArticleCard from "./ArticleCard/ArticleCard";
 import FilterSidePanel from "../Shared/SidePanel/FilterSidePanel";
 import SkeletonWrapper from "./skeletonWrapper/SkeletonWrapper";
-import Dropdown from "../Shared/Dropdown/Dropdown";
 import NoNewsFound from "./NoNewsFound/NoNewsFound";
 import EmailSubscription from "./emailSubscription/EmailSubcription";
 import { Button } from "zebpay-ui";
@@ -102,8 +101,6 @@ const isInDateRange = (publishedAt: string, range: string | null) => {
       return articleDate > new Date(now.setMonth(now.getMonth() - 3));
     case "Last 1 Year":
       return articleDate > new Date(now.setFullYear(now.getFullYear() - 1));
-    case "Custom":
-      return true;
     default:
       return true;
   }
@@ -224,11 +221,7 @@ const NewsPage: React.FC = () => {
                 <FilterSidePanel onApplyFilters={handleApplyFilters} onResetFilters={handleResetFilters} />
               </div>
               <div css={updown}>
-                <Dropdown
-                  onSortChange={(value: string) => {
-                    console.log("Sort by:", value);
-                  }}
-                />
+                
               </div>
             </div>
           </div>
@@ -277,15 +270,7 @@ const NewsPage: React.FC = () => {
               }}
             >
               {Array.from({ length: 12 }).map((_, index) => (
-                <ArticleCard
-                  key={index}
-                  title={<SkeletonWrapper isLoading={loading} height={45} width={170} borderRadius={4} />}
-                  link={<SkeletonWrapper isLoading={loading} height={45} width={170} borderRadius={4} />}
-                  imageUrl={<SkeletonWrapper isLoading={loading} height={100} width={100} borderRadius={4} />}
-                  date={<SkeletonWrapper isLoading={loading} height={22} width={73} borderRadius={4} />}
-                  readingTime={<SkeletonWrapper isLoading={loading} height={22} width={73} borderRadius={4} />}
-                  domain={<SkeletonWrapper isLoading={loading} height={22} width={90} borderRadius={4} />}
-                />
+                <ArticleCard key={index} loading />
               ))}
             </div>
           ) : filteredArticles.length === 0 ? (

@@ -1,6 +1,6 @@
 import Blogs from "@components/Blogs";
 import News from "@components/News";
-import Overview from "@components/overview";
+import Overview from "@components/Overview";
 import PricePredictor from "@components/PricePredictor";
 import React, { useMemo, useState } from "react";
 import { Tabs, utils } from "zebpay-ui";

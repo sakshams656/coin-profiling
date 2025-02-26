@@ -3,6 +3,7 @@ import { Button, Tabs, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 import { useState } from "react";
 import { header, headerButton, tabs } from "./styles";
+import NOOB from "@constants/noob";
 
 interface HeaderProps {
   selectedTab: string;
@@ -32,7 +33,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
       </div>
       <div css={headerButton}>
         <Button
-          onClick={function noRefCheck() {}}
+          onClick={NOOB}
           size="medium"
           type="primary"
         >

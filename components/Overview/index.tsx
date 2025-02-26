@@ -16,16 +16,19 @@ import {
   rightContainer, 
   returnsTitle,
   formContainer,
-  pastButton,
   investmentBox,
   IBlabel,
   IBvalue,
   percentageBox,
 } from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
-import { Button, colors, Divider, Input, InputDropDown, utils } from "zebpay-ui";
-import Statistics from "./statistics/Statistics";
+import { Button, colors, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
+import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
+import CoinInfo from "./CoinInformation/CoinInfo";
+import PerformanceGraph from "./Graph/PerformanceGraph";
+import CryptoCategories from "./Categories/CryptoCategories";
+import NOOB from "@constants/noob";
 
 const Overview = () => {
   return (
@@ -60,7 +63,10 @@ const Overview = () => {
       {/* Below Coin Banner - Two Columns */}
       <div css={contentWrapper}>
         <div css={leftContainer}>
+          <PerformanceGraph/>
           <Statistics/>
+          <CoinInfo />
+          <CryptoCategories/>
         </div>
         <div css={rightContainer}>
           <div css={returnsTitle}>
@@ -70,12 +76,6 @@ const Overview = () => {
             {/* Amount Invested Input */}
               <Input
                   label="Amount Invested"
-                  onBlur={() => {}}
-                  onChange={() => {}}
-                  onFocus={() => {}}
-                  onKeyDown={() => {}}
-                  onPaste={() => {}}
-                  onWheel={() => {}}
                   placeholder="Enter Amount"
                   type="number"
                   value={undefined} 
@@ -105,16 +105,32 @@ const Overview = () => {
                   value: ''
                 }}
                 selected="" maxRows={4}            />
-                <div css={{marginTop: "1rem"}}>
-                <span css={{fontSize: utils.remConverter(14), color: colors.Zeb_Solid_Light_Blue}}>Over the Past</span>
-                <div css={{display: "flex", justifyContent: "space-between"}}>
-                  <button css={pastButton}>6M</button>
-                  <button css={pastButton}>1Y</button>
-                  <button css={pastButton}>2Y</button>
-                  <button css={pastButton}>3Y</button>
+                <div css={{ marginTop: utils.remConverter(16) }}>
+                  <span css={{ fontSize: utils.remConverter(14), color: colors.Zeb_Solid_Light_Blue }}>Over the Past</span>
+                  <Tabs
+                    onChange={NOOB}
+                    selectedTab="6M" 
+                    tabsList={[
+                      {
+                        tab: "6M",
+                        title: <>6M</>, 
+                      },
+                      {
+                        tab: "1Y",
+                        title: "1Y",
+                      },
+                      {
+                        tab: "2Y",
+                        title: "2Y",
+                      },
+                      {
+                        tab: "3Y",
+                        title: "3Y",
+                      },
+                    ]}
+                    type="secondary"
+                  />
                 </div>
-                </div>
-                
           </div>
           <div css={investmentBox}>
                   <div css={{display: "flex", justifyContent: "space-between", maxHeight: utils.remConverter(106)}}>
@@ -130,7 +146,7 @@ const Overview = () => {
                 </div>
 
                 <Button
-                  onClick={function noRefCheck(){}}
+                  onClick={NOOB}
                   size="full-width"
                   type="primary"
                 >

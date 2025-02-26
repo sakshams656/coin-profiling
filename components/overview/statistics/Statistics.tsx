@@ -4,7 +4,7 @@ import { utils, colors, Divider, Tooltip } from "zebpay-ui";
 import AssetsImg from "@public/images";
 import Image from "next/image";
 import { dummyCoinData } from "../../../Data/DummyCoinData";
-import styles from "./styles";
+import styles from "./styles"
 
 /* 🔥 Component */
 const Statistics: React.FC = () => {

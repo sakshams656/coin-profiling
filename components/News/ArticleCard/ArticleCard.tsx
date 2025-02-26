@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
-import { Icon } from "zebpay-ui"; 
-
+import { Icon } from "zebpay-ui";
+import SkeletonWrapper from "../skeletonWrapper/SkeletonWrapper";
 import {
   cardContainerStyle,
   insideFrameStyle,
@@ -21,15 +21,17 @@ import {
 } from "./styles";
 
 interface ArticleCardProps {
-  title: string | JSX.Element;
-  link: string | JSX.Element;
-  imageUrl: string | JSX.Element;
-  date: string | JSX.Element;
-  readingTime: string | JSX.Element;
-  domain: string | JSX.Element;
+  loading?: boolean;
+  title?: string;
+  link?: string;
+  imageUrl?: string;
+  date?: string;
+  readingTime?: string;
+  domain?: string;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({
+  loading = false,
   title,
   link,
   imageUrl,
@@ -37,74 +39,69 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   readingTime,
   domain,
 }) => {
-  // Check if domain is a string
-  const isDomainString = typeof domain === "string";
-  const shortDomain =
-    isDomainString && domain.startsWith("www.") ? domain.slice(4) : domain;
-
-  // Check if shortDomain is a string to avoid errors
-  const isZebpay =
-    isDomainString &&
-    typeof shortDomain === "string" &&
-    shortDomain.toLowerCase() === "zebpay";
+  // Domain processing only when not loading
+  const isDomainString = !loading && typeof domain === "string";
+  const shortDomain = isDomainString && domain.startsWith("www.") 
+    ? domain.slice(4) 
+    : domain;
+  const isZebpay = isDomainString && shortDomain.toLowerCase() === "zebpay";
 
   return (
     <div css={cardContainerStyle}>
       <div css={insideFrameStyle}>
         <div css={cardImageStyle}>
-          {typeof imageUrl === "string" ? (
-            <img
-              src={imageUrl}
-              alt={typeof title === "string" ? title : "Article Image"}
-            />
-          ) : (
-            imageUrl
-          )}
+          {loading ? (
+            <SkeletonWrapper isLoading={true} height={200} width="100%" />
+          ) : imageUrl ? (
+            <img src={imageUrl} alt={title || "Article Image"} />
+          ) : null}
         </div>
+        
         <div css={cardInfoStyle}>
           <div css={infoHeaderStyle}>
-            {typeof shortDomain === "string" ? (
-              <div css={domainNameStyle(isZebpay)}>{shortDomain}</div>
+            {loading ? (
+              <SkeletonWrapper isLoading={true} height={20} width={120} />
             ) : (
-              domain
+              <div css={domainNameStyle(isZebpay)}>{shortDomain}</div>
             )}
 
-            {typeof shortDomain === "string" ? (
+            {loading ? (
+              <SkeletonWrapper isLoading={true} height={24} count={2} />
+            ) : (
               <a
-                href={typeof link === "string" ? link : "#"}
+                href={link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 css={titleStyle}
               >
                 {title}
               </a>
-            ) : (
-              title
             )}
           </div>
 
           <div css={infoFooterStyle}>
-            {typeof shortDomain === "string" ? (
+            {loading ? (
+              <SkeletonWrapper isLoading={true} height={20} width={100} />
+            ) : (
               <div css={readingTimeStyle}>
                 <div css={readingTimeIcon}>
                   <Icon name="term" />
                 </div>
                 <div css={textReadingTime}>{readingTime}</div>
               </div>
-            ) : (
-              readingTime
             )}
+            
             <div css={iconSeparatorStyle}></div>
 
-            {typeof shortDomain === "string" ? (
+            {loading ? (
+              <SkeletonWrapper isLoading={true} height={20} width={80} />
+            ) : (
               <div css={dateStyle}>
                 <div css={dateIconStyle}>
                   <Icon name="calendar" />
                 </div>
                 <div css={dateTextStyle}>{date}</div>
               </div>
-            ) : (
-              date
             )}
           </div>
         </div>
