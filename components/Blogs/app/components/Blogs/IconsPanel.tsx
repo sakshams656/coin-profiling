@@ -33,6 +33,9 @@ interface IconsPanelProps {
   onDateRangeChange: (dateRange: string) => void;
   onSortChange: (sortBy: string) => void;
   onReset?: () => void;
+  selectedCategories: string[];
+  selectedDurations: string[];
+  selectedDateRange: string;
 }
 
 const IconsPanel: React.FC<IconsPanelProps> = ({
@@ -41,14 +44,29 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   onDateRangeChange,
   onSortChange,
   onReset,
+  selectedCategories,
+  selectedDurations,
+  selectedDateRange,
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
 
-  const [tempCategories, setTempCategories] = useState<string[]>([]);
-  const [tempDurations, setTempDurations] = useState<string[]>([]);
-  const [tempDateRange, setTempDateRange] = useState<string>("");
+  // Use the passed props for initial state and update when props change
+  const [tempCategories, setTempCategories] = useState<string[]>(selectedCategories);
+  const [tempDurations, setTempDurations] = useState<string[]>(selectedDurations);
+  const [tempDateRange, setTempDateRange] = useState<string>(selectedDateRange);
+
+  // Update temp states when the selected values change (from outside)
+  useEffect(() => {
+    setTempCategories(selectedCategories);
+  }, [selectedCategories]);
+
+  useEffect(() => {
+    setTempDurations(selectedDurations);
+  }, [selectedDurations]);
+
+  useEffect(() => {
+    setTempDateRange(selectedDateRange);
+  }, [selectedDateRange]);
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isDurationOpen, setIsDurationOpen] = useState(false);
@@ -97,9 +115,6 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   };
 
   const handleApplyFilters = () => {
-    setSelectedCategories(tempCategories);
-    setSelectedDurations(tempDurations);
-
     onCategoryChange(tempCategories);
     onDurationChange(tempDurations);
     onDateRangeChange(tempDateRange);
@@ -111,9 +126,6 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
     setTempCategories([]);
     setTempDurations([]);
     setTempDateRange("");
-
-    setSelectedCategories([]);
-    setSelectedDurations([]);
 
     onCategoryChange([]);
     onDurationChange([]);
@@ -201,9 +213,12 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             onToggle={() => handleAccordionToggle("category")}
             title={
               <div css={Title(isCategoryOpen)}>
-                <Image src={AssetsImg.ic_reports} css={css`
+                <Image
+                  src={AssetsImg.ic_reports}
+                  css={css`
                     margin-right: 0.5rem;
-                  `}/>
+                  `}
+                />
                 Category
                 {selectedCategories.length > 0 && (
                   <span css={Added}>({selectedCategories.join(", ")})</span>
@@ -288,9 +303,12 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             onToggle={() => handleAccordionToggle("duration")}
             title={
               <div css={Title(isDurationOpen)}>
-                <Image src={AssetsImg.ic_duration} css={css`
+                <Image
+                  src={AssetsImg.ic_duration}
+                  css={css`
                     margin-right: 0.5rem;
-                  `}/>
+                  `}
+                />
                 Duration
                 {selectedDurations.length > 0 && (
                   <span css={Added}>({selectedDurations.join(", ")})</span>

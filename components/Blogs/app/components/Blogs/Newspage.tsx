@@ -9,7 +9,7 @@ import dummyArticles from "../../data/dummyArticles";
 import NewsLetter from "./Newsletter";
 import Tradingbanner from "./Trading";
 import NoBlogsFound from "./NoBlogsFound";
-import { Button,Divider } from "zebpay-ui";
+import { Button, Divider } from "zebpay-ui";
 import Image from "next/image";
 
 import {
@@ -209,6 +209,9 @@ const NewsPage: React.FC = () => {
               onDateRangeChange={handleDateRangeChange}
               onSortChange={handleSortChange}
               onReset={handleReset}
+              selectedCategories={selectedCategories}
+              selectedDurations={selectedDurations}
+              selectedDateRange={dateRange}
             />
           </div>
           {(selectedCategories.length > 0 ||
@@ -218,7 +221,7 @@ const NewsPage: React.FC = () => {
               <div css={selectedCategoriesContainer}>
                 {selectedCategories.map((category) => (
                   <button key={category} css={categoryButton}>
-                    <Image src={AssetsImg.ic_category_white} css={clockIcon}/>
+                    <Image src={AssetsImg.ic_category_white} css={clockIcon} />
                     <span css={categoryText}>{category}</span>
                     <Image
                       src={AssetsImg.ic_cross_blue}
@@ -240,7 +243,7 @@ const NewsPage: React.FC = () => {
                 ))}
                 {dateRange && (
                   <button key={dateRange} css={categoryButton}>
-                    <i className="icon icon-calendar" css={clockIcon}/>
+                    <i className="icon icon-calendar" css={clockIcon} />
                     <span css={categoryText}>{dateRange}</span>
                     <Image
                       src={AssetsImg.ic_cross_blue}
@@ -254,13 +257,11 @@ const NewsPage: React.FC = () => {
                 onClick={handleReset}
                 size="small"
                 type="secondary"
-                style={{marginLeft:"1rem"}}
+                style={{ marginLeft: "1rem" }}
               >
                 Reset
               </Button>
-              
             </div>
-            
           )}
         </div>
         <div css={section}>

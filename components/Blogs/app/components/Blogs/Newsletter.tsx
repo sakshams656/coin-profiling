@@ -36,7 +36,6 @@ const NewsLetter = () => {
     return regex.test(email);
   };
 
-  // Handle Input Change
   const handleEmailChange = (target: InputTargetProps) => {
     const newEmail = target.value;
     setEmail(newEmail);
@@ -94,7 +93,7 @@ const NewsLetter = () => {
                 `}
               >
                 <Input
-                  invalid={true}
+                  invalid={showError}
                   label="Enter Email Address"
                   value={email}
                   onChange={handleEmailChange}
@@ -102,8 +101,8 @@ const NewsLetter = () => {
                   style={{
                     width: "100%",
                   }}
-                  onFocus={()=>setIsInputFocus(true)}
-                  onBlur={()=>setIsInputFocus(false)}
+                  // onFocus={()=>setIsInputFocus(true)}
+                  // onBlur={()=>setIsInputFocus(false)}
                 />
                 {showError && <span css={ErrorText}>Invalid email id</span>}
               </Form>

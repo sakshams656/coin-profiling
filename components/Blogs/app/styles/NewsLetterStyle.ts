@@ -133,22 +133,24 @@ export const Subscribed = css({
   });
   
   export const Form = styled.div`
-    display: flex;
-    // width:max;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  padding-top: 1rem;
+  
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 480px) {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.5rem;
-    align-self: stretch;
-    margin-bottom: 2.6rem;
-    padding-top: 1rem;
-    "@media (max-width: 768px)": {
-      height: "auto",
-      padding: "1rem",
-    },
-    "@media (max-width: 480px)": {
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "0.5rem",
-    },
-  `;
+    margin-bottom: 1rem;
+  }
+`;
   
