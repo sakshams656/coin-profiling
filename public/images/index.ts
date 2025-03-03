@@ -40,6 +40,7 @@ import i_blocker_background from "./illustrations/blocker-background.png";
 import ic_search from "./Icons/search.svg";
 import ic_search_grey from "./Icons/search_grey.svg";
 import ic_cross from "./Icons/cross.svg";
+import ic_no_search from "./illustrations/no-search.png";
 
 const AssetsImg = {
   i_zebpay_logo,
@@ -79,7 +80,8 @@ const AssetsImg = {
   ic_reports,
   ic_cross_blue,
   ic_clock_white,
-  ic_category_white
+  ic_category_white,
+  ic_no_search
 };
 
 export default AssetsImg;

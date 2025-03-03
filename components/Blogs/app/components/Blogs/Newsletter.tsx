@@ -17,11 +17,9 @@ import {
   MailIcon,
   quote,
   Form,
-  Subscribe
+  Subscribe,
 } from "../../styles/NewsLetterStyle";
 import Image from "next/image";
-
-
 
 const NewsLetter = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +27,7 @@ const NewsLetter = () => {
   const [showError, setShowError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isInputFocus,setIsInputFocus]=useState(false);
+  const [isInputFocus, setIsInputFocus] = useState(false);
 
   const validateEmail = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -76,45 +74,43 @@ const NewsLetter = () => {
             <div css={heading}>
               {isSubscribed
                 ? "Subscription Successful!"
-                : "ZebPay Weekly Newsletter!"}
+                : "ZebPay Blog Digest!"}
             </div>
             <div css={quote}>
               {isSubscribed
                 ? "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
-                : "Subscribe for latest crypto news & stay updated!"}
+                : "Stay ahead with our weekly crypto blogs & updates!"}
             </div>
           </div>
 
           {!isSubscribed && (
             <>
-              <Form
-                css={css`
-                  position: relative;
-                `}
-              >
+              <div css={Form}>
                 <Input
-                  invalid={showError}
+                  errorText={showError } 
+                  disabled={isSubmitting}
                   label="Enter Email Address"
                   value={email}
                   onChange={handleEmailChange}
                   placeholder="qwerty@gmail.com"
                   style={{
                     width: "100%",
+                    
                   }}
-                  // onFocus={()=>setIsInputFocus(true)}
-                  // onBlur={()=>setIsInputFocus(false)}
+                  onFocus={() => setIsInputFocus(true)}
+                  onBlur={() => setIsInputFocus(false)}
                 />
-                {showError && <span css={ErrorText}>Invalid email id</span>}
-              </Form>
+                {showError && <span css={ErrorText}>Invalid email ID</span>}
+              </div>
               <div css={Subscribe} isValid={isValidEmail}>
                 <Button
                   onClick={handleSubmit}
                   size="full-width"
                   type="primary"
-                  disabled={(!isValidEmail  || isSubmitting)&& isInputFocus}
-                  loading={isSubmitting}
-          
-                  
+                  disabled={
+                    ((!isValidEmail || isSubmitting) && isInputFocus) ||
+                    isSubmitting
+                  }
                 >
                   <div css={ButtonStyle}>Subscribe</div>
                 </Button>

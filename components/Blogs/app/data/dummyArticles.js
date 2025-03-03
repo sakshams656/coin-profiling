@@ -1,6 +1,6 @@
 const dummyArticles = [
   {
-      title: "Bitcoin Hits New Highs in Market Rally",
+      title: "Bitcoin Hits New Highs in Market Rally randomsadaswqwewdew" ,
       url: "https://example.com/article1",
       urlToImage: "https://www.tastycrypto.com/wp-content/uploads/2023/11/DALL%C2%B7E-2023-11-30-09.54.54-A-vibrant-colorful-montage-showcasing-a-variety-of-cryptocurrencies.-The-image-features-symbolic-representations-of-various-well-known-digital-curren-1536x878.png",
       publishedAt: "2024-02-01T10:30:00Z",

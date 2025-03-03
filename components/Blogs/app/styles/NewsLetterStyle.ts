@@ -7,9 +7,11 @@ export const ErrorText = css({
   color: "#ea6161",
   fontSize: "14px",
   position: "absolute",
-  bottom: "-26px",
-  left: "0",
+  bottom: "355px", // Moves error below input without shifting layout
+  left: "1122px",
+  // width: "100%",
 });
+
 
 export const ButtonStyle = css({
   display: "flex",
@@ -50,7 +52,7 @@ export const Subscribed = css({
 
 
   export const newsletter = css({
-    height: "10",
+    height: "10vh",
     // display: "10%",
     // width: "inherit",
     // height: "8.5rem",
@@ -61,7 +63,7 @@ export const Subscribed = css({
     borderRadius: "8px",
     background: colors.Zeb_Solid_BG_Blue,
     "@media (max-width: 768px)": {
-      height: "auto",
+      height: "10vh",
       padding: "1rem",
     },
     "@media (max-width: 480px)": {
@@ -73,6 +75,7 @@ export const Subscribed = css({
   
   export const newsChild = css({
     display: "flex",
+    height:"20%",
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -95,7 +98,7 @@ export const Subscribed = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: "0.3rem",
+    // gap: "1rem",
     alignSelf: "stretch",
   });
   
@@ -108,6 +111,7 @@ export const Subscribed = css({
     fontWeight: "700",
     lineHeight: "1.75rem",
     letterSpacing: "0.05rem",
+    
   });
   
   export const MailIcon = styled.div`
@@ -132,25 +136,25 @@ export const Subscribed = css({
     // margin:"0.rem"
   });
   
-  export const Form = styled.div`
+  export const Form = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3.5rem;
   padding-top: 1rem;
-  
+
   @media (max-width: 768px) {
     height: auto;
     padding: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1rem !important;
   }
-  
+
   @media (max-width: 480px) {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1rem !important;
   }
 `;
   

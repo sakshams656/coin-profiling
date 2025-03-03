@@ -50,12 +50,12 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  // Use the passed props for initial state and update when props change
+
   const [tempCategories, setTempCategories] = useState<string[]>(selectedCategories);
   const [tempDurations, setTempDurations] = useState<string[]>(selectedDurations);
   const [tempDateRange, setTempDateRange] = useState<string>(selectedDateRange);
 
-  // Update temp states when the selected values change (from outside)
+
   useEffect(() => {
     setTempCategories(selectedCategories);
   }, [selectedCategories]);

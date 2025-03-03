@@ -5,7 +5,6 @@ import PricePredictor from "@components/PricePredictor";
 import React, { useMemo, useState } from "react";
 import { Tabs, utils } from "zebpay-ui";
 import { TabItem } from "zebpay-ui/dist/cjs/components/Tabs/typings";
-
 const TABS_LIST: TabItem[] = [
   {
     title: "OVERVIEW",
@@ -24,10 +23,8 @@ const TABS_LIST: TabItem[] = [
     tab: "BLOGS",
   },
 ];
-
 const CoinProfiling = () => {
   const [selectedTab, setSelectedTab] = useState<string>(TABS_LIST[0].tab);
-
   const renderContent = useMemo(() => {
     switch (selectedTab) {
       case "OVERVIEW":
@@ -40,7 +37,6 @@ const CoinProfiling = () => {
         return <Blogs />;
     }
   }, [selectedTab]);
-
   return (
     <div css={utils.p(20)}>
       <Tabs
@@ -49,10 +45,8 @@ const CoinProfiling = () => {
         onChange={(value) => setSelectedTab(value)}
         type={"primary"}
       />
-
       <div css={utils.mt(20)}>{renderContent}</div>
     </div>
   );
 };
-
 export default CoinProfiling;

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ArticleCard from "./ArticleCard";
 import SkeletonWrapper from "../SkeletonWrapper";
 import IconsPanel from "./IconsPanel";
@@ -83,6 +83,7 @@ const NewsPage: React.FC = () => {
   const [resetTrigger, setResetTrigger] = useState(0);
   const [iconsPanelKey, setIconsPanelKey] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const handleCategoryChange = (categories: string[]) => {
     setSelectedCategories(categories);
@@ -116,15 +117,27 @@ const NewsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("ScrollY:", window.scrollY);
-    const handleScroll = () => {
-      console.log("Scroll event fired, scrollY:", window.scrollY);
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  });
+    const sectionElement = sectionRef.current;
 
+    const handleScroll = () => {
+      if (sectionElement) {
+        // const headerHeight = 110; 
+        const isSectionScrolled = sectionElement.scrollTop > 0;
+        setIsScrolled(isSectionScrolled);
+      }
+    };
+
+    if (sectionElement) {
+      sectionElement.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (sectionElement) {
+        sectionElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+  
   const handleReset = () => {
     setSelectedCategories([]);
     setSelectedDurations([]);
@@ -199,7 +212,8 @@ const NewsPage: React.FC = () => {
   return (
     <div css={main}>
       <div css={container}>
-        <div css={headerFrame(false)}>
+      <div css={headerFrame(isScrolled, selectedCategories.length > 0 || selectedDurations.length > 0 || dateRange !== "")}>
+
           <div css={header}>
             <div css={news}>Crypto Blogs</div>
             <IconsPanel
@@ -219,6 +233,7 @@ const NewsPage: React.FC = () => {
             dateRange) && (
             <div css={headerBelow}>
               <div css={selectedCategoriesContainer}>
+              
                 {selectedCategories.map((category) => (
                   <button key={category} css={categoryButton}>
                     <Image src={AssetsImg.ic_category_white} css={clockIcon} />
@@ -261,23 +276,27 @@ const NewsPage: React.FC = () => {
               >
                 Reset
               </Button>
+              
             </div>
           )}
+          
         </div>
-        <div css={section}>
+        <div css={section} ref={sectionRef} >
           {error ? (
             <div>{error}</div>
           ) : (
-            <div css={InsideSection}>
+            <div css={InsideSection} >
               {loading ? (
                 Array.from({ length: 12 }).map((_, index) => (
                   <ArticleCard
                     key={index}
+
+                    
                     title={
                       <SkeletonWrapper
                         isLoading={loading}
-                        height={22}
-                        width={205}
+                        height={18}
+                        width={300}
                       />
                     }
                     link={
@@ -297,29 +316,29 @@ const NewsPage: React.FC = () => {
                     date={
                       <SkeletonWrapper
                         isLoading={loading}
-                        height={18}
-                        width={80}
-                      />
-                    }
-                    readingTime={
-                      <SkeletonWrapper
-                        isLoading={loading}
-                        height={18}
-                        width={80}
-                      />
-                    }
-                    domain={
-                      <SkeletonWrapper
-                        isLoading={loading}
-                        height={22}
+                        height={20}
                         width={120}
+                      />
+                    }
+                    totalViews={
+                      <SkeletonWrapper
+                        isLoading={loading}
+                        height={20}
+                        width={120}
+                      />
+                    }
+                    category={
+                      <SkeletonWrapper
+                        isLoading={loading}
+                        height={24}
+                        width={150}
                       />
                     }
                     description={
                       <SkeletonWrapper
                         isLoading={loading}
-                        height={36}
-                        width={205}
+                        height={38}
+                        width={300}
                       />
                     }
                   />
@@ -337,9 +356,14 @@ const NewsPage: React.FC = () => {
                     imageUrl={article.urlToImage}
                     date={
                       isValidDate(article.publishedAt)
-                        ? new Date(article.publishedAt).toLocaleDateString()
+                        ? new Date(article.publishedAt).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })
                         : "Unknown Date"
                     }
+                    
                     totalViews={article.totalViews}
                     category={article.category}
                     description={article.content}

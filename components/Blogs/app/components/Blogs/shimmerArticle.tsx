@@ -15,6 +15,7 @@ import { utils } from "zebpay-ui";
 // }
 
 const CardContainer = styled.div`
+  // height:"5rem";
   display: flex;
   padding: 0.75rem;
   flex-direction: column;
@@ -33,7 +34,7 @@ const InsideFrame = styled.div`
 `;
 
 const CardImage = styled.div`
-  
+  height:"5rem";
   justify-content: center;
   align-items: center;
   gap: 0.25rem;

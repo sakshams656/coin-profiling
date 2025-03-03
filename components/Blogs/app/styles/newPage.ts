@@ -9,8 +9,10 @@ export const main = css({
   alignItems: "flex-start",
   gap: "1.25rem",
   width: "100%",
-  // padding: "1.25rem",
-  height: "88vh",
+  marginTop:"10px",
+  padding: "0 2rem",
+  height: "calc(100vh - 5.5rem)",
+  overflowY:"hidden",
   flexShrink: 0,
   alignSelf: "stretch",
   background: colors.Zeb_Solid_BG_Blue,
@@ -36,29 +38,35 @@ export const container = css({
   },
 });
 
-export const headerFrame = (isScrolled: boolean) =>
+export const headerFrame = (isScrolled: boolean, hasFilters: boolean) =>
   css({
     display: "flex",
     paddingTop: "1rem",
     flexDirection: "column",
     alignItems: "flex-start",
     gap: "1rem",
-    width:"100%",
+    width: "100%",
     alignSelf: "stretch",
     background: colors.Zeb_Solid_Dark_Blue,
     position: "sticky",
     top: 0,
     borderRadius: "8px",
-    zIndex: 10,
-    ...(isScrolled && {
-      paddingBottom:"1rem;",
-      boxShadow: "0px 8px 8px -4px #0C0C1D",
-    }),
+    ...(isScrolled
+      ? {
+          paddingBottom: "0.6rem",
+          boxShadow: "0px 8px 8px -4px #0C0C1D",
+        }
+      : hasFilters
+      ? {
+          paddingBottom: "0.6rem",
+          borderBottom: `1px solid #222245`, // Divider
+        }
+      : {}),
     "@media (max-width: 768px)": {
-      
       gap: "0.5rem",
     },
   });
+
 
 export const header = css({
   display: "flex",
@@ -76,6 +84,7 @@ export const header = css({
 
 export const section = css({
   display: "flex",
+  // border: "2px solid red", // Outline to see section
   flexWrap: "wrap",
   // height: "39.75rem",
   height:"100%",
@@ -88,7 +97,6 @@ export const section = css({
   background: colors.Zeb_Solid_Dark_Blue,
   overflowY: "auto",
   overflowX: "hidden",
-  position: "relative",
   paddingRight: "0.75rem", 
 
   "&::-webkit-scrollbar": {
@@ -182,6 +190,7 @@ export const Email = styled.input`
 `;
 
 export const InsideSection = css({
+  
   display: "flex",
   flexWrap: "wrap",
   gap: "1rem",
