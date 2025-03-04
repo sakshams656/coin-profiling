@@ -51,15 +51,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           {!isImageLoaded && (
             <SkeletonWrapper
               isLoading={true}
-              height={120} // Match your image height
-              width={300}  // Match your image width
+              height={120} 
+              width={300}  
             />
           )}
           <img
             src={imageUrl}
             alt={title}
             onLoad={() => setIsImageLoaded(true)}
-            onError={() => setIsImageLoaded(false)} // Hide shimmer even if image fails
+            onError={() => setIsImageLoaded(false)} 
             style={{ display: isImageLoaded ? "block" : "none"}}
           />
         </div>

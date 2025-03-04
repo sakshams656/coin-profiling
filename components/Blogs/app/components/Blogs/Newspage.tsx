@@ -106,7 +106,8 @@ const NewsPage: React.FC = () => {
       try {
         setArticles(dummyArticles);
         setFilteredArticles(dummyArticles);
-        setLoading(false);
+        setTimeout(()=>setLoading(false),6000)
+        
       } catch (err) {
         console.error("Error fetching cryptocurrency news:", err);
         setError("Failed to fetch news.");
@@ -376,8 +377,8 @@ const NewsPage: React.FC = () => {
       </div>
       <div css={innerDiv}>
         <div css={innerCard}>
-          <NewsLetter />
-          <Tradingbanner />
+          <NewsLetter isLoading={loading}/>
+          <Tradingbanner isLoading={loading}/>
         </div>
       </div>
     </div>

@@ -30,7 +30,7 @@ const SkeletonWrapper: React.FC<SkeletonWrapperProps> = ({
   wrapper,
   baseColor,
   highlightColor,
-  mode = "dark",
+  mode = "light",
   borderRadius
 }) => {
   return (

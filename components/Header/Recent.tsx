@@ -1,13 +1,7 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { useState } from "react";
+import { Card, articleFooter, articleHeader, articleImage, articleInfo, articleTitle } from "./SearchStyle";
 import Image from "next/image";
 import AssetsImg from "@public/images";
-import { articleFooter, articleImage, articleInfo, articleTitle, Card, articleHeader } from "./SearchStyle";
-
-export type OptionsType = {
-  label: JSX.Element;
-  value: string | number;
-};
 
 interface Article {
   title: string;
@@ -19,14 +13,20 @@ interface Article {
   totalViews: string;
 }
 
-interface RecentProps {
+export type OptionsType = {
+  label: JSX.Element;
+  value: string | number;
+};
+
+interface ArticleOptionsProps {
   filteredArticles: Article[];
-  setHoveredIndex: (index: number | null) => void;
-  hoveredIndex: number | null;
+  handleArticleClick: (article: Article) => void;
 }
 
-const Recent = ({ filteredArticles, setHoveredIndex, hoveredIndex }: RecentProps) => {
-  const articleOptions: OptionsType[] = filteredArticles.map((article, index) => ({
+const ArticleOptions = ({ filteredArticles, handleArticleClick }: ArticleOptionsProps) => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  return filteredArticles.map((article, index) => ({
     value: index,
     label: (
       <div
@@ -34,10 +34,9 @@ const Recent = ({ filteredArticles, setHoveredIndex, hoveredIndex }: RecentProps
         key={index}
         onMouseEnter={() => setHoveredIndex(index)}
         onMouseLeave={() => setHoveredIndex(null)}
+        onClick={() => handleArticleClick(article)}
       >
-        <div>
-          <img src={article.urlToImage} alt={article.title} css={articleImage} />
-        </div>
+        <img src={article.urlToImage} alt={article.title} css={articleImage} />
         <div css={articleInfo}>
           <div css={articleHeader}>
             <div css={articleTitle} title={article.title}>
@@ -53,7 +52,13 @@ const Recent = ({ filteredArticles, setHoveredIndex, hoveredIndex }: RecentProps
             <div>
               <span style={{ justifyContent: "center" }}>
                 <i className="icon icon-calendar" style={{ marginRight: "0.5rem" }} />
-                {new Date(article.publishedAt).toLocaleDateString()}
+                {new Date(article.publishedAt)
+                  .toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                  .replace(",", "")}
               </span>
             </div>
             <div>
@@ -68,8 +73,6 @@ const Recent = ({ filteredArticles, setHoveredIndex, hoveredIndex }: RecentProps
       </div>
     ),
   }));
-
-  return articleOptions;
 };
 
-export default Recent;
+export default ArticleOptions;

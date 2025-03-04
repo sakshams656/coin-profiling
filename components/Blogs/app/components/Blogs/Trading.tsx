@@ -5,6 +5,8 @@ import React from "react";
 import { css } from "@emotion/react";
 import AssetsImg from "@public/images";
 import Image from "next/image";
+import SkeletonWrapper from "../SkeletonWrapper";
+import { Shimmer } from "zebpay-ui";
 
 import {
   ButtonStyle,
@@ -19,23 +21,25 @@ import {
   buttonGroup,
 } from "../../styles/TradingStyle";
 
-const Tradingbanner = () => {
+const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <div css={tradingBanner}>
       <div css={frame}>
         <div css={anotherFrame}>
-          <div css={zebpayImageDiv}>
-            <Image src={AssetsImg.ic_crypto} alt="Crypto" />
+
+
+          <div css={zebpayImageDiv}>{isLoading?<Shimmer height={60} width={100} typeLightdDark="true" />:
+            <Image src={AssetsImg.ic_crypto} alt="Crypto" />}
           </div>
           <div css={textWrapper}>
-            <div css={title}>Crypto Knowledge Hub</div>
-            <div css={subtitle}>
+            {isLoading?<Shimmer height={25} width={220} typeLightdDark="true" />:<div css={title}>Crypto Knowledge Hub</div>}
+            {isLoading?<Shimmer height={45} width={260} typeLightdDark="true" />:<div css={subtitle}>
               Stay updated on the latest trends and insights with ZebPay.
               Download now
-            </div>
+            </div>}
           </div>
           <div css={buttonGroup}>
-            <a
+            {isLoading?<Shimmer height={30} width={125} typeLightdDark="true" style={{"marginTop":"1rem"}}/>:<a
               href="https://apps.apple.com/in/app/zebpay-buy-bitcoin-crypto/id944854686"
               target="_blank"
               rel="noopener noreferrer"
@@ -47,9 +51,9 @@ const Tradingbanner = () => {
                   css={image}
                 />
               </button>
-            </a>
+            </a>}
 
-            <a
+            {isLoading?<Shimmer height={30} width={125} typeLightdDark="true" style={{"marginTop":"1rem"}} />:<a
               href="https://play.google.com/store/apps/details?id=zebpay.Application&hl=en_IN"
               target="_blank"
               rel="noopener noreferrer"
@@ -61,7 +65,7 @@ const Tradingbanner = () => {
                   css={image}
                 />
               </button>
-            </a>
+            </a>}
           </div>
         </div>
       </div>

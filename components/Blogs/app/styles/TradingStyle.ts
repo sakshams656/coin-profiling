@@ -41,9 +41,8 @@ export const image = css({
 
 export const tradingBanner = css({
   display: "flex",
-  // width: "100%",
-  height: "auto", // Prevent stretching
-  minHeight: "12rem", // Fixed minimum height
+  height: "auto", 
+  minHeight: "12rem", 
   padding: "0.75rem",
   flexDirection: "column",
   alignItems: "flex-start",
@@ -52,13 +51,13 @@ export const tradingBanner = css({
   
   "@media (max-width: 768px)": {
     padding: "1rem",
-    minHeight: "10rem", // Ensure height remains consistent
+    minHeight: "10rem",
   },
 
   "@media (max-width: 480px)": {
     flexDirection: "column",
     alignItems: "center",
-    minHeight: "9rem", // Keep height stable
+    minHeight: "9rem", 
   },
 });
 
@@ -67,7 +66,7 @@ export const frame = css({
   flexDirection: "column",
   alignItems: "center",
   alignSelf: "stretch",
-  minHeight: "100%", // Ensures frame doesn't expand when width decreases
+  minHeight: "100%", 
 });
   
   export const anotherFrame = css({
@@ -88,13 +87,13 @@ export const frame = css({
 
   export const zebpayImageDiv = css({
     display: "flex",
-    width: "clamp(2.5rem, 5vw, 4rem)", // Adjusts between 2.5rem and 4rem
-    height: "clamp(2.5rem, 5vw, 4rem)", // Keeps aspect ratio intact
+    width: "clamp(2.5rem, 5vw, 4rem)", 
+    height: "clamp(2.5rem, 5vw, 4rem)", 
     justifyContent: "center",
     alignItems: "center",
   
     "@media (max-width: 768px)": {
-      width: "clamp(2rem, 4vw, 3rem)", // Shrinks at smaller widths
+      width: "clamp(2rem, 4vw, 3rem)", 
       height: "clamp(1rem, 3vw, 2rem)",
     },
   
@@ -109,11 +108,7 @@ export const frame = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    // gap: "0.25rem",
-    // alignSelf: "stretch",
-    "@media (max-width: 768px)": {
-      // gap: "0.125rem",
-    },
+    gap:"3px",
   });
 
 
@@ -121,10 +116,9 @@ export const frame = css({
     width:"100%",
     color: "var(--Zeb_Solid-White, #FFF)",
     fontFeatureSettings: "'liga' off, 'clig' off",
-    // lineHeight: "1.75rem", // 175%
     letterSpacing: "0.05rem",
-    fontSize: "clamp(0.5rem, 1.2vw, 1.25rem)", // Responsive font size
-  lineHeight: "clamp(1.5rem, 2.5vw, 1.75rem)", // Dynamic line height
+    fontSize: "clamp(0.5rem, 1.2vw, 1.25rem)", 
+  lineHeight: "clamp(1.5rem, 2.5vw, 1.75rem)", 
     "@media (max-width: 768px)": {
       fontSize: "0.875rem",
       lineHeight: "1.5rem",
@@ -135,12 +129,10 @@ export const frame = css({
     width:"100%",
     color: "var(--Zeb_Solid-Light_Blue, var(--blue-04-light-blue, #C0C0EE))",
     fontFeatureSettings: "'liga' off, 'clig' off",
-    // fontSize: "0.875rem",
-    fontSize: "clamp(0.625rem, 1.2vw, 0.9rem)", // Lower min, higher max
+    fontSize: "clamp(0.625rem, 1.2vw, 0.9rem)", 
   lineHeight: "clamp(1rem, 2.2vw, 1.5rem)",
     fontStyle: "normal",
     fontWeight: "400",
-    // lineHeight: "1.5rem", // 171.429%
     letterSpacing: "0.025rem",
     "@media (max-width: 768px)": {
       fontSize: "0.75rem",

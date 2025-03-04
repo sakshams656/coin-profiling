@@ -3,9 +3,11 @@
 
 import { useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
-import { Icon, Input, Button, CircularLoader } from "zebpay-ui";
+import { Icon, Input, Button, CircularLoader, Shimmer } from "zebpay-ui";
 import { css } from "@emotion/react";
 import AssetsImg from "@public/images";
+import SkeletonWrapper from "../SkeletonWrapper";
+
 import {
   ErrorText,
   ButtonStyle,
@@ -21,7 +23,7 @@ import {
 } from "../../styles/NewsLetterStyle";
 import Image from "next/image";
 
-const NewsLetter = () => {
+const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [showError, setShowError] = useState(false);
@@ -65,57 +67,103 @@ const NewsLetter = () => {
       <div css={newsChild}>
         <div>
           <div css={newsHeader}>
+            {/* {isLoading ? (
+              <div>
+                <SkeletonWrapper isLoading={isLoading} height={65} width={70} />
+              </div>
+            ) : ( */}
+
             <MailIcon>
-              <Image
-                src={isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.ic_mail}
-                alt={isSubscribed ? "Subscribed" : "Mail"}
-              />
+              {isLoading ? (
+                <SkeletonWrapper isLoading={isLoading} height={70} width={70} />
+              ) : (
+                <Image
+                  src={
+                    isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.ic_mail
+                  }
+                  alt={isSubscribed ? "Subscribed" : "Mail"}
+                />
+              )}
             </MailIcon>
             <div css={heading}>
-              {isSubscribed
-                ? "Subscription Successful!"
-                : "ZebPay Blog Digest!"}
+              {isLoading ? (
+                <SkeletonWrapper
+                  isLoading={isLoading}
+                  height={28}
+                  width={220}
+                />
+              ) : isSubscribed ? (
+                "Subscription Successful!"
+              ) : (
+                "ZebPay Blog Digest!"
+              )}
             </div>
             <div css={quote}>
-              {isSubscribed
-                ? "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
-                : "Stay ahead with our weekly crypto blogs & updates!"}
+              {isLoading ? (
+                <SkeletonWrapper
+                  isLoading={isLoading}
+                  height={45}
+                  width={260}
+                />
+              ) : isSubscribed ? (
+                "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
+              ) : (
+                "Stay ahead with our weekly crypto blogs & updates!"
+              )}
             </div>
           </div>
 
-          {!isSubscribed && (
-            <>
-              <div css={Form}>
-                <Input
-                  errorText={showError } 
-                  disabled={isSubmitting}
-                  label="Enter Email Address"
-                  value={email}
-                  onChange={handleEmailChange}
-                  placeholder="qwerty@gmail.com"
-                  style={{
-                    width: "100%",
-                    
-                  }}
-                  onFocus={() => setIsInputFocus(true)}
-                  onBlur={() => setIsInputFocus(false)}
-                />
-                {showError && <span css={ErrorText}>Invalid email ID</span>}
+          {isLoading ? (
+            <div
+              style={{
+                marginTop: "1.5rem",
+                gap: "0.3rem",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <SkeletonWrapper isLoading={isLoading} height={20} width={220} />
+              <SkeletonWrapper isLoading={isLoading} height={37} width={260} />
+
+              <div style={{marginTop:"2.5rem"}}>
+              <SkeletonWrapper isLoading={isLoading} height={32} width={260} />
               </div>
-              <div css={Subscribe} isValid={isValidEmail}>
-                <Button
-                  onClick={handleSubmit}
-                  size="full-width"
-                  type="primary"
-                  disabled={
-                    ((!isValidEmail || isSubmitting) && isInputFocus) ||
-                    isSubmitting
-                  }
-                >
-                  <div css={ButtonStyle}>Subscribe</div>
-                </Button>
-              </div>
-            </>
+
+            </div>
+          ) : (
+            !isSubscribed && (
+              <>
+                <div css={Form}>
+                  <Input
+                    errorText={showError}
+                    disabled={isSubmitting}
+                    label="Enter Email Address"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="qwerty@gmail.com"
+                    style={{
+                      width: "100%",
+                    }}
+                    onFocus={() => setIsInputFocus(true)}
+                    onBlur={() => setIsInputFocus(false)}
+                  />
+                  {showError && <span css={ErrorText}>Invalid email ID</span>}
+                </div>
+                <div css={Subscribe} isValid={isValidEmail}>
+                  <Button
+                    onClick={handleSubmit}
+                    size="full-width"
+                    type="primary"
+                    disabled={
+                      ((!isValidEmail || isSubmitting) && isInputFocus) ||
+                      isSubmitting
+                    }
+                  >
+                    <div css={ButtonStyle}>Subscribe</div>
+                  </Button>
+                </div>
+              </>
+            )
           )}
         </div>
 

@@ -17,7 +17,6 @@ import {
   OuterDiv,
   articleHeader,
 } from "./SearchStyle";
-import Recent from "./Recent";
 
 interface HeaderProps {
   selectedTab: string;
@@ -44,7 +43,8 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
   const shareButtonRef = useRef<HTMLButtonElement>(null);
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState<Article[]>(dummyArticles);
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>(dummyArticles);
+  const [filteredArticles, setFilteredArticles] =
+    useState<Article[]>(dummyArticles);
   const [clickedArticles, setClickedArticles] = useState<Article[]>([]);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -76,7 +76,6 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               )}
             </div>
             <div css={articleFooter}>
-              <div>
                 <span style={{ justifyContent: "center" }}>
                   <i
                     className="icon icon-calendar"
@@ -90,14 +89,9 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                     })
                     .replace(",", "")}
                 </span>
-              </div>
-              <div>
                 <Image src={AssetsImg.ic_seperator} alt="Separator" />
-              </div>
-              <div>
                 <Image src={AssetsImg.ic_views} alt="Views" />
                 <span> {article.totalViews} </span>
-              </div>
             </div>
           </div>
         </div>
@@ -176,53 +170,56 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               "div>div": {
                 backgroundColor: colors.Zeb_Solid_Dark_Blue,
               },
-              // button: {
-              //   backgroundColor: colors.Zeb_Solid_Dark_Blue,
-              // },
               zIndex: 1,
-              // height:"400px",
               width: "280px",
             })}
             minimumInputDirection="right"
             contentHeading={
-              search.trim() !== ""
-                ? "Search Results:"
-                : clickedArticles.length > 0
-                  ? "Recent Search:"
-                  : "Trending Blogs:"
+              filteredArticles.length > 0
+                ? search.trim() !== ""
+                  ? "Search Results:"
+                  : clickedArticles.length > 0
+                    ? "Recent Search:"
+                    : "Trending Blogs:"
+                : ""
             }
-            disableTick
+            // disableTick
             toggleInputSearch
             placeholder="Search Blogs"
             options={
               filteredArticles.length > 0
                 ? articleOptions
-                : [{ label: <NofilterBlogs />, value: "NoFilterBlogs" }]
+                : [
+                    {
+                      label: <NofilterBlogs setSearch={setSearch} />,
+                      value: "NoFilterBlogs",
+                    },
+                  ]
             }
-            // options={[{label:"first",value:"first"}]}
-            // selected=""
             onChange={(value) => {
+              if (filteredArticles.length === 0 || value === "NoFilterBlogs") {
+                return; 
+              }
               const selectedArticle = filteredArticles[value];
               handleArticleClick(selectedArticle);
             }}
             maxRows={4}
-            // Rows={4}
             search={{
               placeholder: `Select ${selectedTab.charAt(0).toUpperCase() + selectedTab.slice(1).toLowerCase()}`,
               value: search,
               onChange: (value) => setSearch(value),
               onClear: () => setSearch(""),
             }}
-            // onDropdownClick={() => {}}
-            rowHeight={75}
-            // customInputWidth={475}
+            rowHeight={filteredArticles.length > 0 ? 75 : 346}
             customDropDownStyle={{
               width: "450px",
-              height: "100px !important",
+              ...(filteredArticles.length === 0 && {
+                "& div:hover": {
+                  backgroundColor: "#181837",
+                },
+              }),
             }}
             customInputHeight={675}
-
-            // listStyle=""
           />
         )}
         {selectedTab === "overview" && (
