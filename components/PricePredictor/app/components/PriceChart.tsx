@@ -38,7 +38,6 @@ const TimeBasedChart: React.FC = () => {
 
     chartRef.current = chart;
 
-    // **PAST SERIES**
     const pastSeries = chart.addSeries(AreaSeries, {
       lineColor: "#C0C0EE",
       topColor: "#9D9D9D22",
@@ -47,7 +46,6 @@ const TimeBasedChart: React.FC = () => {
       priceLineVisible: false,
     });
 
-    // **FUTURE SERIES**
     const futureSeries = chart.addSeries(AreaSeries, {
       lineColor: "#EA6161",
       topColor: "#44C26012",
@@ -108,7 +106,6 @@ const TimeBasedChart: React.FC = () => {
 
     chart.timeScale().fitContent();
 
-    // **Handle crosshair movement to show tooltip and vertical line**
     chart.subscribeCrosshairMove((param) => {
       if (!chartContainerRef.current || !param.point) {
         setTooltip(null);
@@ -123,7 +120,6 @@ const TimeBasedChart: React.FC = () => {
         return;
       }
 
-      // Convert timestamp to readable format
       const hoveredDate = new Date(time * 1000);
       const formattedDate = hoveredDate.toLocaleDateString("en-GB", {
         day: "2-digit",
@@ -137,21 +133,18 @@ const TimeBasedChart: React.FC = () => {
         hour12: true,
       });
 
-      // Update tooltip state
       setTooltip({
         price: parseFloat(price.toFixed(2)),
         date: formattedDate,
         time: formattedTime,
       });
 
-      // Update tooltip position
-      // Update tooltip position
       const rect = chartContainerRef.current.getBoundingClientRect();
       setTooltipPosition({
         x: rect.left + param.point.x,
-        y: rect.top, // Start from above the chart
-        height: rect.bottom - rect.top, // Extend to bottom
-        hoveredY: param.point.y, // Store hovered Y position
+        y: rect.top,
+        height: rect.bottom - rect.top,
+        hoveredY: param.point.y,
       });
     });
 
@@ -181,46 +174,45 @@ const TimeBasedChart: React.FC = () => {
         }}
       />
       {tooltip && tooltipPosition && (
-  <>
-    {/* Vertical Line */}
-    <div
-      style={{
-        position: "absolute",
-        left: tooltipPosition.x,
-        top: tooltipPosition.y, // ✅ Start from the top of the chart
-        height: tooltipPosition.hoveredY, // ✅ Extend down to hovered point
-        width: "1px",
-        backgroundColor: "#338FFF",
-        zIndex: 998,
-      }}
-    />
+        <>
+          <div
+            style={{
+              position: "absolute",
+              left: tooltipPosition.x,
+              top: tooltipPosition.y,
+              height: tooltipPosition.hoveredY,
+              width: "1px",
+              backgroundColor: "#338FFF",
+              zIndex: 998,
+            }}
+          />
 
-    {/* Tooltip Box at the Top */}
-    <div
-      style={{
-        position: "absolute",
-        left: tooltipPosition.x - 40,
-        top: tooltipPosition.y - 30, // ✅ Position at the top of the chart
-        background: "#181837",
-        color: "#ffffff",
-        padding: "5px 10px",
-        borderRadius: "4px",
-        fontSize: "12px",
-        border: "1px solid #338FFF",
-        pointerEvents: "none",
-        zIndex: 999,
-        textAlign: "center",
-        minWidth: "80px",
-      }}
-    >
-      <div style={{ fontWeight: "600", fontSize: "12px" }}>{tooltip.price} INR</div>
-      <div style={{ fontSize: "12px", marginTop: "2px" }}>
-        {tooltip.date} | {tooltip.time}
-      </div>
-    </div>
-  </>
-)}
-
+          <div
+            style={{
+              position: "absolute",
+              left: tooltipPosition.x - 40,
+              top: tooltipPosition.y - 30,
+              background: "#181837",
+              color: "#ffffff",
+              padding: "5px 10px",
+              borderRadius: "4px",
+              fontSize: "12px",
+              border: "1px solid #338FFF",
+              pointerEvents: "none",
+              zIndex: 999,
+              textAlign: "center",
+              minWidth: "80px",
+            }}
+          >
+            <div style={{ fontWeight: "600", fontSize: "12px" }}>
+              {tooltip.price} INR
+            </div>
+            <div style={{ fontSize: "12px", marginTop: "2px" }}>
+              {tooltip.date} | {tooltip.time}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
