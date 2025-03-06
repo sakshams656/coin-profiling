@@ -1,33 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
 import { Icon } from "zebpay-ui";
-import SkeletonWrapper from "../skeletonWrapper/SkeletonWrapper";
-import {
-  cardContainerStyle,
-  insideFrameStyle,
-  cardImageStyle,
-  cardInfoStyle,
-  domainNameStyle,
-  titleStyle,
-  readingTimeStyle,
-  iconSeparatorStyle,
-  dateStyle,
-  dateIconStyle,
-  dateTextStyle,
-  textReadingTime,
-  infoHeaderStyle,
-  infoFooterStyle,
-  readingTimeIcon
-} from "./styles";
+import Image from "next/image";
+import ShimmerWrapper from "../../Shared/ShimmerWrapper/ShimmerWrapper";
+import * as styles from "./styles"; 
+import AssetsImg from "@public/images";
 
 interface ArticleCardProps {
   loading?: boolean;
-  title?: string;
-  link?: string;
-  imageUrl?: string;
-  date?: string;
-  readingTime?: string;
-  domain?: string;
+  title: string;
+  link: string;
+  imageUrl: string;
+  date: string;
+  readingTime: string;
+  domain: string;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({
@@ -41,68 +27,60 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
 }) => {
   // Domain processing only when not loading
   const isDomainString = !loading && typeof domain === "string";
-  const shortDomain = isDomainString && domain.startsWith("www.") 
-    ? domain.slice(4) 
-    : domain;
+  const shortDomain = isDomainString && domain.startsWith("www.") ? domain.slice(4) : domain;
   const isZebpay = isDomainString && shortDomain.toLowerCase() === "zebpay";
 
   return (
-    <div css={cardContainerStyle}>
-      <div css={insideFrameStyle}>
-        <div css={cardImageStyle}>
-          {loading ? (
-            <SkeletonWrapper isLoading={true} height={200} width="100%" />
-          ) : imageUrl ? (
-            <img src={imageUrl} alt={title || "Article Image"} />
-          ) : null}
-        </div>
-        
-        <div css={cardInfoStyle}>
-          <div css={infoHeaderStyle}>
-            {loading ? (
-              <SkeletonWrapper isLoading={true} height={20} width={120} />
-            ) : (
-              <div css={domainNameStyle(isZebpay)}>{shortDomain}</div>
+    <div css={styles.cardContainerStyle}>
+      <div css={styles.insideFrameStyle}>
+        <div css={styles.cardImageStyle}>
+          <ShimmerWrapper isLoading={loading} height={108} width={100}>
+            {imageUrl && (
+              <img src={imageUrl} alt={title || "Article Image"} />
             )}
+          </ShimmerWrapper>
+        </div>
 
-            {loading ? (
-              <SkeletonWrapper isLoading={true} height={24} count={2} />
-            ) : (
+        <div css={styles.cardInfoStyle}>
+          <div css={styles.infoHeaderStyle}>
+            <ShimmerWrapper isLoading={loading} height={22} width={120}>
+              <div css={styles.domainNameStyle(isZebpay)}>{shortDomain}</div>
+            </ShimmerWrapper>
+
+            <ShimmerWrapper isLoading={loading} height={50} width={300}>
               <a
                 href={link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                css={titleStyle}
+                css={styles.titleStyle}
               >
                 {title}
               </a>
-            )}
+            </ShimmerWrapper>
           </div>
 
-          <div css={infoFooterStyle}>
-            {loading ? (
-              <SkeletonWrapper isLoading={true} height={20} width={100} />
-            ) : (
-              <div css={readingTimeStyle}>
-                <div css={readingTimeIcon}>
+          <div css={styles.infoFooterStyle}>
+            <ShimmerWrapper isLoading={loading} height={20} width={80}>
+              <div css={styles.readingTimeStyle}>
+                <div css={styles.readingTimeIcon}>
                   <Icon name="term" />
                 </div>
-                <div css={textReadingTime}>{readingTime}</div>
+                <div css={styles.textReadingTime}>{readingTime}</div>
               </div>
-            )}
-            
-            <div css={iconSeparatorStyle}></div>
+            </ShimmerWrapper>
 
-            {loading ? (
-              <SkeletonWrapper isLoading={true} height={20} width={80} />
-            ) : (
-              <div css={dateStyle}>
-                <div css={dateIconStyle}>
+            <div>
+              <Image src={AssetsImg.ic_seperator} alt="" width={16} height={16} />
+            </div>
+
+            <ShimmerWrapper isLoading={loading} height={20} width={80}>
+              <div css={styles.dateStyle}>
+                <div css={styles.dateIconStyle}>
                   <Icon name="calendar" />
                 </div>
-                <div css={dateTextStyle}>{date}</div>
+                <div css={styles.dateTextStyle}>{date}</div>
               </div>
-            )}
+            </ShimmerWrapper>
           </div>
         </div>
       </div>

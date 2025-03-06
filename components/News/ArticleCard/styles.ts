@@ -35,7 +35,7 @@ export const cardImageStyle = css({
   gap: utils.remConverter(4),
   alignSelf: "stretch",
   borderRadius: utils.remConverter(4),
-  border: `${utils.remConverter(1)} solid #34345a`,
+  
   img: {
     width: "100%",
     height: "100%",
@@ -48,9 +48,10 @@ export const cardInfoStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: utils.remConverter(12),
+  gap: utils.remConverter(8),
   flex: "1 0 0",
   alignSelf: "stretch",
+  ...typography.B4_14_semibold
 });
 
 export const infoHeaderStyle = css({
@@ -68,12 +69,13 @@ export const domainNameStyle = (isZebpay) =>
     alignItems: "center",
     gap: utils.remConverter(10),
     borderRadius: utils.remConverter(4),
+    ...typography["b5/12_semibold"],
     background: isZebpay
       ? "rgba(51, 143, 255, 0.20)"
-      : "rgba(192, 192, 238, 0.20)",
+      : colors.Zeb_BG_Light_Blue,
     color: isZebpay
       ? colors.Zeb_Solid_Bright_Blue
-      : "#C2C2DD",
+      : colors.Zeb_Solid_Grey,
   });
 
 export const titleStyle = css({
@@ -87,7 +89,6 @@ export const titleStyle = css({
   color: colors.Zeb_Solid_White,
   textDecoration: "none",
   overflow: "hidden",
-  display: "-webkit-box",
   WebkitLineClamp: 2,
   WebkitBoxOrient: "vertical",
   textOverflow: "ellipsis",

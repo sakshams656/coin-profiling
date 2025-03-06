@@ -110,6 +110,7 @@ const styles = {
     color: colors.Zeb_Solid_Light_Blue,
     fontSize: utils.remConverter(12),
     fontWeight: 400,
+    marginBottom: "1rem"
   }),
 
   statsValue: css({
@@ -119,6 +120,7 @@ const styles = {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    marginTop: utils.remConverter(16)
   }),
 
   /* 🚀 Bitcoin Animation */
@@ -154,6 +156,25 @@ const styles = {
     height: utils.remConverter(20),
   }),
 
+  coinInfoSpan: css({
+    color: colors.Zeb_Solid_White,
+    fontsize: utils.remConverter(14),
+    fontWeight: 600,
+    marginLeft: utils.remConverter(8)
+  }),
+
+  coinInfoHoverContainer: css({
+    display: "flex", 
+    marginBottom: utils.remConverter(8)
+  }),
+
+  statsInner: css({
+    backgroundColor: colors.Zeb_Solid_Dark_Blue,
+    padding: utils.remConverter(12), 
+    borderRadius: utils.remConverter(8),
+    width: utils.remConverter(42),
+    height: utils.remConverter(42) 
+  }) 
 };
 
 export default styles;

@@ -1,58 +1,39 @@
-import Blogs from "@components/Blogs";
-import News from "@components/News";
+import Header from "@components/Header/Header";
+import NewsPage from "@components/News";
 import Overview from "@components/Overview";
-import PricePredictor from "@components/PricePredictor";
-import React, { useMemo, useState } from "react";
-import { Tabs, utils } from "zebpay-ui";
-import { TabItem } from "zebpay-ui/dist/cjs/components/Tabs/typings";
-
-const TABS_LIST: TabItem[] = [
-  {
-    title: "OVERVIEW",
-    tab: "OVERVIEW",
-  },
-  {
-    title: "PRICE PREDICTOR",
-    tab: "PRICE_PREDICTOR",
-  },
-  {
-    title: "NEWS",
-    tab: "NEWS",
-  },
-  {
-    title: "BLOGS",
-    tab: "BLOGS",
-  },
-];
+import { main } from "@styles/styles";
+import React, { useState } from "react";
+import { Divider } from "zebpay-ui";
 
 const CoinProfiling = () => {
-  const [selectedTab, setSelectedTab] = useState<string>(TABS_LIST[0].tab);
 
-  const renderContent = useMemo(() => {
+  const [selectedTab, setSelectedTab] = useState<string>("overview");
+
+  const renderTabContent = () => {
     switch (selectedTab) {
-      case "OVERVIEW":
+      case "overview":
         return <Overview />;
-      case "PRICE_PREDICTOR":
-        return <PricePredictor />;
-      case "NEWS":
-        return <News />;
-      case "BLOGS":
-        return <Blogs />;
+      case "pricePredictor":
+        return <div>This is Tab 2</div>;
+      case "news":
+        return <NewsPage/>;
+      case "blogs":
+        return <div>You're viewing Tab 4</div>;
+      default:
+        return <div>Invalid Tab</div>;
     }
-  }, [selectedTab]);
+  };
 
   return (
-    <div css={utils.p(20)}>
-      <Tabs
-        selectedTab={selectedTab}
-        tabsList={TABS_LIST}
-        onChange={(value) => setSelectedTab(value)}
-        type={"primary"}
+    <div css={main}>
+      <Header selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      <Divider
+        color="#181837"
+        spacing={0}
       />
-
-      <div css={utils.mt(20)}>{renderContent}</div>
+      {renderTabContent()}
     </div>
   );
-};
+}
 
 export default CoinProfiling;

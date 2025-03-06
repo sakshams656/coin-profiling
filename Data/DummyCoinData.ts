@@ -6,7 +6,7 @@ export const dummyCoinData = {
   change: "↑ 0.31%",
   rank: "# 01",
   stats: [
-    { icon: AssetsImg.ic_star, label: "Coin Rating", value: "A+" },
+    { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
     { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "58.98%" },
     { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
   ],
@@ -29,34 +29,4 @@ export const dummyCoinData = {
   },
 };
 
-export const dummyData24h = [
-  { time: "2023-10-31", value: 32.51 },
-  { time: "2023-11-01", value: 31.11 },
-  { time: "2023-11-04", value: 27.02 },
-  { time: "2023-11-05", value: 27.32 },
-  { time: "2023-11-09", value: 28.89 },
-];
 
-export const dummyData1W = [
-  { time: "2023-10-31", value: 32.51 },
-  { time: "2023-11-02", value: 30.89 },
-  { time: "2023-11-05", value: 28.45 },
-  { time: "2023-11-07", value: 29.12 },
-  { time: "2023-11-09", value: 28.89 },
-];
-
-export const dummyData1M = [
-  { time: "2023-10-01", value: 35.21 },
-  { time: "2023-10-15", value: 33.78 },
-  { time: "2023-10-31", value: 32.51 },
-  { time: "2023-11-05", value: 28.45 },
-  { time: "2023-11-09", value: 28.89 },
-];
-
-export const dummyData1Y = [
-  { time: "2022-11-09", value: 40.12 },
-  { time: "2023-02-09", value: 38.56 },
-  { time: "2023-05-09", value: 36.78 },
-  { time: "2023-08-09", value: 34.23 },
-  { time: "2023-11-09", value: 28.89 },
-];

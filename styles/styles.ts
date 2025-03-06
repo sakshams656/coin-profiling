@@ -7,6 +7,6 @@ export const main = css({
   height: "100vh",
   display: "flex",
   flexDirection: "column",
-  width: "100%", // Ensure the main container takes full width
-  padding: 0, // Remove any default padding
+  width: "100%", 
+  padding: 0, 
 });

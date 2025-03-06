@@ -289,7 +289,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           value={
             startDateValue ? dateFormat(startDateValue, inputDateFormat) : ""
           }
-          appendix={<img src={AssetsImg.ic_calendar} alt="Calendar icon" />}
+          appendix={<img src={AssetsImg.ic_calendar.src} alt="Calendar icon" />}
           onClick={() => {
             setCalendarOpen(true);
             setEndDateOpen(false);
@@ -306,7 +306,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           customCss={styles.dateInput}
           invalid={!!errorMessage}
           value={endDateValue ? dateFormat(endDateValue, inputDateFormat) : ""}
-          appendix={<img src={AssetsImg.ic_calendar} alt="Calendar icon" />}
+          appendix={<img src={AssetsImg.ic_calendar.src} alt="Calendar icon" />}
           onClick={() => {
             setCalendarOpen(true);
             setStartDateOpen(false);
@@ -334,7 +334,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
               >
                 <img
                   alt="arrow-left"
-                  src={AssetsImg.ic_arrow_left}
+                  src={AssetsImg.ic_arrow_left.src}
                   css={[styles.monthArrow, styles.monthArrowLeft]}
                 />
               </button>
@@ -409,7 +409,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
               >
                 <img
                   alt="arrow-right"
-                  src={AssetsImg.ic_arrow_right}
+                  src={AssetsImg.ic_arrow_right.src}
                   css={[styles.monthArrow, styles.monthArrowRight]}
                 />
               </button>

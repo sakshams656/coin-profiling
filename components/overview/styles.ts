@@ -2,23 +2,25 @@ import { css } from "@emotion/react";
 import { colors, utils } from "zebpay-ui";
 
 export const container = css({
+  fontFamily: "Lato",
   width: "100%",
   padding: utils.remConverter(40),
   paddingTop: utils.remConverter(24),
   marginBottom: utils.remConverter(32),
   height: "100vh",
   overflowY: "auto",
-  scrollbarColor: colors.Zeb_Solid_Light_Blue,
-
+  scrollbarColor: `${colors.Zeb_Solid_Light_Blue} transparent`,
   "&::-webkit-scrollbar": {
-    width: "0.25rem",
+    width: utils.remConverter(4),
   },
-
   "&::-webkit-scrollbar-track": {
     background: "transparent",
   },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: colors.Zeb_Solid_Light_Blue,
+    borderRadius: utils.remConverter(4),
+  },
 });
-
 
 export const coinBanner = css({
   display: "flex",
@@ -57,6 +59,7 @@ export const tag = css({
   border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_White}`,
   padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
   borderRadius: utils.remConverter(8),
+  backgroundColor: colors.Zeb_BG_Light_Blue,
   fontSize: utils.remConverter(14),
   color: colors.Zeb_Solid_White,
 });
@@ -142,7 +145,7 @@ export const formContainer = css({
   padding: utils.remConverter(16),
   boxSizing: "border-box",
   width: "100%",
-  marginBottom: utils.remConverter(16),
+  marginBottom: utils.remConverter(200),
   maxHeight: utils.remConverter(254),
 });
 
@@ -173,7 +176,7 @@ export const IBvalue = css({
 
 export const percentageBox = css({
   background: "#C0C0EE33",
-  padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
+  padding: `${utils.remConverter(4)} ${utils.remConverter(4)}`,
   borderRadius: utils.remConverter(4),
   fontSize: utils.remConverter(14),
   color: colors.Zeb_Solid_White,
@@ -185,3 +188,57 @@ export const statisticsContainer = css({
   padding: utils.remConverter(24),
   borderRadius: utils.remConverter(8),
 });
+
+// New styles from inline css in Overview.tsx
+export const investmentFrequencyLabel = css({
+  fontSize: utils.remConverter(14),
+  color: colors.Zeb_Solid_Light_Blue,
+});
+
+export const overThePastLabel = css({
+  fontSize: utils.remConverter(14),
+  color: colors.Zeb_Solid_Light_Blue,
+});
+
+export const investmentBoxContent = css({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  maxHeight: utils.remConverter(106),
+});
+
+export const investedAmountText = css({
+  color: colors.Zeb_Solid_Light_Blue,
+  fontSize: utils.remConverter(12),
+  fontWeight: 400,
+});
+
+export const investedAmountValue = css({
+  color: colors.Zeb_Solid_Light_Blue,
+  fontSize: utils.remConverter(12),
+  fontWeight: 400,
+});
+
+// Styles for ShimmerWrapper margins
+export const inputMarginBottom = css({
+  marginBottom: utils.remConverter(16),
+});
+
+export const labelMarginBottom = css({
+  marginBottom: utils.remConverter(16),
+});
+
+export const dropdownMargin = css({
+  marginTop: utils.remConverter(4), 
+});
+
+export const tabsMargin = css({
+  marginTop: utils.remConverter(4),
+});
+
+export const buttonMarginTop = css({
+  marginTop: utils.remConverter(16), 
+});
+
+
+

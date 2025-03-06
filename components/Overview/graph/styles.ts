@@ -10,7 +10,7 @@ export const performanceGraphContainer = css({
 });
 
 export const innerChartContainer = css({
-  border: `2px solid ${colors.Zeb_Transparent_4}`, 
+  border: `${utils.remConverter(2)} solid ${colors.Zeb_Transparent_4}`, 
   borderRadius: utils.remConverter(8),
   padding: utils.remConverter(16), 
   backgroundColor: colors.Zeb_Solid_Dark_Blue, 
@@ -31,10 +31,10 @@ export const title = css({
 
 export const performanceTag = css({
   backgroundColor: "rgba(46, 204, 113, 0.2)", 
-  color: "#2ECC71", 
+  color: colors.Zeb_Solid_Green, 
   padding: utils.remConverter(4) + " " + utils.remConverter(8),
   borderRadius: utils.remConverter(8),
-  border: `1px solid ${colors.Zeb_Solid_Green}`,
+  border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_Green}`,
   fontSize: utils.remConverter(14),
   display: "flex",
   alignItems: "center",

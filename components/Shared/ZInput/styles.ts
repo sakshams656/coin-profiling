@@ -62,7 +62,7 @@ export const formControl = (isMobile?: boolean) => {
     background: `${
       isMobile ? colors.Zeb_Solid_Light_Blue_01 : colors.Zeb_Solid_Dark_Blue
     }!important`,
-    borderRadius: "0.5rem",
+    borderRadius: "0.5rem 0rem 0rem 0.5rem",
     border: "none",
     ...typography.B4_14_semibold,
     color: `${
@@ -106,7 +106,8 @@ export const formControlRounded = css({
 
 export const inputGroupText = (isMobile?: boolean) => {
   return css({
-    padding: `${utils.remConverter(4)} ${utils.remConverter(12)}`,
+    padding: `${utils.remConverter(10.5)} ${utils.remConverter(12)}`,
+    paddingLeft: `${utils.remConverter(42)}`,
     background: isMobile
       ? colors.Zeb_Solid_Light_Blue_01
       : colors.Zeb_Solid_Dark_Blue,

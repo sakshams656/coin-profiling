@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import { useState } from "react";
 import { Button, Input } from "zebpay-ui";
-import { form, inputButtonGap, inputContainer } from "./styles"
+import * as styles from "./styles"
+import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 
 const EmailSubscription = ({ onSubscribe }) => {
   const [email, setEmail] = useState("");
@@ -43,31 +43,33 @@ const EmailSubscription = ({ onSubscribe }) => {
   };
 
   return (
-    <div css={form}>
-      <div css={inputButtonGap}> 
-        <div css={inputContainer}>
+    <div css={styles.form}>
+      <div css={styles.inputButtonGap}> 
+        <div css={styles.inputContainer}>
+          <ShimmerWrapper height={40} width={260} isLoading={loading}>
           <Input
+
             label="Enter Email Address"
             onChange={handleInputChange} 
             placeholder="qwerty@gmail.com"
-            errorText={isValidEmail || email.trim() === "" ? "" : "Invalid email"} 
+            errorText={isValidEmail || email.trim() === "" ? "" : "Invalid Email ID"} 
             style={{
               name: "3s4yqf",
               styles: "width:100%", 
             }}
             value={email}
           />
+          </ShimmerWrapper>
         </div>
       </div>
+      
       <Button 
         onClick={handleSubmit} 
         size="full-width" 
         type="primary"
         loading={loading} 
         disabled={loading || !isValidEmail} 
-        style ={{
-          'margin-bottom': "1rem"
-        }}
+        style ={styles.subButton}
       >
         Subscribe
       </Button>
