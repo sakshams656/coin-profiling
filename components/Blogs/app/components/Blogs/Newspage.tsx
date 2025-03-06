@@ -3,13 +3,12 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import ArticleCard from "./ArticleCard";
-import SkeletonWrapper from "../SkeletonWrapper";
 import IconsPanel from "./IconsPanel";
 import dummyArticles from "../../data/dummyArticles";
 import NewsLetter from "./Newsletter";
 import Tradingbanner from "./Trading";
 import NoBlogsFound from "./NoBlogsFound";
-import { Button, Divider } from "zebpay-ui";
+import { Button, Shimmer } from "zebpay-ui";
 import Image from "next/image";
 
 import {
@@ -106,7 +105,7 @@ const NewsPage: React.FC = () => {
       try {
         setArticles(dummyArticles);
         setFilteredArticles(dummyArticles);
-        setTimeout(()=>setLoading(false),6000)
+        setTimeout(()=>setLoading(false),4000)
         
       } catch (err) {
         console.error("Error fetching cryptocurrency news:", err);
@@ -159,13 +158,13 @@ const NewsPage: React.FC = () => {
       const matchesDuration =
         selectedDurations.length === 0 ||
         selectedDurations.some((duration) => {
-          if (duration === "1-5 mins") {
+          if (duration === "01 - 05 Mins") {
             return parseInt(readingTime) <= 5;
-          } else if (duration === "5-10 mins") {
+          } else if (duration === "05 - 10 Mins") {
             return parseInt(readingTime) > 5 && parseInt(readingTime) <= 10;
-          } else if (duration === "10-20 mins") {
+          } else if (duration === "10 - 20 Mins") {
             return parseInt(readingTime) > 10 && parseInt(readingTime) <= 20;
-          } else if (duration === "20+ mins") {
+          } else if (duration === "20+ Mins") {
             return parseInt(readingTime) > 20;
           }
           return false;
@@ -291,53 +290,46 @@ const NewsPage: React.FC = () => {
                 Array.from({ length: 12 }).map((_, index) => (
                   <ArticleCard
                     key={index}
-
                     
                     title={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
+                    
                         height={18}
                         width={300}
                       />
                     }
                     link={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
                         height={22}
                         width={205}
                       />
                     }
                     imageUrl={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
                         height={110}
                         width={205}
                       />
                     }
                     date={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
                         height={20}
                         width={120}
                       />
                     }
                     totalViews={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
                         height={20}
                         width={120}
                       />
                     }
                     category={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
                         height={24}
                         width={150}
                       />
                     }
                     description={
-                      <SkeletonWrapper
-                        isLoading={loading}
+                      <Shimmer
                         height={38}
                         width={300}
                       />

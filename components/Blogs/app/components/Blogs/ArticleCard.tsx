@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import AssetsImg from "@public/images";
-import SkeletonWrapper from "../SkeletonWrapper"; // Import shimmer component
 
 import {
   CardContainer,
@@ -20,6 +19,7 @@ import {
   DateIcon,
   DateText,
 } from "../../styles/articleStyle";
+import { Shimmer } from "zebpay-ui";
 
 interface ArticleCardProps {
   title: string;
@@ -45,12 +45,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   const handleClick = () => window.open(link, "_blank", "noopener,noreferrer");
 
   return (
-    <div css={CardContainer} onClick={handleClick} style={{ cursor: "pointer" }}>
+    <div css={CardContainer} className={isImageLoaded? "hover-active" : ""} onClick={handleClick} style={{ cursor: "pointer" }}>
       <div css={InsideFrame}>
         <div css={CardImage}>
           {!isImageLoaded && (
-            <SkeletonWrapper
-              isLoading={true}
+            <Shimmer
               height={120} 
               width={300}  
             />

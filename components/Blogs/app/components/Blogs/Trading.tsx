@@ -5,7 +5,6 @@ import React from "react";
 import { css } from "@emotion/react";
 import AssetsImg from "@public/images";
 import Image from "next/image";
-import SkeletonWrapper from "../SkeletonWrapper";
 import { Shimmer } from "zebpay-ui";
 
 import {

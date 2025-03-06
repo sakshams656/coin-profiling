@@ -19,7 +19,7 @@ export const CardContainer = css`
   flex: 1 1 27%;  
   max-width: 33%; 
   
-  &:hover {
+  &:hover-active:hover {
     border: 1px solid ${colors.Zeb_Solid_Bright_Blue};
     box-shadow: 0px 0.5rem 0.5rem -0.25rem #0c0c1d;
   }

@@ -2,11 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import "react-loading-skeleton/dist/skeleton.css";
 import { Icon, Input, Button, CircularLoader, Shimmer } from "zebpay-ui";
 import { css } from "@emotion/react";
 import AssetsImg from "@public/images";
-import SkeletonWrapper from "../SkeletonWrapper";
 
 import {
   ErrorText,
@@ -67,15 +65,10 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
       <div css={newsChild}>
         <div>
           <div css={newsHeader}>
-            {/* {isLoading ? (
-              <div>
-                <SkeletonWrapper isLoading={isLoading} height={65} width={70} />
-              </div>
-            ) : ( */}
 
             <MailIcon>
               {isLoading ? (
-                <SkeletonWrapper isLoading={isLoading} height={70} width={70} />
+                <Shimmer height={70} width={70} />
               ) : (
                 <Image
                   src={
@@ -87,8 +80,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
             </MailIcon>
             <div css={heading}>
               {isLoading ? (
-                <SkeletonWrapper
-                  isLoading={isLoading}
+                <Shimmer
                   height={28}
                   width={220}
                 />
@@ -100,8 +92,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
             </div>
             <div css={quote}>
               {isLoading ? (
-                <SkeletonWrapper
-                  isLoading={isLoading}
+                <Shimmer
                   height={45}
                   width={260}
                 />
@@ -122,11 +113,11 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
                 flexDirection: "column",
               }}
             >
-              <SkeletonWrapper isLoading={isLoading} height={20} width={220} />
-              <SkeletonWrapper isLoading={isLoading} height={37} width={260} />
+              <Shimmer height={20} width={220} />
+              <Shimmer height={37} width={260} />
 
               <div style={{marginTop:"2.5rem"}}>
-              <SkeletonWrapper isLoading={isLoading} height={32} width={260} />
+              <Shimmer height={32} width={260} />
               </div>
 
             </div>

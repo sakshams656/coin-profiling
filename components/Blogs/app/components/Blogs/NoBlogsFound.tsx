@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
-import { CardContainer } from "../../styles/articleStyle";
-import { typography, colors, utils, Button } from "zebpay-ui";
+import {  Button } from "zebpay-ui";
 import { Heading, Main, subHeading } from "../../styles/NoBlogFoundStyle";
 import AssetsImg from "@public/images";
 import Image from "next/image";

@@ -327,10 +327,10 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
               `}
             >
               {[
-                { label: "01 - 05 Mins", value: "1-5 mins" },
-                { label: "05 - 10 Mins", value: "5-10 mins" },
-                { label: "10 - 20 Mins", value: "10-20 mins" },
-                { label: "20+ Mins", value: "20+ mins" },
+                { label: "01 - 05 Mins", value: "01 - 05 Mins" },
+                { label: "05 - 10 Mins", value: "05 - 10 Mins" },
+                { label: "10 - 20 Mins", value: "10 - 20 Mins" },
+                { label: "20+ Mins", value: "20+ Mins" },
               ].map((option, index) => (
                 <React.Fragment key={option.value}>
                   <div
