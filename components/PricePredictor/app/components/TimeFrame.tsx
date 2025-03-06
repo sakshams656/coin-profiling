@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 // import styles from "../styles/BTCPricePredictor.module.css";
 
-import { InputDropDown, typography } from "zebpay-ui";
+import { InputDropDown, Shimmer, typography } from "zebpay-ui";
 import SkeletonWrapper from "../SkeletonWrapper";
 
 import { Field } from "../styles/emotionStyles";
@@ -24,13 +24,13 @@ const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (time
   return (
     <Field>
       {loading ? (
-        <SkeletonWrapper isLoading={loading} height={22} width={130} />
+        <Shimmer height={22} width={130} />
       ) : (
         <div style={{color: isDropDownOpen ? "white":"#C0C0EE"}}>Timeframe</div>
       )}
  
       {loading ? (
-        <SkeletonWrapper isLoading={loading} height={50} width={370} />
+        <Shimmer height={50} width={420} />
       ) : (
         <InputDropDown
           onDropdownClick={()=>setIsDropDownOpen(!isDropDownOpen)}

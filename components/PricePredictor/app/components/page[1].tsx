@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { fetchHistoricalData } from "../actions/fetchHistoricalData";
 import "chart.js/auto";
 import CryptoSelector from "./CryptoSelector";
-import { Button } from "zebpay-ui";
-import { Toast } from "zebpay-ui";
+import { Toast ,Shimmer,Button} from "zebpay-ui";
 import SkeletonWrapper from "../SkeletonWrapper";
 import iconImage from "../images/iconImage.png";
 import Image from "next/image";
@@ -47,22 +46,23 @@ const BTCPricePredictor: React.FC = () => {
   const isPredictButtonEnabled =
     investmentAmount !== null && investmentAmount > 0 && timeframe !== "";
 
-  // const fetchData = async () => {
-  //   setLoading(true);
-  //   const data = await fetchHistoricalData(crypto, timeframe);
-  //   setHistoricalData(reduceDataPoints(data));
-  //   setLoading(false);
-  //   setLoader(false);
-  // };
+  const fetchData = async () => {
+    setLoading(true);
+    const data = await fetchHistoricalData(crypto, timeframe);
+    setHistoricalData(reduceDataPoints(data));
+    setTimeout(()=>{
+    setLoading(false);
+    setLoader(false);},3000)
+  };
 
   const handlePredictClick = () => {
     if (!isPredictButtonEnabled) return;
     setLoader(true);
     setTimeout(() => {
-      // fetchData();
+      fetchData();
       setShowTable(true);
       setLoader(false);
-    }, 4000);
+    }, 3000);
   };
 
   const reduceDataPoints = (data: Array<number[]>) => {
@@ -76,7 +76,7 @@ const BTCPricePredictor: React.FC = () => {
         <PredictionCards>
           <Heading>
             {loading ? (
-              <SkeletonWrapper isLoading={loading} height={45} width={250} />
+              <Shimmer height={30} width={250} mode="dark" />
             ) : (
               <>
                 <Image src={predict.src} width={20} height={20} alt="image" />
@@ -86,12 +86,12 @@ const BTCPricePredictor: React.FC = () => {
           </Heading>
           <Cryptoselect>
             {loading ? (
-              <SkeletonWrapper isLoading={loading} height={27} width={80} />
+              <Shimmer style={{"margin-bottom":"10px"}} height={20} width={80} />
             ) : (
               <div style={{ paddingBottom: 6 }}>Crypto</div>
             )}
             {loading ? (
-              <SkeletonWrapper isLoading={loading} height={48} width={960} />
+              <Shimmer  height={40} width={960} />
             ) : (
               <CryptoSelector crypto={crypto} setCrypto={setCrypto} />
             )}
@@ -110,7 +110,7 @@ const BTCPricePredictor: React.FC = () => {
           </FieldRow>
           <ButtonWrapper>
             {loading ? (
-              <SkeletonWrapper isLoading={loading} height={49} width={960} />
+              <Shimmer  height={40} width={960} />
             ) : (
               <Button
                 onClick={handlePredictClick}
@@ -127,7 +127,7 @@ const BTCPricePredictor: React.FC = () => {
         </PredictionCards>
         <Component15>
           {loading ? (
-            <SkeletonWrapper isLoading={loading} height={214} width={1000} />
+            <Shimmer  height={240} width={1000} />
           ) : (
             <Chart>
               <PriceChart showFutureData={showTable} />
@@ -137,13 +137,10 @@ const BTCPricePredictor: React.FC = () => {
       </Graph>
       <Rightsidecards>
         <Breakdown>
-          {loading ? (
-            <SkeletonWrapper isLoading={loading} height={125} width={320} />
-          ) : (
             <CurrentValue>
               <InnerWrapper>
                 <Roww>
-                  <img
+                  {loading?<Shimmer  height={68} width={68} typeLightdDark/>: <img
                     src={iconImage.src}
                     alt="Icon"
                     style={{
@@ -151,9 +148,9 @@ const BTCPricePredictor: React.FC = () => {
                       height: "4.5rem",
                       alignSelf: "end",
                     }}
-                  />
+                  />}
                   <Coll>
-                    <Up>
+                    {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<Up>
                       <Headercontent>Current Value</Headercontent>
                       <Headercontent1>
                         <svg
@@ -170,16 +167,16 @@ const BTCPricePredictor: React.FC = () => {
                         </svg>
                         100.31%
                       </Headercontent1>
-                    </Up>
-                    <Down>₹88,11,06,349.88</Down>
+                    </Up>}
+                    {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<Down>₹88,11,06,349.88</Down>}
                   </Coll>
                 </Roww>
               </InnerWrapper>
             </CurrentValue>
-          )}
+
           {!showTable ? <NoTable /> : <Table loading={loading} />}
           {loading ? (
-            <SkeletonWrapper isLoading={loading} height={120} width={320} />
+            <Shimmer  height={120} width={320} />
           ) : (
             <Toast
               description="All price predictions are based on research model and is in continuous development. ZebPay does not hold responsible for any price prediction accuracy and is purely based for research purposes."

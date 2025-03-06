@@ -14,7 +14,6 @@ import {
   articleInfo,
   articleTitle,
   Card,
-  OuterDiv,
   articleHeader,
 } from "./SearchStyle";
 

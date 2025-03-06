@@ -102,9 +102,8 @@ export const Component15 = styled.div`
   align-items: center;
   gap: 0.75rem;
   align-self: stretch;
-  border-radius: 0.5rem;
   background: var(Zeb_Transparent/4));
-  border:2px solid #338FFF0A;
+  
   
   // padding: 1rem;
   margin-top: 1.25rem;
@@ -316,6 +315,8 @@ export const Divi = styled.div`
 export const Chart = styled.div`
   width: 100%;
   height: 100%;
+  border-radius: 0.5rem;
+  border:2px solid #338FFF0A;
   
 `;
 export const CryptoOption = styled.div`

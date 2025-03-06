@@ -1,7 +1,7 @@
 import "chart.js/auto";
 import React from "react";
 
-import { Icon, Divider, Tags } from "zebpay-ui";
+import { Icon, Divider, Tags, Shimmer } from "zebpay-ui";
 
 import SkeletonWrapper from "../SkeletonWrapper";
 
@@ -38,7 +38,7 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
   return (
     <>
       {loading ? (
-        <SkeletonWrapper isLoading={loading} height={40} width={320} />
+        <Shimmer height={30} width={240} />
       ) : (
         <Frame461>
           <Icon name="icon icon-max-supply" />
@@ -46,7 +46,7 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
         </Frame461>
       )}
       {loading ? (
-        <SkeletonWrapper isLoading={loading} height={302} width={320} />
+        <Shimmer height={290} width={320} />
       ) : (
         <Component15a>
           <History>

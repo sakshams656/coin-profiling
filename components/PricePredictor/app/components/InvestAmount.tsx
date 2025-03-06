@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { colors, Input } from "zebpay-ui";
+import { colors, Input, Shimmer } from "zebpay-ui";
 import SkeletonWrapper from "../SkeletonWrapper";
 import { Field } from "../styles/emotionStyles";
 
@@ -15,7 +15,7 @@ const InvestmentAmount: React.FC<{
   return (
     <Field>
       {loading ? (
-        <SkeletonWrapper isLoading={loading} height={22} width={130} />
+        <Shimmer height={22} width={130} />
       ) : (
         <div
           style={{
@@ -26,7 +26,7 @@ const InvestmentAmount: React.FC<{
         </div>
       )}
       {loading ? (
-        <SkeletonWrapper isLoading={loading} height={50} width={390} />
+        <Shimmer height={50} width={420} />
       ) : (
         <>
           <Input
