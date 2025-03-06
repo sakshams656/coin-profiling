@@ -39,10 +39,12 @@ export const PredictionCards = styled.div`
   display: flex;
   flex-direction: column;
   margin: auto;
-  width: 99%;
+  width: 100%;
   height: 100%;
-  gap: 1.3rem;
+  // height:292px;
+  gap: 1.1rem;
   padding: 1rem;
+  padding-bottom:0.5rem;
   border-radius: 0.5rem;
   background: var(--Zeb_Solid-BG_Blue, #222245);
 `;
@@ -88,7 +90,7 @@ export const FieldRow = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
-  padding-top: 2rem;
+  padding-top: 1rem;
 `;
 
 export const Component15 = styled.div`
@@ -96,16 +98,13 @@ export const Component15 = styled.div`
   
   width: 100%;
   height: 100%;
-  // height:10%;
-  // height:37.5rem;
-  // height:auto;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   align-self: stretch;
   border-radius: 0.5rem;
   background: var(Zeb_Transparent/4));
-  border:4px solid #338FFF0A;
+  border:2px solid #338FFF0A;
   
   // padding: 1rem;
   margin-top: 1.25rem;
@@ -118,7 +117,7 @@ export const Rightsidecards = styled.div`
   // height: 39.75rem;
   // flex-direction: column;
   // align-items: flex-start;
-  // gap: 6rem;
+  gap: 6rem;
   width:25%;
 
   @media (min-width: 768px) {
@@ -130,7 +129,7 @@ export const Breakdown = styled.div`
   display: flex;
   padding: 1rem;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 1rem;
   justify-content: space-between;
   align-items: flex-start;
   flex: 1 0 0;
@@ -266,7 +265,7 @@ export const Cryptoselect = styled.div`
   font-weight: 400;
   line-height: 1.5rem;
   letter-spacing: 0.025rem;
-  margin-bottom: 0.55rem;
+  // margin-bottom: 0.55rem;
 `;
 
 export const placeholderStyle = styled.div`
@@ -317,24 +316,25 @@ export const Divi = styled.div`
 export const Chart = styled.div`
   width: 100%;
   height: 100%;
+  
 `;
 export const CryptoOption = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: normal;
-  margin: 0.4rem;
+  // align-items: normal;
+  // margin: 0.4rem;
 `;
 
 export const CryptoIcon = styled.img`
   // margin-top: 0.6rem;
   width: 1.5rem;
-  height: 1.5rem;
+  // height: 1.5rem;
 `;
 
 export const CryptoText = styled.div`
   margin-left: 0.5rem;
-  margin-top: 0.2rem;
-  line-height: 1.2;
+  // margin-top: 0.2rem;
+  // line-height: 1.2;
   font-size: 1rem; /* 16px to rem */
-  align-items: center;
+  // align-items: center;
 `;

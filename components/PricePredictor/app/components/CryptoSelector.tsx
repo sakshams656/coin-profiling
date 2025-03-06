@@ -35,30 +35,31 @@ const CryptoSelector: React.FC<CryptoSelectorProps> = ({ crypto, setCrypto }) =>
   }));
 
   const dropdownStyles = css`
-    width: 47rem;
-    max-width: 48rem;
-    height: auto;
-    min-height: 2.375rem;
+    // width: 460rem;
+    // max-width: 60rem;
+    // height: auto;
+    // min-height: 2.375rem;
 
-    @media (max-width: 768px) {
-      max-width: 90%;
-    }
+    // @media (max-width: 768px) {
+    //   max-width: 90%;
+    // }
 
-    @media (min-width: 769px) {
-      max-width: 47rem;
-    }
+    // @media (min-width: 769px) {
+    //   max-width: 47rem;
+    // }
   `;
 
   return (
-    <div css={css`width: 100%; max-width: 48rem;`}>
+    <div >
       {selectedCrypto && (
         <InputDropDown
+         
           onClear={() => setCrypto('')} 
           // enableSearch
           onChange={handleDropdownChange}
           options={options}
           placeholder="Select Cryptocurrency"
-          rowHeight={44}
+          rowHeight={40}
           search={{
             onChange: () => {},
             onClear: () => {},
@@ -67,8 +68,7 @@ const CryptoSelector: React.FC<CryptoSelectorProps> = ({ crypto, setCrypto }) =>
           }}
           selected={crypto} 
           maxRows={4}
-          // style={{ width: '47rem', height: '2.375rem' }}
-          css={dropdownStyles} // Apply responsive styles
+          // style={{height:"50px"}}
         />
       )}
     </div>

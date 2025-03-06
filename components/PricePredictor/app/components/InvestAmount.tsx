@@ -3,17 +3,25 @@ import { colors, Input } from "zebpay-ui";
 import SkeletonWrapper from "../SkeletonWrapper";
 import { Field } from "../styles/emotionStyles";
 
-const InvestmentAmount: React.FC<{ loading: boolean,loader:boolean; setInvestmentAmount: (amount: number) => void; }> = ({ loading,loader, setInvestmentAmount }) => {
+const InvestmentAmount: React.FC<{
+  loading: boolean;
+  loader: boolean;
+  setInvestmentAmount: (amount: number) => void;
+}> = ({ loading, loader, setInvestmentAmount }) => {
   const [amount, setAmount] = useState("");
   const [showError, setShowError] = useState(false);
-  const [focus,setFocus]=useState(false);
+  const [focus, setFocus] = useState(false);
 
   return (
     <Field>
       {loading ? (
         <SkeletonWrapper isLoading={loading} height={22} width={130} />
       ) : (
-        <div style={{ color: !showError ? (focus? "white":"#C0C0EE" ): "#EA6161" }}>
+        <div
+          style={{
+            color: !showError ? (focus ? "white" : "#C0C0EE") : "#EA6161",
+          }}
+        >
           Investment Amount
         </div>
       )}
@@ -23,21 +31,34 @@ const InvestmentAmount: React.FC<{ loading: boolean,loader:boolean; setInvestmen
         <>
           <Input
             onChange={(e) => {
-                const value = parseFloat(e.value);
-                setAmount(e.value);
-                setShowError(!value || value <= 0);
-                setInvestmentAmount(value > 0 ? value : 0);
+              const value = parseFloat(e.value);
+              setAmount(e.value);
+              setShowError(!value || value <= 0);
+              setInvestmentAmount(value > 0 ? value : 0);
             }}
             onFocus={() => {
               if (!amount || amount === "0") setShowError(true);
               setFocus(true);
             }}
-            appendItem={"INR"}
+            appendItem={
+              <span
+                style={{
+                  backgroundColor: loader?"#222245":"transparent",
+                  padding: "10px 0px",
+                  color:loader?"#C0C0EE":"white"
+                }}
+              >
+                INR
+              </span>
+            }
+            // appendItem={"INR"}
             invalid={showError}
             placeholder="0"
             style={{
               name: "3s4yqf",
-              styles: "width:95%",
+              styles: "width:95% ",
+              // height:"100px"
+              
             }}
             disabled={loader}
             onBlur={() => {
@@ -51,8 +72,7 @@ const InvestmentAmount: React.FC<{ loading: boolean,loader:boolean; setInvestmen
               style={{
                 color: "#EA6161",
                 // position: "absolute",
-                display:"block"
-                
+                display: "block",
               }}
             >
               Please enter amount to proceed

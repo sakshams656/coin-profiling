@@ -47,20 +47,21 @@ const BTCPricePredictor: React.FC = () => {
   const isPredictButtonEnabled =
     investmentAmount !== null && investmentAmount > 0 && timeframe !== "";
 
-  const fetchData = async () => {
-    setLoading(true);
-    const data = await fetchHistoricalData(crypto, timeframe);
-    setHistoricalData(reduceDataPoints(data));
-    setLoading(false);
-    setLoader(false);
-  };
+  // const fetchData = async () => {
+  //   setLoading(true);
+  //   const data = await fetchHistoricalData(crypto, timeframe);
+  //   setHistoricalData(reduceDataPoints(data));
+  //   setLoading(false);
+  //   setLoader(false);
+  // };
 
   const handlePredictClick = () => {
     if (!isPredictButtonEnabled) return;
     setLoader(true);
     setTimeout(() => {
-      fetchData();
+      // fetchData();
       setShowTable(true);
+      setLoader(false);
     }, 4000);
   };
 
@@ -87,7 +88,7 @@ const BTCPricePredictor: React.FC = () => {
             {loading ? (
               <SkeletonWrapper isLoading={loading} height={27} width={80} />
             ) : (
-              <div style={{ padding: 6 }}>Crypto</div>
+              <div style={{ paddingBottom: 6 }}>Crypto</div>
             )}
             {loading ? (
               <SkeletonWrapper isLoading={loading} height={48} width={960} />
@@ -129,7 +130,7 @@ const BTCPricePredictor: React.FC = () => {
             <SkeletonWrapper isLoading={loading} height={214} width={1000} />
           ) : (
             <Chart>
-              <PriceChart />
+              <PriceChart showFutureData={showTable} />
             </Chart>
           )}
         </Component15>
@@ -184,7 +185,7 @@ const BTCPricePredictor: React.FC = () => {
               description="All price predictions are based on research model and is in continuous development. ZebPay does not hold responsible for any price prediction accuracy and is purely based for research purposes."
               style={{
                 background: "#F9C85C29",
-                width: "100%",
+                // width: "100%",
               }}
               title=" Warning"
               type="info"

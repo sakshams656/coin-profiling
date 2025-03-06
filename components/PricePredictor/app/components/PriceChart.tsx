@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, IChartApi } from "lightweight-charts";
+import { Tags } from "zebpay-ui";
 
-const TimeBasedChart: React.FC = () => {
+const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const [tooltip, setTooltip] = useState<{
@@ -14,14 +15,23 @@ const TimeBasedChart: React.FC = () => {
     y: number;
     height: number;
     hoveredY: number;
+    dataY: number; // Add this to store the Y coordinate of the data point
   } | null>(null);
+  const [chartDimensions, setChartDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
+    // Get initial dimensions
+    setChartDimensions({
+      width: chartContainerRef.current.clientWidth,
+      height: chartContainerRef.current.clientHeight
+    });
+
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
-      height: 185,
+      height: 247,
+
       layout: {
         textColor: "#C0C0EE",
         background: { type: "solid", color: "#181837" },
@@ -30,11 +40,25 @@ const TimeBasedChart: React.FC = () => {
         vertLines: { color: "transparent" },
         horzLines: { color: "#338FFF0A" },
       },
-      crosshair: {
-        vertLine: false,
-        horzLine: false,
+      crosshair: { vertLine: false, horzLine: false },
+      timeScale: {
+        borderVisible: false,
+        fixLeftEdge: true,
+        fixRightEdge: true,
+        
+      },
+      rightPriceScale: {
+        autoScale: false,
+        borderVisible: false,
+
+        scaleMargins: {
+          top: 0.6,
+          // bottom: 0.005,
+        },
       },
     });
+
+    
 
     chartRef.current = chart;
 
@@ -46,13 +70,17 @@ const TimeBasedChart: React.FC = () => {
       priceLineVisible: false,
     });
 
-    const futureSeries = chart.addSeries(AreaSeries, {
-      lineColor: "#EA6161",
-      topColor: "#44C26012",
-      bottomColor: "#181837",
-      lastValueVisible: false,
-      priceLineVisible: false,
-    });
+    let futureSeries: any = null;
+
+    if (showFutureData) {
+      futureSeries = chart.addSeries(AreaSeries, {
+        lineColor: "#EA6161",
+        topColor: "#44C26012",
+        bottomColor: "#181837",
+        lastValueVisible: false,
+        priceLineVisible: false,
+      });
+    }
 
     const data = [
       {
@@ -102,25 +130,52 @@ const TimeBasedChart: React.FC = () => {
     const futureData = data.slice(midpoint);
 
     pastSeries.setData(pastData);
-    futureSeries.setData(futureData);
+    if (showFutureData && futureSeries) {
+      futureSeries.setData(futureData);
+    }
 
     chart.timeScale().fitContent();
 
     chart.subscribeCrosshairMove((param) => {
-      if (!chartContainerRef.current || !param.point) {
+      if (!chartContainerRef.current || !param.point || !param.time) {
         setTooltip(null);
         return;
       }
 
-      const price = pastSeries.coordinateToPrice(param.point.y);
-      const time = chart.timeScale().coordinateToTime(param.point.x);
+      // Convert hovered time to timestamp
+      const hoveredTimestamp = param.time * 1000;
 
-      if (price === null || time === null) {
+      // Find the closest data point in `pastData` and `futureData`
+      let closestDataPoint = null;
+      let minTimeDiff = Infinity;
+
+      [...pastData, ...futureData].forEach((d) => {
+        const dataTimestamp = d.time * 1000;
+        const timeDiff = Math.abs(dataTimestamp - hoveredTimestamp);
+
+        if (timeDiff < minTimeDiff) {
+          minTimeDiff = timeDiff;
+          closestDataPoint = d;
+        }
+      });
+
+      // If the closest data point is still too far, hide tooltip
+      if (!closestDataPoint || minTimeDiff > 50000) {
         setTooltip(null);
         return;
       }
 
-      const hoveredDate = new Date(time * 1000);
+      // Get Y coordinate of the data point on the chart
+      const dataY = pastSeries.priceToCoordinate(closestDataPoint.value);
+
+      if (!dataY || Math.abs(param.point.y - dataY) > 10) {
+        // 10px threshold to check if cursor is near the line
+        setTooltip(null);
+        return;
+      }
+
+      // Format date & time
+      const hoveredDate = new Date(closestDataPoint.time * 1000);
       const formattedDate = hoveredDate.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
@@ -133,8 +188,9 @@ const TimeBasedChart: React.FC = () => {
         hour12: true,
       });
 
+      // Set tooltip values
       setTooltip({
-        price: parseFloat(price.toFixed(2)),
+        price: closestDataPoint.value.toFixed(2),
         date: formattedDate,
         time: formattedTime,
       });
@@ -145,12 +201,19 @@ const TimeBasedChart: React.FC = () => {
         y: rect.top,
         height: rect.bottom - rect.top,
         hoveredY: param.point.y,
+        dataY: dataY, // Store the Y coordinate of the data point
       });
     });
 
     const handleResize = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+        
+        // Update chart dimensions state for tag positioning
+        setChartDimensions({
+          width: chartContainerRef.current.clientWidth,
+          height: chartContainerRef.current.clientHeight
+        });
       }
     };
 
@@ -160,7 +223,18 @@ const TimeBasedChart: React.FC = () => {
       window.removeEventListener("resize", handleResize);
       chart.remove();
     };
-  }, []);
+  }, [showFutureData]);
+
+  // Calculate tag positions based on chart dimensions
+  const historicalTagStyle = {
+    name: "1pzk433",
+    styles: `position:absolute; left:${chartDimensions.width * 0.3}px; bottom:240px; z-index:1;`,
+  };
+
+  const predictionTagStyle = {
+    name: "1pzk433",
+    styles: `position:absolute; left:${chartDimensions.width * 0.7}px; bottom:240px; z-index:1;`,
+  };
 
   return (
     <>
@@ -173,6 +247,24 @@ const TimeBasedChart: React.FC = () => {
           overflow: "visible",
         }}
       />
+
+      <Tags
+        size="medium"
+        style={historicalTagStyle}
+        type="default"
+        
+      >
+        Historical
+      </Tags>
+
+      <Tags
+        size="medium"
+        style={predictionTagStyle}
+        type="success"
+      >
+        Prediction
+      </Tags>
+
       {tooltip && tooltipPosition && (
         <>
           <div
@@ -180,18 +272,17 @@ const TimeBasedChart: React.FC = () => {
               position: "absolute",
               left: tooltipPosition.x,
               top: tooltipPosition.y,
-              height: tooltipPosition.hoveredY,
+              height: tooltipPosition.dataY, 
               width: "1px",
               backgroundColor: "#338FFF",
               zIndex: 998,
             }}
           />
-
           <div
             style={{
               position: "absolute",
-              left: tooltipPosition.x - 40,
-              top: tooltipPosition.y - 30,
+              left: tooltipPosition.x - 68,
+              top: tooltipPosition.y,
               background: "#181837",
               color: "#ffffff",
               padding: "5px 10px",

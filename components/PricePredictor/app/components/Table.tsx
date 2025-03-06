@@ -1,7 +1,7 @@
 import "chart.js/auto";
 import React from "react";
 
-import { Icon, Divider, Tags } from "zebpay-ui"; 
+import { Icon, Divider, Tags } from "zebpay-ui";
 
 import SkeletonWrapper from "../SkeletonWrapper";
 
@@ -31,7 +31,7 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
     const change = ((current - previous) / previous) * 100;
     return {
       value: `${Math.abs(change).toFixed(2)}%`,
-      isUp: change > 0, // true if price increased, false if decreased
+      isUp: change > 0, 
     };
   };
 
@@ -50,12 +50,15 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
       ) : (
         <Component15a>
           <History>
-            <Cols>TimeFrame</Cols> <Cols>Price</Cols> <Cols>% Change</Cols>
+            <Cols  >TimeFrame</Cols> <Cols >Price</Cols> <Cols>% Chg</Cols>
           </History>
           {dummyData.slice(1).map((item, index) => {
             const currentPrice = parsePrice(item.price);
             const previousPrice = parsePrice(dummyData[index].price);
-            const { value, isUp } = calculateChange(currentPrice, previousPrice);
+            const { value, isUp } = calculateChange(
+              currentPrice,
+              previousPrice
+            );
 
             return (
               <React.Fragment key={index + 1}>
@@ -64,32 +67,53 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
                   <Cols>₹{item.price}</Cols>
                   <Cols>
                     <Tags
-                      size="medium"
-                      type={isUp === null ? "default" : isUp ? "success" : "error"}
-                      // style={{
-                      //   display: "flex",
-                      //   // padding:"0.1rem",
-                      //   alignItems: "center",
-                      //   // gap: "4px",
-                      //   // width: "100px",
-                      //   justifyContent: "center",
-                      // }}
+                      type={
+                        isUp === null ? "default" : isUp ? "success" : "error"
+                      }
+                      style={{
+                        name: "1pzk433",
+                        styles: "width:200px",
+                      }}
                     >
                       {isUp === null ? (
-                        value
+                        <span style={{ fontSize: "12px", fontWeight: "400" }}>
+                          {value}
+                        </span>
                       ) : !isUp ? (
-                        <>
-                          <Icon name="icon icon-downwards" /> {value}
-                        </>
+                        <div
+                          style={{
+                            gap: "5px",
+                            display: "flex",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <Icon name="icon icon-downwards" />
+                          <span
+                            style={{ fontSize: "13px", fontWeight: "600" }}
+                          >
+                            {value}
+                          </span>
+                        </div>
                       ) : (
-                        <>
-                          <Icon name="icon icon-upwards" /> {value}
-                        </>
+                        <div
+                          style={{
+                            gap: "5px",
+                            display: "flex",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <Icon name="icon icon-upwards" />
+                          <span
+                            style={{ fontSize: "13px", fontWeight: "600" }}
+                          >
+                            {value}
+                          </span>
+                        </div>
                       )}
                     </Tags>
                   </Cols>
                 </Row>
-                {/* {index < dummyData.length - 2 && <Divider spacing={1} />} */}
+                {index < dummyData.length - 2 && <Divider spacing={1} />}
               </React.Fragment>
             );
           })}

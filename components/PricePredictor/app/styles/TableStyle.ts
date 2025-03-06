@@ -22,7 +22,7 @@ export const Frame461 = styled.div`
 
 export const Component15a = styled.div`
   display: flex;
-  height: 45vh;
+  height: 100%;
   // margin:0.3rem;
   flex-direction: column;
   // align-items: center;
@@ -34,12 +34,10 @@ export const Component15a = styled.div`
 
 export const History = styled.div`
   height: 2.25rem;
-  flex-shrink: 0;
-  align-self: stretch;
+  // flex-shrink: 0;
+  // align-self: stretch;
   background: var(--Shimmer-Zeb_Solid-BG_Blue, #222245);
-  font-family: Lato;
   font-size: 0.75rem;
-  font-style: normal;
   font-weight: 400;
   line-height: 1.125rem; /* 150% */
   letter-spacing: 0.025rem;
@@ -47,19 +45,23 @@ export const History = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding:14px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  color: #C0C0EE;
 `;
 
 export const Cols = styled.div`
-  padding: 0.8rem;
+  // padding: 0.8rem;
+  // padding-bottom:0.4rem;
 `;
 
 export const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  // padding: 2px;
+  padding: 8px 14px;
   font-size: 14px;
-  font-weight: 500;
   color: #ffffff;
 
 `;
