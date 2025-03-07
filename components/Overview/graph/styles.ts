@@ -44,4 +44,5 @@ export const performanceTag = css({
 export const chartContainer = css({
   width: "100%",
   height: utils.remConverter(200),
+  overflow: "hidden"
 });

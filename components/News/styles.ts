@@ -381,7 +381,7 @@ export const container = css({
   },
 });
 
-export const headerFrame = (isScrolled: boolean) =>
+export const headerFrame = (isScrolled: boolean, p0: boolean) =>
   css({
     display: "flex",
     padding: `${utils.remConverter(16)} 0`,
@@ -541,15 +541,16 @@ export const title = css({
 
 export const filterTagsContainer = css({
   display: "flex",
-  flexDirection: "column", 
-  alignItems: "flex-start", 
-  justifyContent: "flex-start", 
-  gap: utils.remConverter(8), 
+  alignItems: "center", 
+  gap: utils.remConverter(8),
   padding: utils.remConverter(10),
+  paddingLeft: utils.remConverter(24),
+  overflowX: "hidden",
+  flexDirection: "column",  
+  justifyContent: "flex-start",  
   background: colors.Zeb_Solid_Dark_Blue,
   borderBottom: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_BG_Blue}`,
   width: "100%",
-  overflowX: "auto", 
   overflowY: "hidden",
   scrollbarWidth: "thin",
   scrollbarColor: `${colors.Zeb_Solid_Dark_Grey} transparent`,

@@ -46,6 +46,8 @@ import ic_star_filled from "./icons/star_filled.png";
 import ic_clock_blue from "./icons/ic_clock_blue.png";
 import ic_share_white from "./icons/share_white.png";
 import ic_rank from "./icons/rank.png";
+import ic_calendar_white from "./icons/ calendar_white.png";
+import ic_document_white from "./icons/document_white.png";
 
 // illustrations
 import i_zebpay_logo from "./illustrations/zebpay-logo.png";
@@ -127,7 +129,9 @@ const AssetsImg = {
   ic_tb_gradient,
   ic_clock_blue,
   ic_share_white,
-  ic_rank
+  ic_rank,
+  ic_calendar_white,
+  ic_document_white
 };
 
 export default AssetsImg;

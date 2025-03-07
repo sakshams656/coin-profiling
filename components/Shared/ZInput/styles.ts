@@ -45,11 +45,14 @@ export const activeFormLabel = (isMobile?: boolean) =>
 export const inputGroup = css({
   border: "1px solid transparent",
   borderRadius: "8px",
-  position: "relative"
+  position: "relative",
+  display: "flex",
+  flexDirection: "row"
 });
 
 export const focusedInputGroup = (isMobile?: boolean) =>
   css({
+    marginRight: utils.remConverter(26),
     borderColor: colors.Zeb_Solid_Bright_Blue,
     boxShadow: isMobile
       ? colors.Zeb_Effects_Soft_Shadow
@@ -107,7 +110,7 @@ export const formControlRounded = css({
 export const inputGroupText = (isMobile?: boolean) => {
   return css({
     padding: `${utils.remConverter(10.5)} ${utils.remConverter(12)}`,
-    paddingLeft: `${utils.remConverter(42)}`,
+    paddingLeft: `${utils.remConverter(16)}`,
     background: isMobile
       ? colors.Zeb_Solid_Light_Blue_01
       : colors.Zeb_Solid_Dark_Blue,
@@ -146,5 +149,6 @@ export const inputIcon = css({
 export const labelContainer = css({
   display: "flex",
   justifyContent: "space-between",
-  alignItems: "center"
+  alignItems: "center",
+  paddingLeft: utils.remConverter(8)
 });

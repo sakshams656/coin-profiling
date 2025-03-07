@@ -2,7 +2,6 @@ import { css } from "@emotion/react";
 import { utils, colors } from "zebpay-ui";
 
 export const shareMenu = css({
-    fontFamily: "Lato",
     position: "absolute",
     right: utils.remConverter(185),
     top: `calc(100% + ${utils.remConverter(8)})`,
@@ -23,6 +22,7 @@ export const shareMenu = css({
     paddingLeft: utils.remConverter(0),
     width: "100%",
     color: colors.Zeb_Solid_Light_Blue,
+    fontsize: utils.remConverter(14),
     background: "none",
     border: "none",
     cursor: "pointer",

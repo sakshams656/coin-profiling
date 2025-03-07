@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as styles from "./styles";
 import { getCryptoNews } from "./APIservice/apiService";
 import ArticleCard from "./ArticleCard/ArticleCard";
@@ -9,7 +9,7 @@ import FilterSidePanel from "../Shared/SidePanel/FilterSidePanel";
 import ShimmerWrapper from "../Shared/ShimmerWrapper/ShimmerWrapper";
 import NoNewsFound from "./NoNewsFound/NoNewsFound";
 import EmailSubscription from "./emailSubscription/EmailSubcription";
-import {Button} from "zebpay-ui";
+import { Button } from "zebpay-ui";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 
@@ -32,6 +32,11 @@ interface Filters {
   dateRange: string | null;
 }
 
+interface FilterItem {
+  type: keyof Filters;
+  value: string;
+}
+
 const calculateReadingTime = (content: string) => {
   const wordsPerMinute = 200;
   const noOfWords = content.split(/\s/g).length;
@@ -50,11 +55,11 @@ const getDomain = (url: string) => {
 
 const isInDurationRange = (minutes: number, range: string) => {
   switch (range) {
-    case "01-05 Mins":
+    case "01 - 05 Mins":
       return minutes >= 1 && minutes <= 5;
-    case "05-10 Mins":
+    case "05 - 10 Mins":
       return minutes > 5 && minutes <= 10;
-    case "10-20 Mins":
+    case "10 - 20 Mins":
       return minutes > 10 && minutes <= 20;
     case "20+ Mins":
       return minutes > 20;
@@ -99,12 +104,86 @@ const NewsPage: React.FC = () => {
   const [showNewContent, setShowNewContent] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Lifted state from FilterSidePanel
-  const [filters, setFilters] = useState<Filters>({
+  // Filter + More Logic
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleTags, setVisibleTags] = useState(0);
+  const [overflowCount, setOverflowCount] = useState(0);
+
+  const [activeFilters, setActiveFilters] = useState<Filters>({
     publishers: [],
     durations: [],
     dateRange: null,
-  }); 
+  });
+
+  const activeFiltersArray: FilterItem[] = [
+    ...activeFilters.publishers.map((value) => ({ type: "publishers", value })),
+    ...activeFilters.durations.map((value) => ({ type: "durations", value })),
+    ...(activeFilters.dateRange ? [{ type: "dateRange", value: activeFilters.dateRange }] : []),
+  ];
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container || activeFiltersArray.length === 0) {
+      setVisibleTags(0);
+      setOverflowCount(0);
+      return;
+    }
+
+    const resetButton = container.querySelector('[data-reset-button]');
+    const resetButtonWidth = resetButton?.getBoundingClientRect().width || 0;
+
+    const containerStyle = window.getComputedStyle(container);
+    const padding = parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight);
+    const gap = parseFloat(containerStyle.gap) || 8;
+
+    const availableWidth = container.clientWidth - padding - resetButtonWidth - gap * 2;
+    let totalWidth = 0;
+    let visibleCount = 0;
+
+    const tempDiv = document.createElement("div");
+    tempDiv.style.visibility = "hidden";
+    tempDiv.style.position = "absolute";
+    document.body.appendChild(tempDiv);
+
+    activeFiltersArray.forEach((filter) => {
+      const tag = document.createElement("div");
+      tag.style.display = "flex";
+      tag.style.alignItems = "center";
+      tag.style.padding = "6px 10px";
+      tag.style.gap = "6px";
+      tag.innerHTML = `
+        <img src="${
+          filter.type === "publishers"
+            ? AssetsImg.ic_document
+            : filter.type === "durations"
+            ? AssetsImg.ic_clock
+            : AssetsImg.ic_calendar
+        }" width="16" height="16" />
+        <span>${filter.value}</span>
+        <button style="margin-left: 6px;">
+          <img src="${AssetsImg.ic_cross}" width="16" height="16" />
+        </button>
+      `;
+      tempDiv.appendChild(tag);
+      const width = tag.getBoundingClientRect().width + gap;
+      if (totalWidth <= availableWidth) {
+        totalWidth += width;
+        visibleCount++;
+      }
+    });
+
+    document.body.removeChild(tempDiv);
+    const remaining = activeFiltersArray.length - visibleCount;
+    setVisibleTags(remaining > 0 ? visibleCount : activeFiltersArray.length);
+    setOverflowCount(remaining > 0 ? remaining : 0);
+  }, [activeFiltersArray.length]);
+
+  const [pendingFilters, setPendingFilters] = useState<Filters>({
+    publishers: [],
+    durations: [],
+    dateRange: null,
+  });
+
   const [accordionStates, setAccordionStates] = useState({
     publishedBy: false,
     duration: false,
@@ -114,7 +193,7 @@ const NewsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [isSorterOpen, setIsSorterOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Latest"); 
+  const [selectedSort, setSelectedSort] = useState("Latest");
   const sorterRef = useRef<HTMLDivElement>(null);
   const sorterButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -154,24 +233,22 @@ const NewsPage: React.FC = () => {
     setShowNewContent(true);
   };
 
-  const handleApplyFilters = (newFilters: Filters) => {
-    setFilters(newFilters);
-
+  const applyFilters = (filters: Filters) => {
     const filtered = articles.filter((article) => {
       const articleDomain = getDomain(article.url);
       const readingTimeMinutes = calculateReadingTime(article.content);
 
       const matchesPublisher =
-        newFilters.publishers.length === 0 ||
-        newFilters.publishers.some((publisher) =>
+        filters.publishers.length === 0 ||
+        filters.publishers.some((publisher) =>
           articleDomain.toLowerCase().includes(publisher.toLowerCase())
         );
 
       const matchesDuration =
-        newFilters.durations.length === 0 ||
-        newFilters.durations.some((duration) => isInDurationRange(readingTimeMinutes, duration));
+        filters.durations.length === 0 ||
+        filters.durations.some((duration) => isInDurationRange(readingTimeMinutes, duration));
 
-      const matchesDateRange = isInDateRange(article.publishedAt, newFilters.dateRange);
+      const matchesDateRange = isInDateRange(article.publishedAt, filters.dateRange);
 
       return matchesPublisher && matchesDuration && matchesDateRange;
     });
@@ -179,8 +256,15 @@ const NewsPage: React.FC = () => {
     setFilteredArticles(filtered);
   };
 
+  const handleApplyFilters = (newFilters: Filters) => {
+    setActiveFilters(newFilters);
+    setPendingFilters(newFilters);
+    applyFilters(newFilters);
+  };
+
   const handleResetFilters = () => {
-    setFilters({ publishers: [], durations: [], dateRange: null });
+    setActiveFilters({ publishers: [], durations: [], dateRange: null });
+    setPendingFilters({ publishers: [], durations: [], dateRange: null });
     setAccordionStates({ publishedBy: false, duration: false, dateRange: false });
     setCustomDateRange(null);
     setSearchTerm("");
@@ -188,34 +272,50 @@ const NewsPage: React.FC = () => {
   };
 
   const handleRemoveFilter = (type: keyof Filters, value: string) => {
-    setFilters((prev) => {
-      if (type === "publishers") {
-        return { ...prev, publishers: prev.publishers.filter((p) => p !== value) };
-      } else if (type === "durations") {
-        return { ...prev, durations: prev.durations.filter((d) => d !== value) };
-      } else {
-        return { ...prev, dateRange: null, customDateRange: null };
+    const updatedFilters = {
+      ...activeFilters,
+      [type]: type === "dateRange" ? null : activeFilters[type].filter((v) => v !== value),
+    };
+    setActiveFilters(updatedFilters);
+    setPendingFilters(updatedFilters);
+    applyFilters(updatedFilters);
+    if (type === "dateRange") {
+      setCustomDateRange(null);
+    }
+  };
+
+  const handleRemoveHiddenFilters = () => {
+    // Get the hidden filters (those beyond visibleTags)
+    const hiddenFilters = activeFiltersArray.slice(visibleTags);
+
+    // Create a new filters object by removing the hidden filters
+    const updatedFilters = { ...activeFilters };
+
+    hiddenFilters.forEach((filter) => {
+      if (filter.type === "publishers") {
+        updatedFilters.publishers = updatedFilters.publishers.filter((v) => v !== filter.value);
+      } else if (filter.type === "durations") {
+        updatedFilters.durations = updatedFilters.durations.filter((v) => v !== filter.value);
+      } else if (filter.type === "dateRange") {
+        updatedFilters.dateRange = null;
+        setCustomDateRange(null);
       }
     });
 
-    handleApplyFilters({
-      ...filters,
-      [type]: type === "dateRange" ? null : (filters[type] as string[]).filter((v) => v !== value),
-    });
+    setActiveFilters(updatedFilters);
+    setPendingFilters(updatedFilters);
+    applyFilters(updatedFilters);
   };
 
-  // Handle sort option selection
   const handleSortSelect = (option: string) => {
     setSelectedSort(option);
     setIsSorterOpen(false);
-    // Apply sorting logic here based on the selected option
     let sortedArticles = [...filteredArticles];
     switch (option) {
       case "Latest":
         sortedArticles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
         break;
       case "Trending":
-      
         sortedArticles.sort((a, b) => b.title.length - a.title.length);
         break;
       case "Duration - Short to Long":
@@ -227,7 +327,6 @@ const NewsPage: React.FC = () => {
     setFilteredArticles(sortedArticles);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -251,7 +350,7 @@ const NewsPage: React.FC = () => {
   return (
     <div css={styles.main}>
       <div css={styles.container}>
-        <div css={styles.headerFrame(isScrolled)}>
+        <div css={styles.headerFrame(isScrolled, activeFiltersArray.length > 0)}>
           <div css={styles.header}>
             <div css={styles.news}>Crypto News</div>
             <div css={styles.filterAndUpdownFrame}>
@@ -259,8 +358,8 @@ const NewsPage: React.FC = () => {
                 <FilterSidePanel
                   onApplyFilters={handleApplyFilters}
                   onResetFilters={handleResetFilters}
-                  filters={filters}
-                  setFilters={setFilters}
+                  filters={pendingFilters}
+                  setFilters={setPendingFilters}
                   accordionStates={accordionStates}
                   setAccordionStates={setAccordionStates}
                   customDateRange={customDateRange}
@@ -278,10 +377,7 @@ const NewsPage: React.FC = () => {
                   <Image src={AssetsImg.ic_sorter} alt="sorter" height={16} width={16} />
                 </button>
                 {isSorterOpen && (
-                  <div
-                    css={styles.sorterDropdown}
-                    ref={sorterRef}
-                  >
+                  <div css={styles.sorterDropdown} ref={sorterRef}>
                     {["Latest", "Trending", "Duration - Short to Long"].map((option) => (
                       <button
                         key={option}
@@ -290,10 +386,8 @@ const NewsPage: React.FC = () => {
                       >
                         <span>{option}</span>
                         {selectedSort === option && (
-                          <span
-                            css={styles.sorterCheckmark}
-                          >
-                            <Image src={AssetsImg.ic_tick} alt="tick" height={16} width={16}></Image>
+                          <span css={styles.sorterCheckmark}>
+                            <Image src={AssetsImg.ic_tick} alt="tick" height={16} width={16} />
                           </span>
                         )}
                       </button>
@@ -303,33 +397,37 @@ const NewsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          {(filters.publishers.length > 0 || filters.durations.length > 0 || filters.dateRange) && (
-            <div css={styles.filterTagsContainer}>
-              {filters.publishers.map((publisher) => (
-                <span key={publisher} css={styles.filterTag}>
-                  <Image src={AssetsImg.ic_document} alt="doc" /> {publisher}{" "}
-                  <button onClick={() => handleRemoveFilter("publishers", publisher)}>
+          {activeFiltersArray.length > 0 && (
+            <div css={styles.filterTagsContainer} ref={containerRef}>
+              {activeFiltersArray.slice(0, visibleTags).map((filter) => (
+                <span key={`${filter.type}-${filter.value}`} css={styles.filterTag}>
+                  <Image
+                    src={
+                      filter.type === "publishers"
+                        ? AssetsImg.ic_document
+                        : filter.type === "durations"
+                        ? AssetsImg.ic_clock
+                        : AssetsImg.ic_calendar
+                    }
+                    alt="icon"
+                    width={16}
+                    height={16}
+                  />
+                  {filter.value}
+                  <button onClick={() => handleRemoveFilter(filter.type, filter.value)}>
                     <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
                   </button>
                 </span>
               ))}
-              {filters.durations.map((duration) => (
-                <span key={duration} css={styles.filterTag}>
-                  <Image src={AssetsImg.ic_clock} alt="doc" /> {duration}{" "}
-                  <button onClick={() => handleRemoveFilter("durations", duration)}>
-                    <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
-                  </button>
-                </span>
-              ))}
-              {filters.dateRange && (
+              {overflowCount > 0 && (
                 <span css={styles.filterTag}>
-                  <Image src={AssetsImg.ic_calendar} alt="doc" /> {filters.dateRange}{" "}
-                  <button onClick={() => handleRemoveFilter("dateRange", filters.dateRange)}>
+                  +{overflowCount} More
+                  <button onClick={handleRemoveHiddenFilters}>
                     <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
                   </button>
                 </span>
               )}
-              <div css={{ marginLeft: "auto", borderRadius: "0.2rem" }}>
+              <div data-reset-button css={{ marginLeft: "auto" }}>
                 <Button
                   size="small"
                   type="secondary"
@@ -466,7 +564,6 @@ const NewsPage: React.FC = () => {
             </div>
           </div>
           <div css={styles.tradingBanner}>
-            {/* <Image src={AssetsImg.ic_tb_gradient} alt={"gradient"}></Image> */}
             <div></div>
             <div css={styles.frame}>
               <div css={styles.anotherFrame}>

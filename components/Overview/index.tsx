@@ -93,8 +93,8 @@ const Overview = () => {
                 type="number"
                 value={amountInvested}
                 onChange={handleAmountChange}
-                appendItem="INR"
-                style={{ marginBottom: utils.remConverter(16) }}
+                //appendItem="INR"
+                style={{marginBottom: utils.remConverter(16) }}
               />
             </ShimmerWrapper>
 

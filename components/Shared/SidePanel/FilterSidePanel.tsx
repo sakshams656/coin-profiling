@@ -51,7 +51,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     });
   };
 
-  // Data for Published By section
   const publishedByData = [
     { label: "Select All", indeterminate: true },
     { label: "Forbes" },
@@ -59,12 +58,10 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     { label: "CoinTelegraph" },
   ];
 
-  // Filtered Published By data based on search term
   const filteredPublishedByData = publishedByData.filter((item) =>
     item.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Data for Duration section
   const durationData = [
     { label: "Select All", indeterminate: true },
     { label: "01 - 05 Mins" },
@@ -73,7 +70,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     { label: "20+ Mins" },
   ];
 
-  // Data for Date Range section
   const dateRangeData = [
     { label: "Last 7 Days" },
     { label: "Last 1 Month" },
@@ -101,28 +97,25 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     }
   };
 
-  // Handle checkbox changes for durations
   const handleDurationChange = (label: string) => {
     if (label === "Select All") {
-      // Select all durations except "Select All" itself
       const allDurations = durationData
         .filter((item) => item.label !== "Select All")
         .map((item) => item.label);
       setFilters((prev) => ({
         ...prev,
-        durations: allDurations,
+        durations: prev.durations.length === allDurations.length ? [] : allDurations,
       }));
     } else {
-      setFilters((prev) => ({
-        ...prev,
-        durations: prev.durations.includes(label)
+      setFilters((prev) => {
+        const newDurations = prev.durations.includes(label)
           ? prev.durations.filter((item) => item !== label)
-          : [...prev.durations, label],
-      }));
+          : [...prev.durations, label];
+        return { ...prev, durations: newDurations };
+      });
     }
   };
 
-  // Handle radio button changes for date range
   const handleDateRangeChange = (label: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -130,12 +123,10 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     }));
   };
 
-  // Handle custom date range selection from DateRangePicker
   const handleDateRangePickerChange = (dateRange: DateRange) => {
     setCustomDateRange(dateRange);
   };
 
-  // Render checkboxes or radio buttons
   const renderCheckboxes = (
     data: { label: string; indeterminate?: boolean }[],
     isCheckbox: boolean,
@@ -168,7 +159,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                 onChange={() => onChange(item.label)}
                 selected={filters.dateRange === item.label}
                 value={1}
-                // style={{ marginRight: "1rem" }}
               />
             </div>
           )}
@@ -178,7 +168,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     });
   };
 
-  // Handle Apply button click
   const handleApply = () => {
     const dateRangeValue =
       filters.dateRange === "Custom" && customDateRange
@@ -193,7 +182,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     setIsPanelOpen(false);
   };
 
-  // Handle Reset button click
   const handleReset = () => {
     setFilters({ publishers: [], durations: [], dateRange: null });
     setAccordionStates({ publishedBy: false, duration: false, dateRange: false });
@@ -203,7 +191,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     setIsPanelOpen(false);
   };
 
-  // Helper function to get selected names for title
   const getSelectedNames = (data: { label: string }[], selected: string[]) => {
     const allNames = data
       .filter((item) => item.label !== "Select All")
@@ -214,12 +201,10 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
 
   return (
     <>
-      {/* Clickable icon to open SidePanel */}
       <button css={filterStyle} onClick={() => setIsPanelOpen(true)} aria-label="Open Filter">
         <Image src={AssetsImg.ic_filter} alt="filter" width={16} height={16} />
       </button>
 
-      {/* SidePanel Component */}
       <SidePanel
         title="Filter News"
         onClose={() => setIsPanelOpen(false)}
@@ -227,7 +212,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
         open={isPanelOpen}
         style={css({ zIndex: 1 })}
       >
-        {/* Published By Accordion */}
         <div css={accordionWrapper}>
           <Accordion
             onToggle={() => toggleAccordion("publishedBy")}
@@ -245,7 +229,13 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                   toggleAccordion("publishedBy");
                 }}
               >
-                <Image src={AssetsImg.ic_document} alt="doc" height={20} width={20} css={iconAccordian} />
+                <Image
+                  src={accordionStates.publishedBy ? AssetsImg.ic_document_white : AssetsImg.ic_document}
+                  alt="doc"
+                  height={20}
+                  width={20}
+                  css={iconAccordian}
+                />
                 Published By{" "}
                 {filters.publishers.length > 0 &&
                   (filters.publishers.includes("Select All")
@@ -273,7 +263,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           </Accordion>
         </div>
 
-        {/* Duration Accordion */}
         <div css={accordionWrapper}>
           <Accordion
             onToggle={() => toggleAccordion("duration")}
@@ -291,7 +280,13 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                   toggleAccordion("duration");
                 }}
               >
-                <Image src={AssetsImg.ic_clock} alt="clock" height={20} width={20} css={iconAccordian} />
+                <Image
+                  src={accordionStates.duration ? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
+                  alt="clock"
+                  height={20}
+                  width={20}
+                  css={iconAccordian}
+                />
                 Duration{" "}
                 {filters.durations.length > 0 &&
                   (filters.durations.includes("Select All")
@@ -307,7 +302,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           </Accordion>
         </div>
 
-        {/* Date Range Accordion */}
         <div css={accordionWrapper}>
           <Accordion
             onToggle={() => toggleAccordion("dateRange")}
@@ -325,7 +319,13 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                   toggleAccordion("dateRange");
                 }}
               >
-                <Image src={AssetsImg.ic_calendar} alt="calender" height={20} width={20} css={iconAccordian} />
+                <Image
+                  src={accordionStates.dateRange ? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
+                  alt="calendar"
+                  height={20}
+                  width={20}
+                  css={iconAccordian}
+                />
                 Date Range{" "}
                 {filters.dateRange && (
                   <span>
@@ -339,21 +339,18 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
             isOpen={accordionStates.dateRange}
           >
             {accordionStates.dateRange && (
-              <div>
-                {renderCheckboxes(dateRangeData, false, handleDateRangeChange)}
-              </div>
+              <div>{renderCheckboxes(dateRangeData, false, handleDateRangeChange)}</div>
             )}
           </Accordion>
         </div>
 
-        {/* DateRangePicker Outside Accordion */}
         <div
           css={css`
             margin-top: ${utils.remConverter(-8)};
             padding: ${utils.remConverter(16)};
             background-color: ${colors.Zeb_Solid_BG_Blue};
             border-radius: ${utils.remConverter(4)};
-            display: ${filters.dateRange === "Custom" ? "block" : "none"}; 
+            display: ${filters.dateRange === "Custom" ? "block" : "none"};
           `}
         >
           <DateRangePicker
@@ -363,7 +360,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           />
         </div>
 
-        {/* Buttons at the bottom */}
         <div css={buttonWrapper}>
           <button css={resetButton} onClick={handleReset}>
             RESET
