@@ -5,20 +5,20 @@ export const resetButton = css({
   fontFamily: "Lato",
   fontSize: utils.remConverter(14),
   fontWeight: "700",
-  paddingLeft: utils.remConverter(12), 
-  paddingRight: utils.remConverter(12), 
-  borderRadius: utils.remConverter(8), 
-  border: `${utils.remConverter(1)} solid`, 
+  paddingLeft: utils.remConverter(12),
+  paddingRight: utils.remConverter(12),
+  borderRadius: utils.remConverter(8),
+  border: `${utils.remConverter(1)} solid`,
   color: "#C2C2DD",
   cursor: "pointer",
   backgroundColor: colors.Zeb_Solid_BG_Blue,
   "@media (max-width: 75rem)": {
-    paddingLeft: utils.remConverter(8), 
-    paddingRight: utils.remConverter(8), 
+    paddingLeft: utils.remConverter(8),
+    paddingRight: utils.remConverter(8),
   },
   "@media (max-width: 48rem)": {
-    paddingLeft: utils.remConverter(8), 
-    paddingRight: utils.remConverter(8), 
+    paddingLeft: utils.remConverter(8),
+    paddingRight: utils.remConverter(8),
   },
 });
 
@@ -48,4 +48,23 @@ export const buttonWrapper = css({
 export const iconAccordian = css({
   marginRight: utils.remConverter(12),
 });
-  
+
+export const sidePanelStyle = css({
+  zIndex: 1,
+});
+
+export const accordionTitleStyle = (isOpen: boolean) => css`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  color: ${isOpen ? colors.Zeb_Solid_White : colors.Zeb_Solid_Light_Blue};
+`;
+
+export const customDateRangePickerStyle = (dateRange: string | null) => css`
+  margin-top: ${utils.remConverter(-8)};
+  padding: ${utils.remConverter(16)};
+  background-color: ${colors.Zeb_Solid_BG_Blue};
+  border-radius: ${utils.remConverter(4)};
+  display: ${dateRange === "Custom" ? "block" : "none"};
+`;

@@ -1,12 +1,35 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import { Button, Checkbox, colors, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
 import { Accordion, utils } from "zebpay-ui";
 import Image from "next/image";
-import { accordionWrapper, buttonWrapper, filterStyle, iconAccordian, resetButton } from "./styles";
 import AssetsImg from "@public/images";
 import DateRangePicker, { DateRange } from "../DateRangePicker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import * as styles from "./styles";
+
+// Define data as stable constants outside the component
+const PUBLISHED_BY_DATA = [
+  { label: "Select All", indeterminate: true },
+  { label: "Forbes" },
+  { label: "Coindesk" },
+  { label: "CoinTelegraph" },
+];
+
+const DURATION_DATA = [
+  { label: "Select All", indeterminate: true },
+  { label: "01 - 05 Mins" },
+  { label: "05 - 10 Mins" },
+  { label: "10 - 20 Mins" },
+  { label: "20+ Mins" },
+];
+
+const DATE_RANGE_DATA = [
+  { label: "Last 7 Days" },
+  { label: "Last 1 Month" },
+  { label: "Last 3 Months" },
+  { label: "Last 1 Year" },
+  { label: "Custom" },
+];
 
 interface Filters {
   publishers: string[];
@@ -43,6 +66,10 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
+  useEffect(() => {
+    console.log("Filters updated:", filters); // Log state changes for debugging
+  }, [filters]);
+
   const toggleAccordion = (key: string) => {
     setAccordionStates({
       publishedBy: key === "publishedBy" ? !accordionStates.publishedBy : false,
@@ -51,36 +78,14 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
     });
   };
 
-  const publishedByData = [
-    { label: "Select All", indeterminate: true },
-    { label: "Forbes" },
-    { label: "Coindesk" },
-    { label: "CoinTelegraph" },
-  ];
-
-  const filteredPublishedByData = publishedByData.filter((item) =>
+  const filteredPublishedByData = PUBLISHED_BY_DATA.filter((item) =>
     item.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const durationData = [
-    { label: "Select All", indeterminate: true },
-    { label: "01 - 05 Mins" },
-    { label: "05 - 10 Mins" },
-    { label: "10 - 20 Mins" },
-    { label: "20+ Mins" },
-  ];
-
-  const dateRangeData = [
-    { label: "Last 7 Days" },
-    { label: "Last 1 Month" },
-    { label: "Last 3 Months" },
-    { label: "Last 1 Year" },
-    { label: "Custom" },
-  ];
-
   const handlePublisherChange = (label: string) => {
+    console.log("Changing publisher:", label, "Current filters:", filters.publishers); // Debug log
     if (label === "Select All") {
-      const allPublishers = publishedByData
+      const allPublishers = PUBLISHED_BY_DATA
         .filter((item) => item.label !== "Select All")
         .map((item) => item.label);
       setFilters((prev) => ({
@@ -98,8 +103,9 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   };
 
   const handleDurationChange = (label: string) => {
+    console.log("Changing duration:", label, "Current filters:", filters.durations); // Debug log
     if (label === "Select All") {
-      const allDurations = durationData
+      const allDurations = DURATION_DATA
         .filter((item) => item.label !== "Select All")
         .map((item) => item.label);
       setFilters((prev) => ({
@@ -130,20 +136,23 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   const renderCheckboxes = (
     data: { label: string; indeterminate?: boolean }[],
     isCheckbox: boolean,
+    selectedValues: string[],
     onChange: (label: string) => void
   ) => {
     return data.map((item, index) => {
       const isLast = index === data.length - 1;
+      const checked = selectedValues.includes(item.label);
+      const indeterminate = item.indeterminate
+        ? selectedValues.length > 0 && selectedValues.length < (data.length - 1)
+        : false;
+
       return (
         <div key={index}>
           {isCheckbox ? (
             <div css={{ padding: "0.75rem", paddingLeft: "0rem" }}>
               <Checkbox
-                checked={
-                  (data === publishedByData && filters.publishers.includes(item.label)) ||
-                  (data === durationData && filters.durations.includes(item.label))
-                }
-                indeterminate={item.indeterminate}
+                checked={checked}
+                indeterminate={indeterminate}
                 label={item.label}
                 mode="dark"
                 onChange={() => onChange(item.label)}
@@ -157,7 +166,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                 mode="dark"
                 name="date-range"
                 onChange={() => onChange(item.label)}
-                selected={filters.dateRange === item.label}
+                selected={checked}
                 value={1}
               />
             </div>
@@ -201,7 +210,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
 
   return (
     <>
-      <button css={filterStyle} onClick={() => setIsPanelOpen(true)} aria-label="Open Filter">
+      <button css={styles.filterStyle} onClick={() => setIsPanelOpen(true)} aria-label="Open Filter">
         <Image src={AssetsImg.ic_filter} alt="filter" width={16} height={16} />
       </button>
 
@@ -210,36 +219,27 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
         onClose={() => setIsPanelOpen(false)}
         onBack={() => setIsPanelOpen(false)}
         open={isPanelOpen}
-        style={css({ zIndex: 1 })}
+        style={styles.sidePanelStyle}
       >
-        <div css={accordionWrapper}>
+        <div css={styles.accordionWrapper}>
           <Accordion
             onToggle={() => toggleAccordion("publishedBy")}
             title={
-              <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  cursor: pointer;
-                  width: 100%;
-                  color: ${accordionStates.publishedBy ? colors.Zeb_Solid_White : colors.Zeb_Solid_Light_Blue};
-                `}
-                onClick={(e) => {
+              <div css={styles.accordionTitleStyle(accordionStates.publishedBy)} onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("publishedBy");
-                }}
-              >
+                }}>
                 <Image
                   src={accordionStates.publishedBy ? AssetsImg.ic_document_white : AssetsImg.ic_document}
                   alt="doc"
                   height={20}
                   width={20}
-                  css={iconAccordian}
+                  css={styles.iconAccordian}
                 />
                 Published By{" "}
                 {filters.publishers.length > 0 &&
                   (filters.publishers.includes("Select All")
-                    ? `(${getSelectedNames(publishedByData, filters.publishers)})`
+                    ? `(${getSelectedNames(PUBLISHED_BY_DATA, filters.publishers)})`
                     : `(${filters.publishers.join(", ")})`)}
               </div>
             }
@@ -257,74 +257,56 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                   style={{ name: "3s4yqf", styles: "width: 100%;" }}
                   value={searchTerm}
                 />
-                {renderCheckboxes(filteredPublishedByData, true, handlePublisherChange)}
+                {renderCheckboxes(filteredPublishedByData, true, filters.publishers, handlePublisherChange)}
               </div>
             )}
           </Accordion>
         </div>
 
-        <div css={accordionWrapper}>
+        <div css={styles.accordionWrapper}>
           <Accordion
             onToggle={() => toggleAccordion("duration")}
             title={
-              <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  cursor: pointer;
-                  width: 100%;
-                  color: ${accordionStates.duration ? colors.Zeb_Solid_White : colors.Zeb_Solid_Light_Blue};
-                `}
-                onClick={(e) => {
+              <div css={styles.accordionTitleStyle(accordionStates.duration)} onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("duration");
-                }}
-              >
+                }}>
                 <Image
                   src={accordionStates.duration ? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
                   alt="clock"
                   height={20}
                   width={20}
-                  css={iconAccordian}
+                  css={styles.iconAccordian}
                 />
                 Duration{" "}
                 {filters.durations.length > 0 &&
                   (filters.durations.includes("Select All")
-                    ? `(${getSelectedNames(durationData, filters.durations)})`
+                    ? `(${getSelectedNames(DURATION_DATA, filters.durations)})`
                     : `(${filters.durations.join(", ")})`)}
               </div>
             }
             isOpen={accordionStates.duration}
           >
             {accordionStates.duration && (
-              <div>{renderCheckboxes(durationData, true, handleDurationChange)}</div>
+              <div>{renderCheckboxes(DURATION_DATA, true, filters.durations, handleDurationChange)}</div>
             )}
           </Accordion>
         </div>
 
-        <div css={accordionWrapper}>
+        <div css={styles.accordionWrapper}>
           <Accordion
             onToggle={() => toggleAccordion("dateRange")}
             title={
-              <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  cursor: pointer;
-                  width: 100%;
-                  color: ${accordionStates.dateRange ? colors.Zeb_Solid_White : colors.Zeb_Solid_Light_Blue};
-                `}
-                onClick={(e) => {
+              <div css={styles.accordionTitleStyle(accordionStates.dateRange)} onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("dateRange");
-                }}
-              >
+                }}>
                 <Image
                   src={accordionStates.dateRange ? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
                   alt="calendar"
                   height={20}
                   width={20}
-                  css={iconAccordian}
+                  css={styles.iconAccordian}
                 />
                 Date Range{" "}
                 {filters.dateRange && (
@@ -339,20 +321,12 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
             isOpen={accordionStates.dateRange}
           >
             {accordionStates.dateRange && (
-              <div>{renderCheckboxes(dateRangeData, false, handleDateRangeChange)}</div>
+              <div>{renderCheckboxes(DATE_RANGE_DATA, false, [filters.dateRange || ""], handleDateRangeChange)}</div>
             )}
           </Accordion>
         </div>
 
-        <div
-          css={css`
-            margin-top: ${utils.remConverter(-8)};
-            padding: ${utils.remConverter(16)};
-            background-color: ${colors.Zeb_Solid_BG_Blue};
-            border-radius: ${utils.remConverter(4)};
-            display: ${filters.dateRange === "Custom" ? "block" : "none"};
-          `}
-        >
+        <div css={styles.customDateRangePickerStyle(filters.dateRange)}>
           <DateRangePicker
             onChange={handleDateRangePickerChange}
             minDate={new Date("2000-01-01")}
@@ -360,8 +334,8 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           />
         </div>
 
-        <div css={buttonWrapper}>
-          <button css={resetButton} onClick={handleReset}>
+        <div css={styles.buttonWrapper}>
+          <button css={styles.resetButton} onClick={handleReset}>
             RESET
           </button>
           <Button onClick={handleApply} size="medium" type="primary">
