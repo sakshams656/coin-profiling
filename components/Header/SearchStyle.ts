@@ -21,11 +21,13 @@ import { utils } from "zebpay-ui";
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    fontWeight:"600"
   });
 
   export const articleFooter = css({
     display: "flex",
     fontSize: "14px",
+    fontWeight:"400",
     color: "#C0C0EE",
     alignItems:"center",
     gap: "7px",

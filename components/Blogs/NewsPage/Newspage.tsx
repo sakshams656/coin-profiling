@@ -287,7 +287,6 @@ const NewsPage: React.FC = () => {
     })}`;
   };
 
-  // Combine all filters into a single array for proper display management
   const allFilters = [
     ...selectedCategories.map(category => ({ 
       type: 'category', 
@@ -309,12 +308,11 @@ const NewsPage: React.FC = () => {
             .map((date) => formatDateWithSuffix(date))
             .join(" - ")
         : dateRange,
-      icon: null, // Using i tag for calendar icon
+      icon: null, 
       onRemove: () => handleRemoveDate()
     }] : [])
   ];
 
-  // Display only the first 'visibleFilters' number of filters
   const visibleFilterItems = allFilters.slice(0, visibleFilters);
   const hiddenFiltersCount = allFilters.length - visibleFilters;
 

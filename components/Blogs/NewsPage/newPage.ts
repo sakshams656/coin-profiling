@@ -262,7 +262,7 @@ export const categoryWrapper = css`
 export const selectedCategoriesContainer = css`
   display: flex;
   gap: 10px;
-  flex-wrap: nowrap;
+  // flex-wrap: nowrap;
   // overflow-x: auto;
   // overflow-y:"hidden"
   // white-space: nowrap; 
