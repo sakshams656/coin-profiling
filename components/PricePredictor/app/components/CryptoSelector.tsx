@@ -13,9 +13,10 @@ const cryptoOptions = [
 interface CryptoSelectorProps {
   crypto: string;
   setCrypto: (crypto: string) => void;
+  loader : boolean
 }
 
-const CryptoSelector: React.FC<CryptoSelectorProps> = ({ crypto, setCrypto }) => {
+const CryptoSelector: React.FC<CryptoSelectorProps> = ({ loader,crypto, setCrypto }) => {
   const selectedCrypto = cryptoOptions.find(option => option.value === crypto);
 
   const handleDropdownChange = (selectedValue: string) => {
@@ -68,6 +69,7 @@ const CryptoSelector: React.FC<CryptoSelectorProps> = ({ crypto, setCrypto }) =>
           }}
           selected={crypto} 
           maxRows={4}
+          disabled={loader}
           // style={{height:"50px"}}
         />
       )}

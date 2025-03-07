@@ -34,6 +34,7 @@ const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (time
       ) : (
         <InputDropDown
           onDropdownClick={()=>setIsDropDownOpen(!isDropDownOpen)}
+          disableTick={false}
           
           onChange={(value) => {
             const selectedOption = options.find((option) => option.value === value);
@@ -53,7 +54,7 @@ const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (time
             value: "",
           }}
           disabled={loader}
-          selected=""
+          selected={selectedTimeFrame ? options.find((option) => option.label === selectedTimeFrame)?.value : ""}
           
           
         />

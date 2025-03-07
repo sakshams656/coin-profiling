@@ -6,11 +6,22 @@ import { Field } from "../styles/emotionStyles";
 const InvestmentAmount: React.FC<{
   loading: boolean;
   loader: boolean;
+  investmentAmount: number | null;
   setInvestmentAmount: (amount: number) => void;
-}> = ({ loading, loader, setInvestmentAmount }) => {
+}> = ({ loading, loader,investmentAmount, setInvestmentAmount }) => {
   const [amount, setAmount] = useState("");
   const [showError, setShowError] = useState(false);
   const [focus, setFocus] = useState(false);
+
+  const [displayValue, setDisplayValue] = useState(
+    investmentAmount ? investmentAmount.toString() : ""
+  );
+
+  useEffect(() => {
+    if (investmentAmount !== null) {
+      setDisplayValue(investmentAmount.toString());
+    }
+  }, [investmentAmount]);
 
   return (
     <Field>
@@ -30,6 +41,7 @@ const InvestmentAmount: React.FC<{
       ) : (
         <>
           <Input
+          value={displayValue}
             onChange={(e) => {
               const value = parseFloat(e.value);
               setAmount(e.value);
@@ -42,11 +54,11 @@ const InvestmentAmount: React.FC<{
             }}
             appendItem={
               <span
-                style={{
-                  backgroundColor: loader?"#222245":"transparent",
-                  padding: "10px 0px",
-                  color:loader?"#C0C0EE":"white"
-                }}
+                // style={{
+                //   backgroundColor: loader?"#222245":"transparent",
+                //   padding: "10px 0px",
+                //   color:loader?"#C0C0EE":"white"
+                // }}
               >
                 INR
               </span>

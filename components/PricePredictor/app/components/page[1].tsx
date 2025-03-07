@@ -86,20 +86,21 @@ const BTCPricePredictor: React.FC = () => {
           </Heading>
           <Cryptoselect>
             {loading ? (
-              <Shimmer style={{"margin-bottom":"10px"}} height={20} width={80} />
+              <Shimmer style={{"margin-bottom":"10px"}}  height={20} width={80} />
             ) : (
               <div style={{ paddingBottom: 6 }}>Crypto</div>
             )}
             {loading ? (
               <Shimmer  height={40} width={960} />
             ) : (
-              <CryptoSelector crypto={crypto} setCrypto={setCrypto} />
+              <CryptoSelector loader={loader} crypto={crypto} setCrypto={setCrypto} />
             )}
           </Cryptoselect>
           <FieldRow>
             <InvestmentAmount
               loading={loading}
               loader={loader}
+              investmentAmount={investmentAmount} 
               setInvestmentAmount={setInvestmentAmount}
             />
             <TimeFrame
