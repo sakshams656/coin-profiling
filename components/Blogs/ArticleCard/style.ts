@@ -1,41 +1,34 @@
 /** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { typography, colors, utils } from "zebpay-ui";
 
-
-
 export const CardContainer = css`
   display: flex;
-  height:40vh;
+  height: 40vh;
   flex-direction: column;
   align-items: center;
-  padding: 0.75rem;  // 12px
-  border-radius: 0.5rem;  // 8px
+  padding: ${utils.remConverter(12)};
+  border-radius: ${utils.remConverter(8)};
   background: ${colors.Zeb_Solid_BG_Blue};
-  // height: 272px;  // Fixed height
   overflow: hidden;
+  flex: 1 1 27%;
+  max-width: 33%;
 
-  flex: 1 1 27%;  
-  max-width: 33%; 
-  
   &.hover-active:hover {
-    border: 1px solid ${colors.Zeb_Solid_Bright_Blue};
-    box-shadow: 0px 0.5rem 0.5rem -0.25rem #0c0c1d;
+    border: ${utils.remConverter(1)} solid ${colors.Zeb_Solid_Bright_Blue};
+    box-shadow: 0px ${utils.remConverter(8)} ${utils.remConverter(8)} ${utils.remConverter(-4)} #0c0c1d;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: ${utils.remConverter(1024)}) {
     flex: 1 1 45%;
     max-width: 45%;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${utils.remConverter(768)}) {
     flex: 1 1 100%;
     max-width: 100%;
   }
 `;
-
-
 
 export const InsideFrame = css`
   display: flex;
@@ -43,63 +36,56 @@ export const InsideFrame = css`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 0.6rem;  // 12px
+  gap: ${utils.remConverter(9.6)};
 `;
-
 
 export const CardImage = css`
   display: flex;
-  height: 17vh;  // 108px
+  height: 17vh; 
   width: 100%;
   justify-content: center;
   align-items: center;
-  gap: 0.25rem;  // 4px
+  gap: ${utils.remConverter(4)};
   align-self: stretch;
-  border-radius: 0.25rem;  // 4px
+  border-radius: ${utils.remConverter(4)};
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0.25rem;  // 4px
+    border-radius: ${utils.remConverter(4)};
   }
 `;
-
 
 export const CardInfo = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.7rem;  // 16px
+  gap: ${utils.remConverter(11.2)};
   align-self: stretch;
-  flex-grow: 1;  
-  justify-content: space-between; 
+  flex-grow: 1;
+  justify-content: space-between;
 `;
-
 
 export const CardInfoHeader = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;  // 8px
+  gap: ${utils.remConverter(8)};
   align-self: stretch;
 `;
 
-
 export const DomainName = css`
   display: flex;
-  // padding: 0.125rem 0.25rem;  // 2px 4px
   justify-content: center;
   align-items: center;
-  gap: 0.25rem;  // 4px
+  gap: ${utils.remConverter(4)};
   color: ${colors.Zeb_Solid_Light_Blue};
-  border-radius: 0.25rem;  // 4px
-  // background: rgba(192, 192, 238, 0.2);  
+  border-radius: ${utils.remConverter(4)};
 `;
 
-
 export const Title = css`
-  height: 18px;
+  gap: ${utils.remConverter(18)};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -111,16 +97,14 @@ export const Title = css`
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
-  max-width: 40ch;  
   line-height: 1;
 `;
 
-
 export const Description = css`
-  font-size:0.9rem;
+  font-size: ${utils.remConverter(14.4)};
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;  
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
@@ -129,56 +113,48 @@ export const Description = css`
   color: ${colors.Zeb_Solid_Light_Blue};
 `;
 
-
 export const CardInfoFooter = css`
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 1.25rem;  // 20px
+  gap: ${utils.remConverter(9.6)};
   align-self: stretch;
-  margin-top: auto; 
-  // margin-bottom:6rem;
 `;
-
 
 export const ReadingTime = css`
   display: flex;
   align-items: center;
-  gap: 0.375rem;  // 6px
+  gap: ${utils.remConverter(6)};
 `;
-
 
 export const ReadingTimeIcon = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 0.75rem;  // 12px
-  height: 0.75rem;  // 12px
+  width: ${utils.remConverter(12)};
+  height: ${utils.remConverter(12)};
 `;
-
 
 export const ReadingTimeText = css`
   color: ${colors.Zeb_Solid_Light_Blue};
+  font-size: ${utils.remConverter(14)};
+  line-height: 1;
 `;
-
 
 export const Date = css`
   display: flex;
   align-items: center;
-  gap: 0.375rem;  // 6px
+  gap: ${utils.remConverter(6)};
 `;
-
 
 export const DateIcon = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 0.75rem;  // 12px
-  height: 0.75rem;  // 12px
 `;
 
-
 export const DateText = css`
-  font-size: 0.875rem;  // 14px
+  font-size: ${utils.remConverter(14)};
   line-height: 1;
   color: ${colors.Zeb_Solid_Light_Blue};
 `;

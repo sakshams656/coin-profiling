@@ -18,7 +18,7 @@ import {
   Date,
   DateIcon,
   DateText,
-} from "./articleStyle";
+} from "./style";
 import { Shimmer } from "zebpay-ui";
 
 interface ArticleCardProps {

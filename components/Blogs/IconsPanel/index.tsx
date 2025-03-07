@@ -11,9 +11,9 @@ import {
   Radio,
   utils,
   colors,
+  Icon,
 } from "zebpay-ui";
 
-import FilterIcon from "../app/icons/FilterIcon";
 import {
   Added,
   ButtonGroup,
@@ -21,11 +21,11 @@ import {
   StyledSidePanel,
   Title,
   filterAndUpdownFrame,
-  filter,
-  updown,
-} from "../app/styles/iconsPanel";
+  icon,
+  AccordionStyle,
+} from "./style";
 import { css } from "@emotion/react";
-import Dropdown from "../DropDown/Dropdown";
+import Dropdown from "../DropDown";
 import AssetsImg from "@public/images";
 import Image from "next/image";
 
@@ -55,11 +55,11 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-
-  const [tempCategories, setTempCategories] = useState<string[]>(selectedCategories);
-  const [tempDurations, setTempDurations] = useState<string[]>(selectedDurations);
+  const [tempCategories, setTempCategories] =
+    useState<string[]>(selectedCategories);
+  const [tempDurations, setTempDurations] =
+    useState<string[]>(selectedDurations);
   const [tempDateRange, setTempDateRange] = useState<string>(selectedDateRange);
-
 
   useEffect(() => {
     setTempCategories(selectedCategories);
@@ -78,7 +78,9 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   const [isDateRangeOpen, setIsDateRangeOpen] = useState(false);
 
   const [isCustomDate, setIsCustomDate] = useState(false);
-const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
+  const [customDateRange, setCustomDateRange] = useState<DateRange | null>(
+    null
+  );
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
@@ -130,19 +132,22 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
   };
 
   const handleApplyFilters = () => {
-  if (isCustomDate && customDateRange) {
-    // Format dates in a standard format (YYYY-MM-DD)
-    const formattedStartDate = new Date(customDateRange.startDate).toISOString().split('T')[0];
-    const formattedEndDate = new Date(customDateRange.endDate).toISOString().split('T')[0];
-    onDateRangeChange(`${formattedStartDate} - ${formattedEndDate}`);
-  } else {
-    onDateRangeChange(tempDateRange);
-  }
-  onCategoryChange(tempCategories);
-  onDurationChange(tempDurations);
-  
-  setIsPanelOpen(false);
-};
+    if (isCustomDate && customDateRange) {
+      const formattedStartDate = new Date(customDateRange.startDate)
+        .toISOString()
+        .split("T")[0];
+      const formattedEndDate = new Date(customDateRange.endDate)
+        .toISOString()
+        .split("T")[0];
+      onDateRangeChange(`${formattedStartDate} - ${formattedEndDate}`);
+    } else {
+      onDateRangeChange(tempDateRange);
+    }
+    onCategoryChange(tempCategories);
+    onDurationChange(tempDurations);
+
+    setIsPanelOpen(false);
+  };
 
   const handleResetFilters = () => {
     setTempCategories([]);
@@ -207,21 +212,26 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
     "Last 3 Months": "Last 3 Months",
     "Last 1 Year": "Last 1 Year",
   };
-  
+
   const formatDate = (date: Date) => {
     const day = date.getDate();
-    const suffix = (day % 10 === 1 && day !== 11) ? "st" :
-                   (day % 10 === 2 && day !== 12) ? "nd" :
-                   (day % 10 === 3 && day !== 13) ? "rd" : "th";
+    const suffix =
+      day % 10 === 1 && day !== 11
+        ? "st"
+        : day % 10 === 2 && day !== 12
+          ? "nd"
+          : day % 10 === 3 && day !== 13
+            ? "rd"
+            : "th";
     const month = date.toLocaleString("en-US", { month: "short" }); // "Mar"
     const year = date.getFullYear().toString().slice(-2); // "22"
     return `${day}${suffix} ${month} ${year}`;
   };
-  
-  const selectedDateRangeLabel = isCustomDate && customDateRange
-    ? `${formatDate(new Date(customDateRange.startDate))} - ${formatDate(new Date(customDateRange.endDate))}`
-    : dateRangeLabels[tempDateRange] || "Select Date";
-  
+
+  const selectedDateRangeLabel =
+    isCustomDate && customDateRange
+      ? `${formatDate(new Date(customDateRange.startDate))} - ${formatDate(new Date(customDateRange.endDate))}`
+      : dateRangeLabels[tempDateRange] || "Select Date";
 
   const handleSortChange = (value: string) => {
     onSortChange(value);
@@ -230,13 +240,18 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
   return (
     <div css={filterAndUpdownFrame}>
       <div
-        css={filter}
+        css={icon}
         onClick={() => setIsPanelOpen(true)}
         style={{ cursor: "pointer" }}
       >
-        <FilterIcon />
+        <i
+          className="icon icon-filter"
+          css={css`
+            color:#C0C0EE
+          `}
+        />
       </div>
-      <div css={updown} style={{ cursor: "pointer" }}>
+      <div css={icon} style={{ cursor: "pointer" }}>
         <Dropdown onSortChange={handleSortChange} />
       </div>
       <StyledSidePanel
@@ -247,7 +262,7 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
         ref={sidePanelRef}
       >
         <div css={InsidePanel}>
-          <Accordion
+          <Accordion 
             isOpen={isCategoryOpen}
             onToggle={() => handleAccordionToggle("category")}
             title={
@@ -427,9 +442,8 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
                 >
                   Date Range
                   {(tempDateRange || isCustomDate) && (
-  <span css={Added}>({selectedDateRangeLabel})</span>
-)}
-
+                    <span css={Added}>({selectedDateRangeLabel})</span>
+                  )}
                 </div>
               </div>
             }
@@ -456,7 +470,10 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
                   >
                     <Radio
                       name="date-range-checkbox"
-                      checked={tempDateRange === option.value|| (isCustomDate && option.value === "custom")}
+                      checked={
+                        tempDateRange === option.value ||
+                        (isCustomDate && option.value === "custom")
+                      }
                       onChange={() => handleDateRangeSelect(option.value)}
                       value={option.value}
                       style={{ marginRight: "1rem" }}
@@ -478,22 +495,24 @@ const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
           </Accordion>
         </div>
 
-        {isCustomDate&&<div
-          css={css`
-            margin-top: ${utils.remConverter(-8)};
-            padding: ${utils.remConverter(16)};
-            background-color: ${colors.Zeb_Solid_BG_Blue};
-            border-radius: ${utils.remConverter(4)};
-            // display: ${filters.dateRange === "Custom" ? "block" : "none"}; 
-          `}
-        >
-          <DateRangePicker
-            onChange={handleDateRangePickerChange}
-            minDate={new Date("2000-01-01")}
-            maxDate={new Date()}
-            // style={{"padding":"100px"}}
-          />
-        </div>}
+        {isCustomDate && (
+          <div
+            css={css`
+              margin-top: ${utils.remConverter(-8)};
+              padding: ${utils.remConverter(16)};
+              background-color: ${colors.Zeb_Solid_BG_Blue};
+              border-radius: ${utils.remConverter(4)};
+              // display: ${filters.dateRange === "Custom" ? "block" : "none"};
+            `}
+          >
+            <DateRangePicker
+              onChange={handleDateRangePickerChange}
+              minDate={new Date("2000-01-01")}
+              maxDate={new Date()}
+              // style={{"padding":"100px"}}
+            />
+          </div>
+        )}
 
         <div css={ButtonGroup}>
           <Button onClick={handleResetFilters} size="medium" type="secondary">

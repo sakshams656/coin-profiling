@@ -3,25 +3,7 @@ import { css } from "@emotion/react";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 import { Button } from "zebpay-ui";
-
-const noResultsContainer = css`
-  text-align: center;
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-`;
-
-const noResultsTitle = css`
-  font-size: 22px;
-`;
-
-const noResultsSubtitle = css`
-  font-size: 16px;
-  color: #c0c0ee;
-`;
+import { noResultsContainer,noResultsTitle,noResultsSubtitle } from "./style";
 
 const NoFilterBlogs = ({ setSearch }: { setSearch: (value: string) => void }) => {
   return (

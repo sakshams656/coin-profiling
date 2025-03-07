@@ -18,7 +18,7 @@ import {
   title,
   subtitle,
   buttonGroup,
-} from "./TradingStyle";
+} from "./style";
 
 const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
   return (

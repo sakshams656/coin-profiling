@@ -1,4 +1,4 @@
-import Header from "@components/Header/Header";
+import Header from "@components/Header";
 import NewsPage from "@components/News";
 import Overview from "@components/Overview";
 import Blogs from "@components/Blogs"

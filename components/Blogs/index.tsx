@@ -1,7 +1,6 @@
 import React from 'react';
-import NewsPage from './NewsPage/Newspage';
+import NewsPage from './NewsPage';
 import "../../styles/shared/global.ts";
-// import "../Blogs/app/styles/fonts.css" 
 
 const Blogs = () => {
   return (

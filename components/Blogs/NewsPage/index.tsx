@@ -2,12 +2,12 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import ArticleCard from "../ArticleCard/ArticleCard";
-import IconsPanel from "../IconsPanel/IconsPanel";
-import dummyArticles from "../app/data/dummyArticles";
-import NewsLetter from "../NewsLetter/Newsletter";
-import Tradingbanner from "../Trading/Trading";
-import NoBlogsFound from "../NoBlogsFound/NoBlogsFound";
+import ArticleCard from "../ArticleCard";
+import IconsPanel from "../IconsPanel";
+import dummyArticles from "../dummyData/dummyArticles";
+import NewsLetter from "../NewsLetter";
+import Tradingbanner from "../Trading";
+import NoBlogsFound from "../NoBlogsFound";
 import { Button, Shimmer } from "zebpay-ui";
 import Image from "next/image";
 
@@ -28,7 +28,7 @@ import {
   categoryText,
   closeIcon,
   headerBelow,
-} from "./newPage";
+} from "./style";
 import AssetsImg from "@public/images";
 
 interface Article {
@@ -54,7 +54,6 @@ const isWithinDateRange = (date: string, range: string): boolean => {
   const articleDate = new Date(date);
   if (isNaN(articleDate.getTime())) return false;
 
-  // Handle cases where range is a predefined duration
   const currentDate = new Date();
   switch (range) {
     case "Last 7 Days":
@@ -78,7 +77,7 @@ const isWithinDateRange = (date: string, range: string): boolean => {
       break;
   }
 
-  // Handle custom date range in the format "YYYY-MM-DD - YYYY-MM-DD"
+
   if (range.includes(" - ")) {
     const [startDateStr, endDateStr] = range.split(" - ");
     const startDate = new Date(startDateStr);
@@ -86,7 +85,7 @@ const isWithinDateRange = (date: string, range: string): boolean => {
 
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return false;
 
-    // Adjust end date to the end of the day to include articles published on that date
+
     endDate.setHours(23, 59, 59, 999);
 
     return articleDate >= startDate && articleDate <= endDate;
@@ -110,6 +109,7 @@ const NewsPage: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visibleFilters, setVisibleFilters] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleCategoryChange = (categories: string[]) => {
     setSelectedCategories(categories);
@@ -147,7 +147,6 @@ const NewsPage: React.FC = () => {
 
     const handleScroll = () => {
       if (sectionElement) {
-        // const headerHeight = 110;
         const isSectionScrolled = sectionElement.scrollTop > 0;
         setIsScrolled(isSectionScrolled);
       }
@@ -176,34 +175,36 @@ const NewsPage: React.FC = () => {
 
   const totalFiltersCount = selectedCategories.length + selectedDurations.length + (dateRange ? 1 : 0);
 
-  useEffect(() => {
-  if (containerRef.current) {
-    const containerWidth = containerRef.current.offsetWidth;
-    let totalWidth = 0;
-    let visibleCount = 0;
-    let needsMoreButton = false;
+useEffect(() => {
+  const calculateVisibleFilters = () => {
+    if (!containerRef.current) return;
 
-    const buttonElements = Array.from(containerRef.current.children) as HTMLElement[];
+    try {
+      const containerWidth = containerRef.current.offsetWidth;
+      const filterButtons = Array.from(containerRef.current.children) as HTMLElement[];
 
-    for (let i = 0; i < buttonElements.length; i++) {
-      const buttonWidth = buttonElements[i].offsetWidth;
+      const moreButtonWidth = 80; 
+      let totalWidth = 0;
+      let visibleCount = 0;
 
-      if (totalWidth + buttonWidth > containerWidth) {
-        needsMoreButton = true;
-        break;
+      for (let i = 0; i < filterButtons.length; i++) {
+        const buttonWidth = filterButtons[i].offsetWidth + 8; 
+
+        if (totalWidth + buttonWidth > containerWidth - moreButtonWidth) {
+          break;
+        }
+
+        totalWidth += buttonWidth;
+        visibleCount++;
       }
 
-      totalWidth += buttonWidth;
-      visibleCount++;
+      setVisibleFilters(visibleCount);
+    } catch (error) {
+      console.error("Error calculating visible filters:", error);
     }
+  };
+}, [selectedCategories, selectedDurations, dateRange]);
 
-    if (needsMoreButton) {
-      visibleCount = Math.max(0, visibleCount - 1); 
-    }
-
-    setVisibleFilters(visibleCount);
-  }
-}, [selectedCategories, selectedDurations, dateRange, totalFiltersCount]);
 
 
   useEffect(() => {
@@ -269,7 +270,7 @@ const NewsPage: React.FC = () => {
 
   const formatDateWithSuffix = (dateStr: string) => {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return "Invalid Date"; // Handle invalid dates
+    if (isNaN(date.getTime())) return "Invalid Date"; 
 
     const day = date.getDate();
     const suffix =

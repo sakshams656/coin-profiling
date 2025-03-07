@@ -6,7 +6,7 @@ import { header, headerButton, iconButton, tabs } from "./styles";
 import NOOB from "@constants/noob";
 import Image from "next/image";
 import AssetsImg from "@public/images";
-import dummyArticles from "@components/Blogs/app/data/dummyArticles";
+import dummyArticles from "../Blogs/dummyData/dummyArticles";
 import NofilterBlogs from "./NoFilterBlogs";
 import {
   articleFooter,
@@ -15,7 +15,7 @@ import {
   articleTitle,
   Card,
   articleHeader,
-} from "./SearchStyle";
+} from "./Search/style";
 
 interface HeaderProps {
   selectedTab: string;

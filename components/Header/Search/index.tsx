@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, articleFooter, articleHeader, articleImage, articleInfo, articleTitle } from "./SearchStyle";
+import { Card, articleFooter, articleHeader, articleImage, articleInfo, articleTitle } from "./style";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 
