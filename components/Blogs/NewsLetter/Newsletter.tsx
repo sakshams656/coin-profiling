@@ -18,7 +18,7 @@ import {
   quote,
   Form,
   Subscribe,
-} from "../../styles/NewsLetterStyle";
+} from "./NewsLetterStyle";
 import Image from "next/image";
 
 const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {

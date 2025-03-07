@@ -14,7 +14,6 @@ import {
   articleInfo,
   articleTitle,
   Card,
-  OuterDiv,
   articleHeader,
 } from "./SearchStyle";
 
@@ -170,6 +169,9 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               "div>div": {
                 backgroundColor: colors.Zeb_Solid_Dark_Blue,
               },
+              button: {
+                backgroundColor: colors.Zeb_Solid_Dark_Blue
+              },
               zIndex: 1,
               width: "280px",
             })}
@@ -183,7 +185,6 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                     : "Trending Blogs:"
                 : ""
             }
-            // disableTick
             toggleInputSearch
             placeholder="Search Blogs"
             options={
@@ -216,6 +217,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               ...(filteredArticles.length === 0 && {
                 "& div:hover": {
                   backgroundColor: "#181837",
+                  borderRadius:".5rem"
                 },
               }),
             }}

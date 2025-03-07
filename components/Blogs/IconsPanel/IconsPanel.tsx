@@ -9,9 +9,11 @@ import {
   Divider,
   Checkbox,
   Radio,
+  utils,
+  colors,
 } from "zebpay-ui";
 
-import FilterIcon from "../../icons/FilterIcon";
+import FilterIcon from "../app/icons/FilterIcon";
 import {
   Added,
   ButtonGroup,
@@ -21,11 +23,14 @@ import {
   filterAndUpdownFrame,
   filter,
   updown,
-} from "../../styles/iconsPanel";
+} from "../app/styles/iconsPanel";
 import { css } from "@emotion/react";
-import Dropdown from "./Dropdown";
+import Dropdown from "../DropDown/Dropdown";
 import AssetsImg from "@public/images";
 import Image from "next/image";
+
+import { DateRangePicker } from "@components/Shared";
+import { DateRange } from "@components/Shared/DateRangePicker";
 
 interface IconsPanelProps {
   onCategoryChange: (categories: string[]) => void;
@@ -72,6 +77,9 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   const [isDurationOpen, setIsDurationOpen] = useState(false);
   const [isDateRangeOpen, setIsDateRangeOpen] = useState(false);
 
+  const [isCustomDate, setIsCustomDate] = useState(false);
+const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
+
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -107,25 +115,41 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   };
 
   const handleDateRangeSelect = (value: string) => {
-    if (value === tempDateRange) {
+    if (value === "custom") {
+      setIsCustomDate(true);
       setTempDateRange("");
+      setCustomDateRange(null);
     } else {
+      setIsCustomDate(false);
       setTempDateRange(value);
     }
   };
 
-  const handleApplyFilters = () => {
-    onCategoryChange(tempCategories);
-    onDurationChange(tempDurations);
-    onDateRangeChange(tempDateRange);
-
-    setIsPanelOpen(false);
+  const handleDateRangePickerChange = (range: DateRange) => {
+    setCustomDateRange(range);
   };
+
+  const handleApplyFilters = () => {
+  if (isCustomDate && customDateRange) {
+    // Format dates in a standard format (YYYY-MM-DD)
+    const formattedStartDate = new Date(customDateRange.startDate).toISOString().split('T')[0];
+    const formattedEndDate = new Date(customDateRange.endDate).toISOString().split('T')[0];
+    onDateRangeChange(`${formattedStartDate} - ${formattedEndDate}`);
+  } else {
+    onDateRangeChange(tempDateRange);
+  }
+  onCategoryChange(tempCategories);
+  onDurationChange(tempDurations);
+  
+  setIsPanelOpen(false);
+};
 
   const handleResetFilters = () => {
     setTempCategories([]);
     setTempDurations([]);
     setTempDateRange("");
+    setCustomDateRange(null);
+    setIsCustomDate(false);
 
     onCategoryChange([]);
     onDurationChange([]);
@@ -177,12 +201,27 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
     }
   };
 
-  const dateRangeLabels = {
-    "7d": "Last 7 Days",
-    "1m": "Last Month",
-    "3m": "Last 3 Months",
-    "1y": "Last 1 Year",
+  const dateRangeLabels: Record<string, string> = {
+    "Last 7 Days": "Last 7 Days",
+    "Last Month": "Last Month",
+    "Last 3 Months": "Last 3 Months",
+    "Last 1 Year": "Last 1 Year",
   };
+  
+  const formatDate = (date: Date) => {
+    const day = date.getDate();
+    const suffix = (day % 10 === 1 && day !== 11) ? "st" :
+                   (day % 10 === 2 && day !== 12) ? "nd" :
+                   (day % 10 === 3 && day !== 13) ? "rd" : "th";
+    const month = date.toLocaleString("en-US", { month: "short" }); // "Mar"
+    const year = date.getFullYear().toString().slice(-2); // "22"
+    return `${day}${suffix} ${month} ${year}`;
+  };
+  
+  const selectedDateRangeLabel = isCustomDate && customDateRange
+    ? `${formatDate(new Date(customDateRange.startDate))} - ${formatDate(new Date(customDateRange.endDate))}`
+    : dateRangeLabels[tempDateRange] || "Select Date";
+  
 
   const handleSortChange = (value: string) => {
     onSortChange(value);
@@ -387,9 +426,10 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                   `}
                 >
                   Date Range
-                  {tempDateRange && (
-                    <span css={Added}>({dateRangeLabels[tempDateRange]})</span>
-                  )}
+                  {(tempDateRange || isCustomDate) && (
+  <span css={Added}>({selectedDateRangeLabel})</span>
+)}
+
                 </div>
               </div>
             }
@@ -400,10 +440,11 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
               `}
             >
               {[
-                { label: "Last 7 Days", value: "7d" },
-                { label: "Last Month", value: "1m" },
-                { label: "Last 3 Months", value: "3m" },
-                { label: "Last 1 Year", value: "1y" },
+                { label: "Last 7 Days", value: "Last 7 Days" },
+                { label: "Last Month", value: "Last Month" },
+                { label: "Last 3 Months", value: "Last 3 Months" },
+                { label: "Last 1 Year", value: "Last 1 Year" },
+                { label: "Custom", value: "custom" },
               ].map((option, index) => (
                 <React.Fragment key={option.value}>
                   <div
@@ -415,7 +456,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                   >
                     <Radio
                       name="date-range-checkbox"
-                      checked={tempDateRange === option.value}
+                      checked={tempDateRange === option.value|| (isCustomDate && option.value === "custom")}
                       onChange={() => handleDateRangeSelect(option.value)}
                       value={option.value}
                       style={{ marginRight: "1rem" }}
@@ -430,12 +471,29 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                     </label>
                   </div>
 
-                  {index < 3 && <Divider spacing={2} />}
+                  {index < 4 && <Divider spacing={2} />}
                 </React.Fragment>
               ))}
             </div>
           </Accordion>
         </div>
+
+        {isCustomDate&&<div
+          css={css`
+            margin-top: ${utils.remConverter(-8)};
+            padding: ${utils.remConverter(16)};
+            background-color: ${colors.Zeb_Solid_BG_Blue};
+            border-radius: ${utils.remConverter(4)};
+            // display: ${filters.dateRange === "Custom" ? "block" : "none"}; 
+          `}
+        >
+          <DateRangePicker
+            onChange={handleDateRangePickerChange}
+            minDate={new Date("2000-01-01")}
+            maxDate={new Date()}
+            // style={{"padding":"100px"}}
+          />
+        </div>}
 
         <div css={ButtonGroup}>
           <Button onClick={handleResetFilters} size="medium" type="secondary">

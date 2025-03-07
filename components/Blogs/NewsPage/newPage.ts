@@ -11,7 +11,7 @@ export const main = css({
   width: "100%",
   marginTop:"10px",
   padding: "0 2rem",
-  height: "calc(100vh - 5.5rem)",
+  height: "calc(100vh - 5.6rem)",
   overflowY:"hidden",
   flexShrink: 0,
   alignSelf: "stretch",
@@ -240,7 +240,7 @@ export const Button = styled.button`
 export const headerBelow = css({
   display:"flex",
   paddingLeft:"1rem",
-  overflowX:"auto",
+  overflowX:"hidden",
   whiteSpace:"nowrap",
   overflowY:"hidden",
   width: "100%",
@@ -263,13 +263,13 @@ export const selectedCategoriesContainer = css`
   display: flex;
   gap: 10px;
   flex-wrap: nowrap;
-  overflow-x: auto;
-  white-space: nowrap; 
+  // overflow-x: auto;
+  // overflow-y:"hidden"
+  // white-space: nowrap; 
   padding-bottom: 5px;
-  // scrollbar-width: thin;
-  whiteSpace: "nowrap", 
-  overflowX: "auto",
-  scrollbarWidth:"none"
+  // whiteSpace: "nowrap", 
+  overflow: "hidden",
+  // scrollbarWidth:"none"
 `;
 
 export const categoryButton = css`

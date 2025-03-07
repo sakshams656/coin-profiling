@@ -1,5 +1,5 @@
 import React from 'react';
-import NewsPage from '../Blogs/app/components/Blogs/Newspage';
+import NewsPage from './NewsPage/Newspage';
 import "../../styles/shared/global.ts";
 // import "../Blogs/app/styles/fonts.css" 
 

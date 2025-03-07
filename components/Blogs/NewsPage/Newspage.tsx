@@ -2,12 +2,12 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import ArticleCard from "./ArticleCard";
-import IconsPanel from "./IconsPanel";
-import dummyArticles from "../../data/dummyArticles";
-import NewsLetter from "./Newsletter";
-import Tradingbanner from "./Trading";
-import NoBlogsFound from "./NoBlogsFound";
+import ArticleCard from "../ArticleCard/ArticleCard";
+import IconsPanel from "../IconsPanel/IconsPanel";
+import dummyArticles from "../app/data/dummyArticles";
+import NewsLetter from "../NewsLetter/Newsletter";
+import Tradingbanner from "../Trading/Trading";
+import NoBlogsFound from "../NoBlogsFound/NoBlogsFound";
 import { Button, Shimmer } from "zebpay-ui";
 import Image from "next/image";
 
@@ -28,7 +28,7 @@ import {
   categoryText,
   closeIcon,
   headerBelow,
-} from "../../styles/newPage";
+} from "./newPage";
 import AssetsImg from "@public/images";
 
 interface Article {
@@ -51,23 +51,48 @@ const calculateReadingTime = (content: string) => {
 const isValidDate = (date: string): boolean => !isNaN(Date.parse(date));
 
 const isWithinDateRange = (date: string, range: string): boolean => {
-  const currentDate = new Date();
   const articleDate = new Date(date);
-  const timeDifference = currentDate.getTime() - articleDate.getTime();
-  const dayInMilliseconds = 24 * 60 * 60 * 1000;
+  if (isNaN(articleDate.getTime())) return false;
 
+  // Handle cases where range is a predefined duration
+  const currentDate = new Date();
   switch (range) {
-    case "7d":
-      return timeDifference <= 7 * dayInMilliseconds;
-    case "1m":
-      return timeDifference <= 30 * dayInMilliseconds;
-    case "3m":
-      return timeDifference <= 90 * dayInMilliseconds;
-    case "1y":
-      return timeDifference <= 365 * dayInMilliseconds;
+    case "Last 7 Days":
+      return (
+        articleDate >= new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000)
+      );
+    case "Last Month":
+      return (
+        articleDate >= new Date(new Date().setMonth(currentDate.getMonth() - 1))
+      );
+    case "Last 3 Months":
+      return (
+        articleDate >= new Date(new Date().setMonth(currentDate.getMonth() - 3))
+      );
+    case "Last 1 Year":
+      return (
+        articleDate >=
+        new Date(new Date().setFullYear(currentDate.getFullYear() - 1))
+      );
     default:
-      return true;
+      break;
   }
+
+  // Handle custom date range in the format "YYYY-MM-DD - YYYY-MM-DD"
+  if (range.includes(" - ")) {
+    const [startDateStr, endDateStr] = range.split(" - ");
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return false;
+
+    // Adjust end date to the end of the day to include articles published on that date
+    endDate.setHours(23, 59, 59, 999);
+
+    return articleDate >= startDate && articleDate <= endDate;
+  }
+
+  return true;
 };
 
 const NewsPage: React.FC = () => {
@@ -83,6 +108,8 @@ const NewsPage: React.FC = () => {
   const [iconsPanelKey, setIconsPanelKey] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [visibleFilters, setVisibleFilters] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleCategoryChange = (categories: string[]) => {
     setSelectedCategories(categories);
@@ -105,8 +132,7 @@ const NewsPage: React.FC = () => {
       try {
         setArticles(dummyArticles);
         setFilteredArticles(dummyArticles);
-        setTimeout(()=>setLoading(false),4000)
-        
+        setTimeout(() => setLoading(false), 4000);
       } catch (err) {
         console.error("Error fetching cryptocurrency news:", err);
         setError("Failed to fetch news.");
@@ -121,7 +147,7 @@ const NewsPage: React.FC = () => {
 
     const handleScroll = () => {
       if (sectionElement) {
-        // const headerHeight = 110; 
+        // const headerHeight = 110;
         const isSectionScrolled = sectionElement.scrollTop > 0;
         setIsScrolled(isSectionScrolled);
       }
@@ -137,7 +163,7 @@ const NewsPage: React.FC = () => {
       }
     };
   }, []);
-  
+
   const handleReset = () => {
     setSelectedCategories([]);
     setSelectedDurations([]);
@@ -147,6 +173,38 @@ const NewsPage: React.FC = () => {
 
     setIconsPanelKey((prev) => prev + 1);
   };
+
+  const totalFiltersCount = selectedCategories.length + selectedDurations.length + (dateRange ? 1 : 0);
+
+  useEffect(() => {
+  if (containerRef.current) {
+    const containerWidth = containerRef.current.offsetWidth;
+    let totalWidth = 0;
+    let visibleCount = 0;
+    let needsMoreButton = false;
+
+    const buttonElements = Array.from(containerRef.current.children) as HTMLElement[];
+
+    for (let i = 0; i < buttonElements.length; i++) {
+      const buttonWidth = buttonElements[i].offsetWidth;
+
+      if (totalWidth + buttonWidth > containerWidth) {
+        needsMoreButton = true;
+        break;
+      }
+
+      totalWidth += buttonWidth;
+      visibleCount++;
+    }
+
+    if (needsMoreButton) {
+      visibleCount = Math.max(0, visibleCount - 1); 
+    }
+
+    setVisibleFilters(visibleCount);
+  }
+}, [selectedCategories, selectedDurations, dateRange, totalFiltersCount]);
+
 
   useEffect(() => {
     let filtered = articles.filter((article) => {
@@ -205,15 +263,72 @@ const NewsPage: React.FC = () => {
     );
   };
 
-  const handleRemoveDate = (dateToRemove: string) => {
+  const handleRemoveDate = () => {
     setDateRange("");
   };
+
+  const formatDateWithSuffix = (dateStr: string) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return "Invalid Date"; // Handle invalid dates
+
+    const day = date.getDate();
+    const suffix =
+      day === 1 || day === 21 || day === 31
+        ? "st"
+        : day === 2 || day === 22
+          ? "nd"
+          : day === 3 || day === 23
+            ? "rd"
+            : "th";
+
+    return `${day}${suffix} ${date.toLocaleDateString("en-GB", {
+      month: "short",
+      year: "numeric",
+    })}`;
+  };
+
+  // Combine all filters into a single array for proper display management
+  const allFilters = [
+    ...selectedCategories.map(category => ({ 
+      type: 'category', 
+      value: category,
+      icon: AssetsImg.ic_category_white,
+      onRemove: () => handleRemoveCategory(category)
+    })),
+    ...selectedDurations.map(duration => ({ 
+      type: 'duration', 
+      value: duration,
+      icon: AssetsImg.ic_clock_white,
+      onRemove: () => handleRemoveDuration(duration)
+    })),
+    ...(dateRange ? [{ 
+      type: 'date', 
+      value: dateRange.includes(" - ")
+        ? dateRange
+            .split(" - ")
+            .map((date) => formatDateWithSuffix(date))
+            .join(" - ")
+        : dateRange,
+      icon: null, // Using i tag for calendar icon
+      onRemove: () => handleRemoveDate()
+    }] : [])
+  ];
+
+  // Display only the first 'visibleFilters' number of filters
+  const visibleFilterItems = allFilters.slice(0, visibleFilters);
+  const hiddenFiltersCount = allFilters.length - visibleFilters;
 
   return (
     <div css={main}>
       <div css={container}>
-      <div css={headerFrame(isScrolled, selectedCategories.length > 0 || selectedDurations.length > 0 || dateRange !== "")}>
-
+        <div
+          css={headerFrame(
+            isScrolled,
+            selectedCategories.length > 0 ||
+              selectedDurations.length > 0 ||
+              dateRange !== ""
+          )}
+        >
           <div css={header}>
             <div css={news}>Crypto Blogs</div>
             <IconsPanel
@@ -232,39 +347,29 @@ const NewsPage: React.FC = () => {
             selectedDurations.length > 0 ||
             dateRange) && (
             <div css={headerBelow}>
-              <div css={selectedCategoriesContainer}>
-              
-                {selectedCategories.map((category) => (
-                  <button key={category} css={categoryButton}>
-                    <Image src={AssetsImg.ic_category_white} css={clockIcon} />
-                    <span css={categoryText}>{category}</span>
+              <div css={selectedCategoriesContainer} ref={containerRef}>
+                {visibleFilterItems.map((filter, index) => (
+                  <button key={`${filter.type}-${filter.value}-${index}`} css={categoryButton}>
+                    {filter.icon ? (
+                      <Image src={filter.icon} css={clockIcon} alt={filter.type} />
+                    ) : (
+                      <i className="icon icon-calendar" css={clockIcon} />
+                    )}
+                    <span css={categoryText}>{filter.value}</span>
                     <Image
                       src={AssetsImg.ic_cross_blue}
                       css={closeIcon}
-                      onClick={() => handleRemoveCategory(category)}
+                      onClick={filter.onRemove}
+                      alt="remove"
                     />
                   </button>
                 ))}
-                {selectedDurations.map((duration) => (
-                  <button key={duration} css={categoryButton}>
-                    <Image src={AssetsImg.ic_clock_white} css={clockIcon} />
-                    <span css={categoryText}>{duration}</span>
-                    <Image
-                      src={AssetsImg.ic_cross_blue}
-                      css={closeIcon}
-                      onClick={() => handleRemoveDuration(duration)}
-                    />
-                  </button>
-                ))}
-                {dateRange && (
-                  <button key={dateRange} css={categoryButton}>
-                    <i className="icon icon-calendar" css={clockIcon} />
-                    <span css={categoryText}>{dateRange}</span>
-                    <Image
-                      src={AssetsImg.ic_cross_blue}
-                      css={closeIcon}
-                      onClick={() => handleRemoveDate(dateRange)}
-                    />
+                {hiddenFiltersCount > 0 && (
+                  <button
+                    css={categoryButton}
+                    onClick={() => setVisibleFilters(Infinity)}
+                  >
+                    +{hiddenFiltersCount} More
                   </button>
                 )}
               </div>
@@ -276,64 +381,25 @@ const NewsPage: React.FC = () => {
               >
                 Reset
               </Button>
-              
             </div>
           )}
-          
         </div>
-        <div css={section} ref={sectionRef} >
+        <div css={section} ref={sectionRef}>
           {error ? (
             <div>{error}</div>
           ) : (
-            <div css={InsideSection} >
+            <div css={InsideSection}>
               {loading ? (
                 Array.from({ length: 12 }).map((_, index) => (
                   <ArticleCard
                     key={index}
-                    
-                    title={
-                      <Shimmer
-                    
-                        height={18}
-                        width={300}
-                      />
-                    }
-                    link={
-                      <Shimmer
-                        height={22}
-                        width={205}
-                      />
-                    }
-                    imageUrl={
-                      <Shimmer
-                        height={110}
-                        width={205}
-                      />
-                    }
-                    date={
-                      <Shimmer
-                        height={20}
-                        width={120}
-                      />
-                    }
-                    totalViews={
-                      <Shimmer
-                        height={20}
-                        width={120}
-                      />
-                    }
-                    category={
-                      <Shimmer
-                        height={24}
-                        width={150}
-                      />
-                    }
-                    description={
-                      <Shimmer
-                        height={38}
-                        width={300}
-                      />
-                    }
+                    title={<Shimmer height={18} width={300} />}
+                    link={<Shimmer height={22} width={205} />}
+                    imageUrl={<Shimmer height={110} width={205} />}
+                    date={<Shimmer height={20} width={120} />}
+                    totalViews={<Shimmer height={20} width={120} />}
+                    category={<Shimmer height={24} width={150} />}
+                    description={<Shimmer height={38} width={300} />}
                   />
                 ))
               ) : filteredArticles.length === 0 ? (
@@ -349,14 +415,16 @@ const NewsPage: React.FC = () => {
                     imageUrl={article.urlToImage}
                     date={
                       isValidDate(article.publishedAt)
-                        ? new Date(article.publishedAt).toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })
+                        ? new Date(article.publishedAt).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          )
                         : "Unknown Date"
                     }
-                    
                     totalViews={article.totalViews}
                     category={article.category}
                     description={article.content}
@@ -369,8 +437,8 @@ const NewsPage: React.FC = () => {
       </div>
       <div css={innerDiv}>
         <div css={innerCard}>
-          <NewsLetter isLoading={loading}/>
-          <Tradingbanner isLoading={loading}/>
+          <NewsLetter isLoading={loading} />
+          <Tradingbanner isLoading={loading} />
         </div>
       </div>
     </div>
