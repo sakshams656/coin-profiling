@@ -11,25 +11,25 @@ import TimeFrame from "../../Timeframe";
 import Table from "../../Table";
 import NoTable from "../../NoTable";
 import {
-  Main,
-  Graph,
-  PredictionCards,
-  InnerWrapper,
-  Heading,
-  FieldRow,
-  Cryptoselect,
-  ButtonWrapper,
-  Component15,
-  Rightsidecards,
-  Breakdown,
-  CurrentValue,
-  Roww,
-  Coll,
-  Headercontent,
-  Headercontent1,
-  Up,
-  Down,
-  Chart,
+  main,
+  graph,
+  predictionCards,
+  innerWrapper,
+  heading,
+  fieldRow,
+  cryptoSelect,
+  buttonWrapper,
+  component15,
+  rightSideCards,
+  breakdown,
+  currentValue,
+  roww,
+  coll,
+  headerContent,
+  headerContent1,
+  up,
+  down,
+  chart,
 } from "../styles/emotionStyles";
 import PriceChart from "../../Pricechart/PriceChart";
 
@@ -70,10 +70,10 @@ const BTCPricePredictor: React.FC = () => {
   };
 
   return (
-    <Main>
-      <Graph>
-        <PredictionCards>
-          <Heading>
+    <div css={main}>
+      <div css={graph}>
+        <div css={predictionCards}>
+          <div css={heading}>
             {loading ? (
               <Shimmer height={30} width={250} mode="dark" />
             ) : (
@@ -82,8 +82,8 @@ const BTCPricePredictor: React.FC = () => {
                 <h3>Predict BTC Price</h3>
               </>
             )}
-          </Heading>
-          <Cryptoselect>
+          </div>
+          <div css={cryptoSelect}>
             {loading ? (
               <Shimmer style={{"margin-bottom":"10px"}}  height={20} width={80} />
             ) : (
@@ -94,8 +94,8 @@ const BTCPricePredictor: React.FC = () => {
             ) : (
               <CryptoSelector loader={loader} crypto={crypto} setCrypto={setCrypto} />
             )}
-          </Cryptoselect>
-          <FieldRow>
+          </div>
+          <div css={fieldRow}>
             <InvestmentAmount
               loading={loading}
               loader={loader}
@@ -107,8 +107,8 @@ const BTCPricePredictor: React.FC = () => {
               loader={loader}
               setTimeframe={setTimeframe}
             />
-          </FieldRow>
-          <ButtonWrapper>
+          </div>
+          <div css={buttonWrapper}>
             {loading ? (
               <Shimmer  height={40} width={960} />
             ) : (
@@ -123,23 +123,23 @@ const BTCPricePredictor: React.FC = () => {
                 Predict {crypto} Future Price
               </Button>
             )}
-          </ButtonWrapper>
-        </PredictionCards>
-        <Component15>
+          </div>
+        </div>
+        <div css={component15}>
           {loading ? (
             <Shimmer  height={240} width={1000} />
           ) : (
-            <Chart>
+            <div css={chart}>
               <PriceChart showFutureData={showTable} />
-            </Chart>
+            </div>
           )}
-        </Component15>
-      </Graph>
-      <Rightsidecards>
-        <Breakdown>
-            <CurrentValue>
-              <InnerWrapper>
-                <Roww>
+        </div>
+      </div>
+      <div css={rightSideCards}>
+        <div css={breakdown}>
+            <div css={currentValue}>
+              <div css={innerWrapper}>
+                <div css={roww}>
                   {loading?<Shimmer  height={68} width={68} typeLightdDark/>: <img
                     src={iconImage.src}
                     alt="Icon"
@@ -149,10 +149,10 @@ const BTCPricePredictor: React.FC = () => {
                       alignSelf: "end",
                     }}
                   />}
-                  <Coll>
-                    {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<Up>
-                      <Headercontent>Current Value</Headercontent>
-                      <Headercontent1>
+                  <div css={coll}>
+                    {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<div css={up}>
+                      <div css={headerContent}>Current Value</div>
+                      <div css={headerContent1}>
                         <svg
                           width="10"
                           height="10"
@@ -166,13 +166,13 @@ const BTCPricePredictor: React.FC = () => {
                           />
                         </svg>
                         100.31%
-                      </Headercontent1>
-                    </Up>}
-                    {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<Down>₹88,11,06,349.88</Down>}
-                  </Coll>
-                </Roww>
-              </InnerWrapper>
-            </CurrentValue>
+                      </div>
+                    </div>}
+                    {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<div css={down}>₹88,11,06,349.88</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
 
           {!showTable ? <NoTable /> : <Table loading={loading} />}
           {loading ? (
@@ -188,9 +188,9 @@ const BTCPricePredictor: React.FC = () => {
               type="info"
             />
           )}
-        </Breakdown>
-      </Rightsidecards>
-    </Main>
+        </div>
+      </div>
+    </div>
   );
 };
 
