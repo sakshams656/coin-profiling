@@ -15,7 +15,9 @@ export const tabs = css({
   marginBottom: utils.remConverter(0),
   padding: utils.remConverter(0),
 });
+
 export const headerButton = css({
+  position: "relative",
   marginBottom: utils.remConverter(32),
   marginRight: utils.remConverter(40),
   display: "flex",
@@ -27,9 +29,10 @@ export const headerButton = css({
     gap: utils.remConverter(8),
   },
 });
+
 export const iconButton = css({
   background: colors.Zeb_Solid_Dark_Blue,
-  borderRadius: utils.remConverter(4),
+  borderRadius: utils.remConverter(8),
   border: "none",
   width: utils.remConverter(36),
   height: utils.remConverter(36),
@@ -38,6 +41,7 @@ export const iconButton = css({
   justifyContent: "center",
   padding: utils.remConverter(8),
   cursor: "pointer",
+  position: "relative", 
   "&:hover": {
     borderColor: colors.Zeb_Solid_Light_Blue,
   },

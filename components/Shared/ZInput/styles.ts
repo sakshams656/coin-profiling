@@ -53,6 +53,7 @@ export const inputGroup = css({
 
 export const focusedInputGroup = (isMobile?: boolean) =>
   css({
+    marginRight: utils.remConverter(26),
     borderColor: colors.Zeb_Solid_Bright_Blue,
     boxShadow: isMobile
       ? colors.Zeb_Effects_Soft_Shadow
@@ -148,5 +149,6 @@ export const inputIcon = css({
 export const labelContainer = css({
   display: "flex",
   justifyContent: "space-between",
-  alignItems: "center"
+  alignItems: "center",
+  paddingLeft: utils.remConverter(8)
 });
