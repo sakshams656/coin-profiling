@@ -1,7 +1,9 @@
 import Header from "@components/Header/Header";
 import NewsPage from "@components/News";
 import Overview from "@components/Overview";
-import { main } from "@styles/styles";
+import Blogs from "@components/Blogs"
+import { main } from "./style";
+
 import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
 
@@ -18,7 +20,7 @@ const CoinProfiling = () => {
       case "news":
         return <NewsPage/>;
       case "blogs":
-        return <div>You're viewing Tab 4</div>;
+        return <Blogs/>;
       default:
         return <div>Invalid Tab</div>;
     }
