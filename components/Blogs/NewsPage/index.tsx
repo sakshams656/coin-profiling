@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef,useLayoutEffect } from "react";
 import ArticleCard from "../ArticleCard";
 import IconsPanel from "../IconsPanel";
 import dummyArticles from "../dummyData/dummyArticles";
@@ -77,14 +77,12 @@ const isWithinDateRange = (date: string, range: string): boolean => {
       break;
   }
 
-
   if (range.includes(" - ")) {
     const [startDateStr, endDateStr] = range.split(" - ");
     const startDate = new Date(startDateStr);
     const endDate = new Date(endDateStr);
 
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return false;
-
 
     endDate.setHours(23, 59, 59, 999);
 
@@ -109,7 +107,7 @@ const NewsPage: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visibleFilters, setVisibleFilters] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
-const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleCategoryChange = (categories: string[]) => {
     setSelectedCategories(categories);
@@ -173,39 +171,79 @@ const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
     setIconsPanelKey((prev) => prev + 1);
   };
 
-  const totalFiltersCount = selectedCategories.length + selectedDurations.length + (dateRange ? 1 : 0);
-
-useEffect(() => {
-  const calculateVisibleFilters = () => {
-    if (!containerRef.current) return;
-
-    try {
-      const containerWidth = containerRef.current.offsetWidth;
-      const filterButtons = Array.from(containerRef.current.children) as HTMLElement[];
-
-      const moreButtonWidth = 80; 
-      let totalWidth = 0;
-      let visibleCount = 0;
-
-      for (let i = 0; i < filterButtons.length; i++) {
-        const buttonWidth = filterButtons[i].offsetWidth + 8; 
-
-        if (totalWidth + buttonWidth > containerWidth - moreButtonWidth) {
-          break;
+  const totalFiltersCount =
+    selectedCategories.length + selectedDurations.length + (dateRange ? 1 : 0);
+    useLayoutEffect(() => {
+      const calculateVisibleFilters = () => {
+        if (!containerRef.current) return;
+    
+        const currentAllFilters = [
+          ...selectedCategories.map(category => ({ type: "category", value: category })),
+          ...selectedDurations.map(duration => ({ type: "duration", value: duration })),
+          ...(dateRange ? [{ type: "date", value: dateRange }] : [])
+        ];
+        
+        try {
+          const containerWidth = containerRef.current.offsetWidth;
+          const filterButtons = Array.from(
+            containerRef.current.children
+          ) as HTMLElement[];
+          
+          const resetButtonMargin = 0;
+          const moreButtonWidth = 0; 
+          let totalWidth = 0;
+          let visibleCount = 0;
+    
+          for (let i = 0; i < filterButtons.length; i++) {
+            const buttonWidth = filterButtons[i].offsetWidth;
+    
+            if (
+              totalWidth + buttonWidth + (currentAllFilters.length > i+1 ? moreButtonWidth : 0) >
+              containerWidth - resetButtonMargin
+            ) {
+              break;
+            }
+    
+            totalWidth += buttonWidth;
+            visibleCount++;
+          }
+    
+          if (currentAllFilters.length > 1 && visibleCount >= currentAllFilters.length) {
+            visibleCount = currentAllFilters.length ;
+          }
+    
+          setVisibleFilters(visibleCount);
+        } catch (error) {
+          console.error("Error calculating visible filters:", error);
         }
-
-        totalWidth += buttonWidth;
-        visibleCount++;
+      };
+    
+      calculateVisibleFilters();
+    
+      const resizeObserver = new ResizeObserver(() => {
+        if (resizeTimeout.current) {
+          clearTimeout(resizeTimeout.current);
+        }
+        resizeTimeout.current = setTimeout(() => {
+          calculateVisibleFilters();
+        }, 100);
+      });
+    
+      if (containerRef.current) {
+        resizeObserver.observe(containerRef.current);
       }
+    
+      return () => {
+        if (containerRef.current) {
+          resizeObserver.disconnect();
+        }
+        if (resizeTimeout.current) {
+          clearTimeout(resizeTimeout.current);
+        }
+      };
+    }, [selectedCategories, selectedDurations, dateRange]); 
 
-      setVisibleFilters(visibleCount);
-    } catch (error) {
-      console.error("Error calculating visible filters:", error);
-    }
-  };
-}, [selectedCategories, selectedDurations, dateRange]);
-
-
+    
 
   useEffect(() => {
     let filtered = articles.filter((article) => {
@@ -270,7 +308,7 @@ useEffect(() => {
 
   const formatDateWithSuffix = (dateStr: string) => {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return "Invalid Date"; 
+    if (isNaN(date.getTime())) return "Invalid Date";
 
     const day = date.getDate();
     const suffix =
@@ -289,29 +327,33 @@ useEffect(() => {
   };
 
   const allFilters = [
-    ...selectedCategories.map(category => ({ 
-      type: 'category', 
+    ...selectedCategories.map((category) => ({
+      type: "category",
       value: category,
       icon: AssetsImg.ic_category_white,
-      onRemove: () => handleRemoveCategory(category)
+      onRemove: () => handleRemoveCategory(category),
     })),
-    ...selectedDurations.map(duration => ({ 
-      type: 'duration', 
+    ...selectedDurations.map((duration) => ({
+      type: "duration",
       value: duration,
       icon: AssetsImg.ic_clock_white,
-      onRemove: () => handleRemoveDuration(duration)
+      onRemove: () => handleRemoveDuration(duration),
     })),
-    ...(dateRange ? [{ 
-      type: 'date', 
-      value: dateRange.includes(" - ")
-        ? dateRange
-            .split(" - ")
-            .map((date) => formatDateWithSuffix(date))
-            .join(" - ")
-        : dateRange,
-      icon: null, 
-      onRemove: () => handleRemoveDate()
-    }] : [])
+    ...(dateRange
+      ? [
+          {
+            type: "date",
+            value: dateRange.includes(" - ")
+              ? dateRange
+                  .split(" - ")
+                  .map((date) => formatDateWithSuffix(date))
+                  .join(" - ")
+              : dateRange,
+            icon: null,
+            onRemove: () => handleRemoveDate(),
+          },
+        ]
+      : []),
   ];
 
   const visibleFilterItems = allFilters.slice(0, visibleFilters);
@@ -348,9 +390,16 @@ useEffect(() => {
             <div css={headerBelow}>
               <div css={selectedCategoriesContainer} ref={containerRef}>
                 {visibleFilterItems.map((filter, index) => (
-                  <button key={`${filter.type}-${filter.value}-${index}`} css={categoryButton}>
+                  <button
+                    key={`${filter.type}-${filter.value}-${index}`}
+                    css={categoryButton}
+                  >
                     {filter.icon ? (
-                      <Image src={filter.icon} css={clockIcon} alt={filter.type} />
+                      <Image
+                        src={filter.icon}
+                        css={clockIcon}
+                        alt={filter.type}
+                      />
                     ) : (
                       <i className="icon icon-calendar" css={clockIcon} />
                     )}
@@ -366,7 +415,7 @@ useEffect(() => {
                 {hiddenFiltersCount > 0 && (
                   <button
                     css={categoryButton}
-                    onClick={() => setVisibleFilters(Infinity)}
+                    onClick={() => setVisibleFilters(allFilters.length)} 
                   >
                     +{hiddenFiltersCount} More
                   </button>

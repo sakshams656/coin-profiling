@@ -258,6 +258,7 @@ export const selectedCategoriesContainer = css`
   gap: ${utils.remConverter(10)};
   padding-bottom: ${utils.remConverter(5)};
   overflow: hidden;
+  // width:100%;
 `;
 
 export const categoryButton = css`
