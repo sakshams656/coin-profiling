@@ -364,8 +364,8 @@ const ZCustomSelect: React.FC<IZCustomSelectData> = ({
                           css={styles.selectedIcon(theme === "light")}
                           src={
                             theme === "light"
-                              ? AssetsImg.ic_tick_blue
-                              : AssetsImg.ic_tick
+                              ? AssetsImg.ic_tick_blue.src
+                              : AssetsImg.ic_tick.src
                           }
                           alt="Selected icon"
                         />

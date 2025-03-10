@@ -117,7 +117,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
             smallSearch && styles.searchInputSmallLowerIcon
           ]}
           src={
-            theme === "light" ? AssetsImg.ic_search_grey : AssetsImg.ic_search
+            theme === "light" ? AssetsImg.ic_search_grey.src : AssetsImg.ic_search.src
           }
           alt="Search icon"
         />
@@ -153,7 +153,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       >
         <img
           data-test-id="closeSearchBar"
-          src={AssetsImg.ic_cross}
+          src={AssetsImg.ic_cross.src}
           alt="Close icon"
         />
       </button>
