@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { css } from "@emotion/react";

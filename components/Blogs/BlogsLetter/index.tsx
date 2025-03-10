@@ -1,9 +1,7 @@
-/** @jsxImportSource @emotion/react */
-"use client";
+
 
 import { useState } from "react";
 import { Icon, Input, Button, CircularLoader, Shimmer } from "zebpay-ui";
-import { css } from "@emotion/react";
 import AssetsImg from "@public/images";
 
 import {
@@ -14,7 +12,7 @@ import {
   newsChild,
   newsHeader,
   heading,
-  MailIcon,
+  mailIcon,
   quote,
   Form,
   Subscribe,
@@ -66,7 +64,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
         <div>
           <div css={newsHeader}>
 
-            <MailIcon>
+            <div css={mailIcon}>
               {isLoading ? (
                 <Shimmer height={70} width={70} />
               ) : (
@@ -77,7 +75,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
                   alt={isSubscribed ? "Subscribed" : "Mail"}
                 />
               )}
-            </MailIcon>
+            </div>
             <div css={heading}>
               {isLoading ? (
                 <Shimmer

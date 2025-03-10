@@ -20,7 +20,6 @@ import ic_playstore from "./icons/playStore.svg";
 import ic_appstore from "./icons/AppStore.svg";
 import ic_zebpayCoin from "./icons/zebpayCoinImg.svg";
 import ic_zebra from "./icons/zebra.svg";
-import ic_mail from "./icons/mailIcon.png";
 import ic_NoNews from "./icons/NoNewsFound.svg";
 import ic_kyc from "./icons/KYC.svg";
 import ic_info from "./icons/info.png";
@@ -33,7 +32,7 @@ import ic_header_star from "./icons/star.png";
 import ic_share from "./icons/share.png";
 import ic_clock from "./icons/term.png";
 import ic_info_white from "./icons/info_white.png";
-import ic_seperator from "./icons/separator.png";
+
 import ic_copy_link from "./icons/copy.png";
 import ic_whatsapp from "./icons/109-whatsapp 1.png";
 import ic_instagram from "./icons/Instagram.png";
@@ -83,7 +82,6 @@ import ic_cross from "./Icons/cross.svg";
 import ic_investmentIcon from "./illustrations/investmentIcon.png";
 import ic_no_search from "./illustrations/no-search.png";
 import ic_tb_gradient from './illustrations/trading_banner_gradient.png'
-import ic_no_search from "./illustrations/no-search.png";
 
 const AssetsImg = {
   i_zebpay_logo,
@@ -149,17 +147,17 @@ const AssetsImg = {
   ic_share_white,
   ic_rank,
   ic_calendar_white,
-  ic_document_white
-  i_404_bg,
+  ic_document_white,
+
   ic_app_store,
   ic_arrow_down,
   ic_category,
   ic_date,
   ic_duration,
   ic_google_play,
-  ic_mail,
+
   ic_no_blogs_found,
-  ic_seperator,
+
   ic_subscribed,
   ic_views,
   ic_zebpay,
@@ -168,7 +166,7 @@ const AssetsImg = {
   ic_cross_blue,
   ic_clock_white,
   ic_category_white,
-  ic_no_search
+
 };
 
 export default AssetsImg;

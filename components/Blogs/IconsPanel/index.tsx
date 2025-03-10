@@ -1,6 +1,3 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
 import React, { useState, useRef, useEffect } from "react";
 import {
   SidePanel,
@@ -18,7 +15,6 @@ import {
   Added,
   ButtonGroup,
   InsidePanel,
-  StyledSidePanel,
   Title,
   filterAndUpdownFrame,
   icon,
@@ -254,7 +250,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
       <div css={icon} style={{ cursor: "pointer" }}>
         <Dropdown onSortChange={handleSortChange} />
       </div>
-      <StyledSidePanel
+      <SidePanel
         onBack={() => setIsPanelOpen(false)}
         onClose={() => setIsPanelOpen(false)}
         title="Filter Blogs"
@@ -522,7 +518,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             Apply
           </Button>
         </div>
-      </StyledSidePanel>
+      </SidePanel>
     </div>
   );
 };
