@@ -68,6 +68,21 @@ const isInDurationRange = (minutes: number, range: string) => {
   }
 };
 
+const parseCustomDateRange = (range: string): { startDate: Date; endDate: Date } => {
+  const [start, end] = range.split(" - ");
+  const parseDate = (dateStr: string): Date => {
+    const [dayStr, monthStr, yearStr] = dateStr.split(" ");
+    const day = parseInt(dayStr.replace(/[^0-9]/g, ""), 10);
+    const month = new Date(`${monthStr} 1`).getMonth();
+    const year = parseInt(`20${yearStr}`, 10);
+    return new Date(year, month, day);
+  };
+  return {
+    startDate: parseDate(start),
+    endDate: parseDate(end),
+  };
+};
+
 const isInDateRange = (publishedAt: string, range: string | null) => {
   const articleDate = new Date(publishedAt);
   const now = new Date();
@@ -75,7 +90,7 @@ const isInDateRange = (publishedAt: string, range: string | null) => {
   if (!range || !isValidDate(publishedAt)) return true;
 
   if (range.includes(" - ")) {
-    const [startDate, endDate] = range.split(" - ").map((d) => new Date(d));
+    const { startDate, endDate } = parseCustomDateRange(range);
     return articleDate >= startDate && articleDate <= endDate;
   }
 
@@ -104,7 +119,6 @@ const NewsPage: React.FC = () => {
   const [showNewContent, setShowNewContent] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Filter + More Logic
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
@@ -136,21 +150,39 @@ const NewsPage: React.FC = () => {
     const padding = parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight);
     const gap = parseFloat(containerStyle.gap) || 8;
 
-    const availableWidth = container.clientWidth - padding - resetButtonWidth - gap * 2;
+    const availableWidth = container.clientWidth - padding - resetButtonWidth - gap;
     let totalWidth = 0;
     let visibleCount = 0;
 
     const tempDiv = document.createElement("div");
     tempDiv.style.visibility = "hidden";
     tempDiv.style.position = "absolute";
+    tempDiv.style.display = "flex";
+    tempDiv.style.gap = `${gap}px`;
     document.body.appendChild(tempDiv);
 
-    activeFiltersArray.forEach((filter) => {
+    const moreTag = document.createElement("div");
+    moreTag.style.display = "flex";
+    moreTag.style.alignItems = "center";
+    moreTag.style.padding = "6px 10px";
+    moreTag.style.gap = "6px";
+    moreTag.style.whiteSpace = "nowrap";
+    moreTag.innerHTML = `
+      <span>+X More</span>
+      <button style="margin-left: 6px;">
+        <img src="${AssetsImg.ic_cross}" width="16" height="16" />
+      </button>
+    `;
+    tempDiv.appendChild(moreTag);
+    const moreTagWidth = moreTag.getBoundingClientRect().width + gap;
+
+    for (const filter of activeFiltersArray) {
       const tag = document.createElement("div");
       tag.style.display = "flex";
       tag.style.alignItems = "center";
       tag.style.padding = "6px 10px";
       tag.style.gap = "6px";
+      tag.style.whiteSpace = "nowrap";
       tag.innerHTML = `
         <img src="${
           filter.type === "publishers"
@@ -165,17 +197,24 @@ const NewsPage: React.FC = () => {
         </button>
       `;
       tempDiv.appendChild(tag);
-      const width = tag.getBoundingClientRect().width + gap;
-      if (totalWidth <= availableWidth) {
-        totalWidth += width;
+      const tagWidth = tag.getBoundingClientRect().width + gap;
+
+      const remainingTags = activeFiltersArray.length - (visibleCount + 1);
+      const widthWithMore = totalWidth + tagWidth + (remainingTags > 0 ? moreTagWidth : 0);
+      if (widthWithMore <= availableWidth) {
+        totalWidth += tagWidth - 46;
         visibleCount++;
+      } else {
+        break;
       }
-    });
+    }
 
     document.body.removeChild(tempDiv);
+
     const remaining = activeFiltersArray.length - visibleCount;
-    setVisibleTags(remaining > 0 ? visibleCount : activeFiltersArray.length);
-    setOverflowCount(remaining > 0 ? remaining : 0);
+    const finalVisibleCount = remaining > 0 ? Math.max(0, visibleCount - 1) : visibleCount;
+    setVisibleTags(finalVisibleCount);
+    setOverflowCount(remaining > 0 ? remaining + (visibleCount > 0 ? 1 : 0) : 0);
   }, [activeFiltersArray.length]);
 
   const [pendingFilters, setPendingFilters] = useState<Filters>({
@@ -191,6 +230,7 @@ const NewsPage: React.FC = () => {
   });
   const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [resetTrigger, setResetTrigger] = useState(0);
 
   const [isSorterOpen, setIsSorterOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Latest");
@@ -216,8 +256,13 @@ const NewsPage: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (sectionRef.current) {
-        setIsScrolled(sectionRef.current.scrollTop > 0);
+      const element = sectionRef.current;
+      if (element) {
+        if (element.scrollTop > 0) {
+          element.classList.add("scrolled");
+        } else {
+          element.classList.remove("scrolled");
+        }
       }
     };
 
@@ -268,6 +313,7 @@ const NewsPage: React.FC = () => {
     setAccordionStates({ publishedBy: false, duration: false, dateRange: false });
     setCustomDateRange(null);
     setSearchTerm("");
+    setResetTrigger((prev) => prev + 1);
     setFilteredArticles(articles);
   };
 
@@ -281,14 +327,12 @@ const NewsPage: React.FC = () => {
     applyFilters(updatedFilters);
     if (type === "dateRange") {
       setCustomDateRange(null);
+      setResetTrigger((prev) => prev + 1);
     }
   };
 
   const handleRemoveHiddenFilters = () => {
-    // Get the hidden filters (those beyond visibleTags)
     const hiddenFilters = activeFiltersArray.slice(visibleTags);
-
-    // Create a new filters object by removing the hidden filters
     const updatedFilters = { ...activeFilters };
 
     hiddenFilters.forEach((filter) => {
@@ -299,6 +343,7 @@ const NewsPage: React.FC = () => {
       } else if (filter.type === "dateRange") {
         updatedFilters.dateRange = null;
         setCustomDateRange(null);
+        setResetTrigger((prev) => prev + 1);
       }
     });
 
@@ -350,7 +395,7 @@ const NewsPage: React.FC = () => {
   return (
     <div css={styles.main}>
       <div css={styles.container}>
-        <div css={styles.headerFrame(isScrolled, activeFiltersArray.length > 0)}>
+        <div css={styles.headerFrame(isScrolled)}>
           <div css={styles.header}>
             <div css={styles.news}>Crypto News</div>
             <div css={styles.filterAndUpdownFrame}>
@@ -366,6 +411,7 @@ const NewsPage: React.FC = () => {
                   setCustomDateRange={setCustomDateRange}
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
+                  resetTrigger={resetTrigger}
                 />
               </div>
               <div css={styles.updown}>
@@ -399,35 +445,37 @@ const NewsPage: React.FC = () => {
           </div>
           {activeFiltersArray.length > 0 && (
             <div css={styles.filterTagsContainer} ref={containerRef}>
-              {activeFiltersArray.slice(0, visibleTags).map((filter) => (
-                <span key={`${filter.type}-${filter.value}`} css={styles.filterTag}>
-                  <Image
-                    src={
-                      filter.type === "publishers"
-                        ? AssetsImg.ic_document
-                        : filter.type === "durations"
-                        ? AssetsImg.ic_clock
-                        : AssetsImg.ic_calendar
-                    }
-                    alt="icon"
-                    width={16}
-                    height={16}
-                  />
-                  {filter.value}
-                  <button onClick={() => handleRemoveFilter(filter.type, filter.value)}>
-                    <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
-                  </button>
-                </span>
-              ))}
-              {overflowCount > 0 && (
-                <span css={styles.filterTag}>
-                  +{overflowCount} More
-                  <button onClick={handleRemoveHiddenFilters}>
-                    <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
-                  </button>
-                </span>
-              )}
-              <div data-reset-button css={{ marginLeft: "auto" }}>
+              <div css={styles.tagsWrapper}>
+                {activeFiltersArray.slice(0, visibleTags).map((filter) => (
+                  <span key={`${filter.type}-${filter.value}`} css={styles.filterTag}>
+                    <Image
+                      src={
+                        filter.type === "publishers"
+                          ? AssetsImg.ic_document
+                          : filter.type === "durations"
+                          ? AssetsImg.ic_clock
+                          : AssetsImg.ic_calendar
+                      }
+                      alt="icon"
+                      width={16}
+                      height={16}
+                    />
+                    {filter.value}
+                    <button onClick={() => handleRemoveFilter(filter.type, filter.value)}>
+                      <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
+                    </button>
+                  </span>
+                ))}
+                {overflowCount > 0 && (
+                  <span css={styles.filterTag}>
+                    +{overflowCount} More
+                    <button onClick={handleRemoveHiddenFilters}>
+                      <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
+                    </button>
+                  </span>
+                )}
+              </div>
+              <div data-reset-button css={styles.resetTagButton}>
                 <Button
                   size="small"
                   type="secondary"

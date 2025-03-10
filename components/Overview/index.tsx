@@ -1,6 +1,7 @@
+
 /** @jsxImportSource @emotion/react */
 import Image from "next/image";
-import * as styles from "./styles"; 
+import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, colors, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
@@ -82,89 +83,92 @@ const Overview = () => {
           <CryptoCategories />
         </div>
         <div css={styles.rightContainer}>
-          <ShimmerWrapper height={24} width={150} isLoading={loading}>
-            <div css={styles.returnsTitle}>Returns Calculator</div>
-          </ShimmerWrapper>
-          <div css={styles.formContainer}>
-            <ShimmerWrapper height={40} width={245} isLoading={loading} style={styles.inputMarginBottom}>
-              <Input
-                label="Amount Invested"
-                placeholder="Enter Amount"
-                type="number"
-                value={amountInvested}
-                onChange={handleAmountChange}
-                //appendItem="INR"
-                style={{marginBottom: utils.remConverter(16) }}
-              />
+          <div>
+            <ShimmerWrapper height={24} width={150} isLoading={loading}>
+              <div css={styles.returnsTitle}>Returns Calculator</div>
             </ShimmerWrapper>
-
-            <ShimmerWrapper height={24} width={140} isLoading={loading} style={styles.labelMarginBottom}>
-              <span css={styles.investmentFrequencyLabel}>Investment Frequency</span>
-            </ShimmerWrapper>
-
-            <ShimmerWrapper height={40} width={245} isLoading={loading} style={styles.labelMarginBottom}>
-              <InputDropDown
-                placeholder="Select Frequency"
-                options={[
-                  { label: "Daily", value: "Daily" },
-                  { label: "Weekly", value: "Weekly" },
-                  { label: "Monthly", value: "Monthly" },
-                  { label: "Yearly", value: "Yearly" },
-                ]}
-                selected={investmentFrequency}
-                onChange={handleFrequencyChange}
-                rowHeight={40}
-                maxRows={4}
-                enableSearch={false}
-                search={{ placeholder: "", value: "", onChange: () => {} }}
-                style={styles.dropdownMargin}
-              />
-            </ShimmerWrapper>
-
-            <div css={{ marginTop: utils.remConverter(16) }}>
-              <ShimmerWrapper height={24} width={140} isLoading={loading} style={styles.labelMarginBottom}>
-                <span css={styles.overThePastLabel}>Over the Past</span>
-              </ShimmerWrapper>
-
-              <ShimmerWrapper height={26} width={245} isLoading={loading}>
-                <Tabs
-                  onChange={handleTimePeriodChange}
-                  selectedTab={timePeriod}
-                  tabsList={[
-                    { tab: "6M", title: <>6M</> },
-                    { tab: "1Y", title: "1Y" },
-                    { tab: "2Y", title: "2Y" },
-                    { tab: "3Y", title: "3Y" },
-                  ]}
-                  type="secondary"
-                  style={styles.tabsMargin}
+            <div css={styles.formContainer}>
+              <ShimmerWrapper height={40} width={245} isLoading={loading} style={styles.inputMarginBottom}>
+                <Input
+                  label="Amount Invested"
+                  placeholder="Enter Amount"
+                  type="number"
+                  value={amountInvested}
+                  onChange={handleAmountChange}
+                  appendItem="INR"
+                  style={{ marginBottom: utils.remConverter(16) }}
                 />
               </ShimmerWrapper>
-            </div>
-          </div>
 
-          <ShimmerWrapper height={106} width={280} isLoading={loading}>
-            <div css={styles.investmentBox}>
-              <div css={styles.investmentBoxContent}>
-                <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
-                <div>
-                  <p css={styles.IBlabel}>Current Value</p>
-                  <p css={styles.IBvalue}>₹0.00</p>
-                </div>
-                <div css={styles.percentageBox}>- 0.00%</div>
+              <ShimmerWrapper height={24} width={140} isLoading={loading} style={styles.labelMarginBottom}>
+                <span css={styles.investmentFrequencyLabel}>Investment Frequency</span>
+              </ShimmerWrapper>
+
+              <ShimmerWrapper height={40} width={245} isLoading={loading} style={styles.labelMarginBottom}>
+                <InputDropDown
+                  placeholder="Select Frequency"
+                  options={[
+                    { label: "Daily", value: "Daily" },
+                    { label: "Weekly", value: "Weekly" },
+                    { label: "Monthly", value: "Monthly" },
+                    { label: "Yearly", value: "Yearly" },
+                  ]}
+                  selected={investmentFrequency}
+                  onChange={handleFrequencyChange}
+                  rowHeight={40}
+                  maxRows={4}
+                  enableSearch={false}
+                  search={{ placeholder: "", value: "", onChange: () => {} }}
+                  style={styles.dropdownMargin}
+                />
+              </ShimmerWrapper>
+
+              <div css={{ marginTop: utils.remConverter(16) }}>
+                <ShimmerWrapper height={24} width={140} isLoading={loading} style={styles.labelMarginBottom}>
+                  <span css={styles.overThePastLabel}>Over the Past</span>
+                </ShimmerWrapper>
+
+                <ShimmerWrapper height={26} width={245} isLoading={loading}>
+                  <Tabs
+                    onChange={handleTimePeriodChange}
+                    selectedTab={timePeriod}
+                    tabsList={[
+                      { tab: "6M", title: <>6M</> },
+                      { tab: "1Y", title: "1Y" },
+                      { tab: "2Y", title: "2Y" },
+                      { tab: "3Y", title: "3Y" },
+                    ]}
+                    type="secondary"
+                    style={styles.tabsMargin}
+                  />
+                </ShimmerWrapper>
               </div>
-              <Divider spacing={2} />
-              <p css={styles.investedAmountText}>
-                Invested Amount: <span css={styles.investedAmountValue}>₹0.00</span>
-              </p>
             </div>
-          </ShimmerWrapper>
 
-          <ShimmerWrapper height={34} width={280} isLoading={loading} style={styles.buttonMarginTop}>
-            <Button onClick={NOOB} size="full-width" type="primary">
-              CALCULATE RETURNS
-            </Button>
-          </ShimmerWrapper>
+            <ShimmerWrapper height={106} width={280} isLoading={loading}>
+              <div css={styles.investmentBox}>
+                <div css={styles.investmentBoxContent}>
+                  <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
+                  <div>
+                    <p css={styles.IBlabel}>Current Value</p>
+                    <p css={styles.IBvalue}>₹0.00</p>
+                  </div>
+                  <div css={styles.percentageBox}>- 0.00%</div>
+                </div>
+                <Divider spacing={2} />
+                <p css={styles.investedAmountText}>
+                  Invested Amount: <span css={styles.investedAmountValue}>₹0.00</span>
+                </p>
+              </div>
+            </ShimmerWrapper>
+          </div>
+          <div css={styles.returnsButton}>
+            <ShimmerWrapper height={34} width={280} isLoading={loading} style={styles.buttonMarginTop}>
+              <Button onClick={NOOB} size="full-width" type="primary">
+                CALCULATE RETURNS
+              </Button>
+            </ShimmerWrapper>
+          </div>
         </div>
       </div>
     </div>

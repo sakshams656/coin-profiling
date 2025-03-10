@@ -75,9 +75,8 @@ export const newsletter = css({
   alignItems: "center",
   gap: utils.remConverter(4),
   flex: "1 0 0",
+  minHeight: utils.remConverter(356),
   borderRadius: utils.remConverter(8),
-  overflowY: "auto",
-  overflowX: "hidden",
   background: colors.Zeb_Solid_BG_Blue,
 
   "&::-webkit-scrollbar": {
@@ -221,7 +220,6 @@ export const bannerImage = css({
   },
 });
 
-
 export const frame = css({
   display: "flex",
   flexDirection: "column",
@@ -347,8 +345,7 @@ export const main = css({
   paddingBottom: utils.remConverter(20),
   height: "calc(100vh - 3.75rem)",
   flexShrink: 0,
-  //alignSelf: "stretch",
-  overflow:"hidden",
+  overflow: "hidden",
   background: colors.Zeb_Solid_BG_Blue,
   boxShadow: `0 ${utils.remConverter(7)} ${utils.remConverter(7)} ${utils.remConverter(-2)} rgba(97, 79, 79, 0.14)`,
   "@media (max-width: 75rem)": {
@@ -381,7 +378,7 @@ export const container = css({
   },
 });
 
-export const headerFrame = (isScrolled: boolean, p0: boolean) =>
+export const headerFrame = (isScrolled: boolean) =>
   css({
     display: "flex",
     padding: `${utils.remConverter(16)} 0`,
@@ -406,59 +403,76 @@ export const headerFrame = (isScrolled: boolean, p0: boolean) =>
     },
   });
 
-export const section = css({
-  display: "flex",
-  flexWrap: "wrap",
-  height: utils.remConverter(636),
-  width: "100%",
-  padding: utils.remConverter(16),
-  paddingBottom: utils.remConverter(16),
-  flexDirection: "column",
-  alignItems: "center",
-  borderRadius: utils.remConverter(4),
-  background: colors.Zeb_Solid_Dark_Blue,
-  overflowY: "auto",
-  overflowX: "hidden",
-  paddingRight: utils.remConverter(12),
-  "&::-webkit-scrollbar": {
-    width: utils.remConverter(4),
-  },
-  "&::-webkit-scrollbar-thumb": {
-    background: colors.Zeb_Solid_Dark_Grey,
-    borderRadius: utils.remConverter(18),
-  },
-  "@media (max-width: 75rem)": {
-    height: utils.remConverter(560),
-    padding: utils.remConverter(12),
-  },
-  "@media (max-width: 48rem)": {
+  export const section = css({
+    display: "flex",
+    flexWrap: "wrap",
+    height: utils.remConverter(636),
     width: "100%",
-    height: "auto",
-    padding: utils.remConverter(8),
-  },
-});
-
-export const innerDiv = css({
-  display: "flex",
-  width: "25%",
-  height: "100%",
-  padding: utils.remConverter(16),
-  fontFamily: "Lato",
-  color: colors.Zeb_Solid_White,
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "flex-start",
-  borderRadius: utils.remConverter(8),
-  background: colors.Zeb_Solid_Dark_Blue,
-  "@media (max-width: 75rem)": {
-    width: "30%",
-  },
-  "@media (max-width: 48rem)": {
-    width: "100%",
-    height: "auto",
-    padding: utils.remConverter(8),
-  },
-});
+    padding: utils.remConverter(16),
+    paddingBottom: utils.remConverter(16),
+    flexDirection: "column",
+    alignItems: "center",
+    borderRadius: utils.remConverter(4),
+    background: colors.Zeb_Solid_Dark_Blue,
+    overflowY: "auto",
+    overflowX: "hidden",
+    paddingRight: utils.remConverter(12),
+    "&::-webkit-scrollbar": {
+      width: utils.remConverter(4),
+      visibility: "hidden",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: colors.Zeb_Solid_Dark_Grey,
+      borderRadius: utils.remConverter(18),
+      visibility: "hidden", 
+    },
+    "&.scrolled": {
+      "&::-webkit-scrollbar": {
+        visibility: "visible",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        visibility: "visible", 
+      },
+    },
+    "@media (max-width: 75rem)": {
+      height: utils.remConverter(560),
+      padding: utils.remConverter(12),
+    },
+    "@media (max-width: 48rem)": {
+      width: "100%",
+      height: "auto",
+      padding: utils.remConverter(8),
+    },
+  });
+  
+  export const innerDiv = css({
+    display: "flex",
+    width: "25%",
+    height: "100%",
+    padding: utils.remConverter(16),
+    overflowY: "auto",
+    fontFamily: "Lato",
+    color: colors.Zeb_Solid_White,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    borderRadius: utils.remConverter(8),
+    background: colors.Zeb_Solid_Dark_Blue,
+    "&::-webkit-scrollbar": {
+      width: 0, 
+    },
+    "&::-webkit-scrollbar-thumb": {
+      display: "none", 
+    },
+    "@media (max-width: 75rem)": {
+      width: "30%",
+    },
+    "@media (max-width: 48rem)": {
+      width: "100%",
+      height: "auto",
+      padding: utils.remConverter(8),
+    },
+  });
 
 export const tradingBanner = css({
   display: "flex",
@@ -494,7 +508,7 @@ export const buttonGroup = css({
 });
 
 export const appButton = css({
-  display:"flex",
+  display: "flex",
   backgroundColor: colors.Zeb_Solid_BG_Blue,
   borderRadius: utils.remConverter(4),
   padding: `${utils.remConverter(6.4)} ${utils.remConverter(28)}`,
@@ -541,34 +555,29 @@ export const title = css({
 
 export const filterTagsContainer = css({
   display: "flex",
-  alignItems: "center", 
+  alignItems: "center",
   gap: utils.remConverter(8),
   padding: utils.remConverter(10),
   paddingLeft: utils.remConverter(24),
-  overflowX: "hidden",
-  flexDirection: "column",  
-  justifyContent: "flex-start",  
+  paddingRight: utils.remConverter(24),
+  width: "100%",
   background: colors.Zeb_Solid_Dark_Blue,
   borderBottom: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_BG_Blue}`,
-  width: "100%",
-  overflowY: "hidden",
-  scrollbarWidth: "thin",
-  scrollbarColor: `${colors.Zeb_Solid_Dark_Grey} transparent`,
-  "&::-webkit-scrollbar": {
-    height: utils.remConverter(4),
+  justifyContent: "space-between",
+  "@media (max-width: 48rem)": {
+    padding: utils.remConverter(8),
+    paddingLeft: utils.remConverter(16),
+    paddingRight: utils.remConverter(16),
   },
-  "&::-webkit-scrollbar-thumb": {
-    background: colors.Zeb_Solid_Dark_Grey,
-    borderRadius: utils.remConverter(4),
-  },
-  "&::-webkit-scrollbar-track": {
-    background: "transparent",
-  },
-  "@media (min-width: 48rem)": {
-    flexDirection: "row", 
-    alignItems: "center", 
-    gap: utils.remConverter(10), 
-  },
+});
+
+export const tagsWrapper = css({
+  display: "flex",
+  alignItems: "center",
+  gap: utils.remConverter(8),
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  flexGrow: 1,
 });
 
 export const filterTag = css({
@@ -580,6 +589,7 @@ export const filterTag = css({
   color: colors.Zeb_Solid_White,
   fontSize: utils.remConverter(12),
   fontWeight: 600,
+  whiteSpace: "nowrap",
 
   img: {
     width: utils.remConverter(16),
@@ -605,9 +615,7 @@ export const filterTag = css({
 });
 
 export const resetTagButton = css({
-  marginLeft: "auto", 
-  display: "flex",
-  justifyContent: "end",
+  flexShrink: 0,
   borderRadius: utils.remConverter(4),
   "@media (max-width: 48rem)": {
     padding: `${utils.remConverter(4)} ${utils.remConverter(10)}`,
@@ -653,12 +661,12 @@ export const sorterItem = css({
 export const sorterCheckmark = css({
   fontSize: utils.remConverter(16),
   color: colors.Zeb_Solid_White,
-  fontFamily: "'Lato', sans-serif", 
+  fontFamily: "'Lato', sans-serif",
 });
 
 export const sorterIcon = css({
   background: "none",
   border: "none",
   cursor: "pointer",
-  paddingTop: utils.remConverter(2)
-})
+  paddingTop: utils.remConverter(2),
+});
