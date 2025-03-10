@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { fetchHistoricalData } from "../actions/fetchHistoricalData";
 import "chart.js/auto";
-import CryptoSelector from "./CryptoSelector";
+import CryptoSelector from "../../CryptoSelector";
 import { Toast ,Shimmer,Button} from "zebpay-ui";
-import SkeletonWrapper from "../SkeletonWrapper";
 import iconImage from "../images/iconImage.png";
 import Image from "next/image";
 import predict from "../images/calculator.svg";
-import InvestmentAmount from "./InvestAmount";
-import TimeFrame from "./TimeFrame";
-import Table from "./Table";
-import NoTable from "./NoTable";
+import InvestmentAmount from "../../InvestAmount";
+import TimeFrame from "../../Timeframe";
+import Table from "../../Table";
+import NoTable from "../../NoTable";
 import {
   Main,
   Graph,
@@ -32,7 +31,7 @@ import {
   Down,
   Chart,
 } from "../styles/emotionStyles";
-import PriceChart from "./PriceChart";
+import PriceChart from "../../Pricechart/PriceChart";
 
 const BTCPricePredictor: React.FC = () => {
   const [historicalData, setHistoricalData] = useState<Array<number[]>>([]);

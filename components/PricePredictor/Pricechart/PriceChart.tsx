@@ -15,17 +15,19 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
     y: number;
     height: number;
     hoveredY: number;
-    dataY: number; // Add this to store the Y coordinate of the data point
+    dataY: number;
   } | null>(null);
-  const [chartDimensions, setChartDimensions] = useState({ width: 0, height: 0 });
+  const [chartDimensions, setChartDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
-    // Get initial dimensions
     setChartDimensions({
       width: chartContainerRef.current.clientWidth,
-      height: chartContainerRef.current.clientHeight
+      height: chartContainerRef.current.clientHeight,
     });
 
     const chart = createChart(chartContainerRef.current, {
@@ -45,7 +47,6 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         borderVisible: false,
         fixLeftEdge: true,
         fixRightEdge: true,
-        
       },
       rightPriceScale: {
         autoScale: false,
@@ -57,8 +58,6 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         },
       },
     });
-
-    
 
     chartRef.current = chart;
 
@@ -142,10 +141,8 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         return;
       }
 
-      // Convert hovered time to timestamp
       const hoveredTimestamp = param.time * 1000;
 
-      // Find the closest data point in `pastData` and `futureData`
       let closestDataPoint = null;
       let minTimeDiff = Infinity;
 
@@ -159,22 +156,18 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         }
       });
 
-      // If the closest data point is still too far, hide tooltip
       if (!closestDataPoint || minTimeDiff > 50000) {
         setTooltip(null);
         return;
       }
 
-      // Get Y coordinate of the data point on the chart
       const dataY = pastSeries.priceToCoordinate(closestDataPoint.value);
 
       if (!dataY || Math.abs(param.point.y - dataY) > 10) {
-        // 10px threshold to check if cursor is near the line
         setTooltip(null);
         return;
       }
 
-      // Format date & time
       const hoveredDate = new Date(closestDataPoint.time * 1000);
       const formattedDate = hoveredDate.toLocaleDateString("en-GB", {
         day: "2-digit",
@@ -188,7 +181,6 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         hour12: true,
       });
 
-      // Set tooltip values
       setTooltip({
         price: closestDataPoint.value.toFixed(2),
         date: formattedDate,
@@ -201,18 +193,17 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         y: rect.top,
         height: rect.bottom - rect.top,
         hoveredY: param.point.y,
-        dataY: dataY, // Store the Y coordinate of the data point
+        dataY: dataY,
       });
     });
 
     const handleResize = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-        
-        // Update chart dimensions state for tag positioning
+
         setChartDimensions({
           width: chartContainerRef.current.clientWidth,
-          height: chartContainerRef.current.clientHeight
+          height: chartContainerRef.current.clientHeight,
         });
       }
     };
@@ -224,8 +215,6 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
       chart.remove();
     };
   }, [showFutureData]);
-
-  // Calculate tag positions based on chart dimensions
   const historicalTagStyle = {
     name: "1pzk433",
     styles: `position:absolute; left:${chartDimensions.width * 0.3}px; bottom:240px; z-index:1;`,
@@ -248,20 +237,11 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
         }}
       />
 
-      <Tags
-        size="medium"
-        style={historicalTagStyle}
-        type="default"
-        
-      >
+      <Tags size="medium" style={historicalTagStyle} type="default">
         Historical
       </Tags>
 
-      <Tags
-        size="medium"
-        style={predictionTagStyle}
-        type="success"
-      >
+      <Tags size="medium" style={predictionTagStyle} type="success">
         Prediction
       </Tags>
 
@@ -272,7 +252,7 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
               position: "absolute",
               left: tooltipPosition.x,
               top: tooltipPosition.y,
-              height: tooltipPosition.dataY, 
+              height: tooltipPosition.dataY,
               width: "1px",
               backgroundColor: "#338FFF",
               zIndex: 998,

@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-
-// import styles from "../styles/BTCPricePredictor.module.css";
-
 import { InputDropDown, Shimmer, typography } from "zebpay-ui";
-import SkeletonWrapper from "../SkeletonWrapper";
-
-import { Field } from "../styles/emotionStyles";
+import { heading ,field} from "./style";
 
 const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (timeframe: string) => void; }> = ({ loading,loader, setTimeframe }) => {
 
@@ -22,11 +17,11 @@ const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (time
   ];
 
   return (
-    <Field>
+    <div css={field}>
       {loading ? (
         <Shimmer height={22} width={130} />
       ) : (
-        <div style={{color: isDropDownOpen ? "white":"#C0C0EE"}}>Timeframe</div>
+        <div css={heading(isDropDownOpen)}>Timeframe</div>
       )}
  
       {loading ? (
@@ -42,7 +37,6 @@ const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (time
             setIsDropDownOpen(false);
             setTimeframe(value);
           }}
-          style={{ width: "100%", alignItems: 3,color:"white" }}
           options={options}
           placeholder={selectedTimeFrame||"Select TimeFrame"}
           placeholderStyle={{ color: selectedTimeFrame ? "white" : "#C0C0EE" }} 
@@ -59,7 +53,7 @@ const TimeFrame: React.FC<{ loading: boolean;loader:boolean; setTimeframe: (time
           
         />
       )}
-    </Field>
+    </div>
   );
 };
 

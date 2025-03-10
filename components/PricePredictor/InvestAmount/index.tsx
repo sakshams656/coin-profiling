@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { colors, Input, Shimmer } from "zebpay-ui";
-import SkeletonWrapper from "../SkeletonWrapper";
-import { Field } from "../styles/emotionStyles";
+import {field,text,warning} from "./style"
 
 const InvestmentAmount: React.FC<{
   loading: boolean;
@@ -24,14 +23,12 @@ const InvestmentAmount: React.FC<{
   }, [investmentAmount]);
 
   return (
-    <Field>
+    <div css={field}>
       {loading ? (
         <Shimmer height={22} width={130} />
       ) : (
         <div
-          style={{
-            color: !showError ? (focus ? "white" : "#C0C0EE") : "#EA6161",
-          }}
+          css={text(showError)}
         >
           Investment Amount
         </div>
@@ -54,22 +51,14 @@ const InvestmentAmount: React.FC<{
             }}
             appendItem={
               <span
-                // style={{
-                //   backgroundColor: loader?"#222245":"transparent",
-                //   padding: "10px 0px",
-                //   color:loader?"#C0C0EE":"white"
-                // }}
               >
                 INR
               </span>
             }
-            // appendItem={"INR"}
             invalid={showError}
             placeholder="0"
             style={{
-              name: "3s4yqf",
               styles: "width:95% ",
-              // height:"100px"
               
             }}
             disabled={loader}
@@ -81,18 +70,14 @@ const InvestmentAmount: React.FC<{
           />
           {showError && (
             <span
-              style={{
-                color: "#EA6161",
-                // position: "absolute",
-                display: "block",
-              }}
+              css={warning}
             >
               Please enter amount to proceed
             </span>
           )}
         </>
       )}
-    </Field>
+    </div>
   );
 };
 

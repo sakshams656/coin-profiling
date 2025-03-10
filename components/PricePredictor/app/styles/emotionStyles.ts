@@ -1,6 +1,6 @@
 // emotionStyles.ts
 import styled from "@emotion/styled";
-import typography from "./typography";
+import css from "styled-jsx/css";
 
 export const Main = styled.div`
   display: flex;
@@ -47,23 +47,6 @@ export const PredictionCards = styled.div`
   padding-bottom:0.5rem;
   border-radius: 0.5rem;
   background: var(--Zeb_Solid-BG_Blue, #222245);
-`;
-
-export const Field = styled.div`
-  display: flex;
-  // left:0;
-  flex-direction: column;
-  width: 100%;
-  gap: 0.5rem;
-  color: var(--Zeb_Solid-Light_Blue, var(--blue-04-light-blue, #c0c0ee));
-  font-feature-settings: "liga" off, "clig" off;
-  font-family: Lato;
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.5rem;
-  letter-spacing: 0.025rem;
-  margin-bottom: 0.55rem;
 `;
 
 export const Heading = styled.div`
@@ -319,23 +302,4 @@ export const Chart = styled.div`
   border:2px solid #338FFF0A;
   
 `;
-export const CryptoOption = styled.div`
-  display: flex;
-  flex-direction: row;
-  // align-items: normal;
-  // margin: 0.4rem;
-`;
 
-export const CryptoIcon = styled.img`
-  // margin-top: 0.6rem;
-  width: 1.5rem;
-  // height: 1.5rem;
-`;
-
-export const CryptoText = styled.div`
-  margin-left: 0.5rem;
-  // margin-top: 0.2rem;
-  // line-height: 1.2;
-  font-size: 1rem; /* 16px to rem */
-  // align-items: center;
-`;
