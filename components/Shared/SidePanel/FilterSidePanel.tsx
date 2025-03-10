@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { Button, Checkbox, colors, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
 import { Accordion, utils } from "zebpay-ui";
 import Image from "next/image";

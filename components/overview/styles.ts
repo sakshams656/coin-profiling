@@ -9,19 +9,6 @@ export const container = css({
   paddingBottom: utils.remConverter(24),
   marginBottom: 0, 
   minHeight: "100vh", 
-  overflowY: "auto",
-  scrollbarColor: `${colors.Zeb_Solid_Light_Blue} transparent`,
-  "&::-webkit-scrollbar": {
-    width: utils.remConverter(4),
-  },
-  "&::-webkit-scrollbar-track": {
-    background: "transparent",
-  },
-  "&::-webkit-scrollbar-thumb": {
-    backgroundColor: colors.Zeb_Solid_Light_Blue,
-    borderRadius: utils.remConverter(4),
-  },
-  boxSizing: "border-box",
 });
 
 export const coinBanner = css({
@@ -109,6 +96,7 @@ export const leftContainer = css({
   display: "flex",
   flexDirection: "column",
   overflowY: "auto",
+  paddingBottom: utils.remConverter(24),
 });
 
 export const rightContainer = css({
@@ -118,23 +106,14 @@ export const rightContainer = css({
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   position: "sticky",
-  top: 0,
+  top: 16,
   minWidth: utils.remConverter(280),
   maxWidth: utils.remConverter(312),
+  marginBottom: utils.remConverter(24),
   display: "flex",
   flexDirection: "column",
-  //justifyContent: "space-between",
   boxSizing: "border-box",
-  minHeight: utils.remConverter(300), 
-  maxHeight: `calc(100vh - ${utils.remConverter(1)} - ${utils.remConverter(0.75)})`,
-  // overflowY: "auto",
-  // "&::-webkit-scrollbar": {
-  //   width: utils.remConverter(4),
-  // },
-  // "&::-webkit-scrollbar-thumb": {
-  //   background: colors.Zeb_Solid_Dark_Grey,
-  //   borderRadius: utils.remConverter(18),
-  // },
+  maxHeight: utils.remConverter(520),
 });
 
 export const contentWrapper = css({
@@ -253,7 +232,7 @@ export const tabsMargin = css({
 
 export const returnsButton = css({
   position: "sticky",
-  bottom: 0,
+  bottom:16,
   padding: `${utils.remConverter(0.75)} ${utils.remConverter(1)}`,
   background: colors.Zeb_Solid_Dark_Blue,
   boxShadow: `${colors.Zeb_Box_Shadow} 0 ${utils.remConverter(-12)} ${utils.remConverter(40)} 0`,

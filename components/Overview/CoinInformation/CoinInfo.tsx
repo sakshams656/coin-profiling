@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from "react";
 import AssetsImg from "@public/images";
 import Image from "next/image";

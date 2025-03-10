@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React from "react";
 import { Icon } from "zebpay-ui";
 import Image from "next/image";
