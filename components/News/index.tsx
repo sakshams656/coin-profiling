@@ -1,6 +1,3 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as styles from "./styles";
 import { getCryptoNews } from "./APIservice/apiService";
@@ -129,10 +126,11 @@ const NewsPage: React.FC = () => {
     dateRange: null,
   });
 
+
   const activeFiltersArray: FilterItem[] = [
-    ...activeFilters.publishers.map((value) => ({ type: "publishers", value })),
-    ...activeFilters.durations.map((value) => ({ type: "durations", value })),
-    ...(activeFilters.dateRange ? [{ type: "dateRange", value: activeFilters.dateRange }] : []),
+    ...activeFilters.publishers.map((value) => ({ type: "publishers" as const, value })),
+    ...activeFilters.durations.map((value) => ({ type: "durations" as const, value })),
+    ...(activeFilters.dateRange ? [{ type: "dateRange" as const, value: activeFilters.dateRange }] : []),
   ];
 
   useLayoutEffect(() => {

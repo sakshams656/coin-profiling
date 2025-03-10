@@ -1,9 +1,7 @@
-
-/** @jsxImportSource @emotion/react */
 import Image from "next/image";
 import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
-import { Button, colors, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
+import { Button, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
 import CoinInfo from "./CoinInformation/CoinInfo";
@@ -12,6 +10,7 @@ import CryptoCategories from "./Categories/CryptoCategories";
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState } from "react";
+import { css } from "@emotion/react";
 
 interface InputTargetProps {
   value: string | number;
@@ -96,7 +95,7 @@ const Overview = () => {
                   value={amountInvested}
                   onChange={handleAmountChange}
                   appendItem="INR"
-                  style={{ marginBottom: utils.remConverter(16) }}
+                  style={css({ marginBottom: utils.remConverter(16) })}
                 />
               </ShimmerWrapper>
 
@@ -145,7 +144,7 @@ const Overview = () => {
               </div>
             </div>
 
-            <ShimmerWrapper height={106} width={280} isLoading={loading}>
+            <ShimmerWrapper height={106} width={280} isLoading={loading} style={styles.labelMarginBottom}>
               <div css={styles.investmentBox}>
                 <div css={styles.investmentBoxContent}>
                   <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
@@ -163,7 +162,7 @@ const Overview = () => {
             </ShimmerWrapper>
           </div>
           <div css={styles.returnsButton}>
-            <ShimmerWrapper height={34} width={280} isLoading={loading} style={styles.buttonMarginTop}>
+            <ShimmerWrapper height={34} width={280} isLoading={loading}>
               <Button onClick={NOOB} size="full-width" type="primary">
                 CALCULATE RETURNS
               </Button>

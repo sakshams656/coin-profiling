@@ -42,15 +42,6 @@ const styles = {
       flexDirection: "column",
     },
   }),
-
-  // largeCard: css({
-  //   flex: "0 0 66.8%",
-  // }),
-
-  // smallCard: css({
-  //   flex: "0 0 15%",
-  // }),
-
   largeCard: css({  width: "66.8%",}),smallCard: css({  width: "15%",}),
 
   /*  Lower Section */

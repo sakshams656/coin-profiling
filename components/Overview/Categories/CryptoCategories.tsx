@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from "react";
 import { Tabs, Tags, utils } from "zebpay-ui";
 import Image from "next/image";
