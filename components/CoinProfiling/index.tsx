@@ -1,14 +1,13 @@
-import Header from "@components/Header/Header";
+import Header from "@components/Header";
 import NewsPage from "@components/News";
 import Overview from "@components/Overview";
-import { main } from "@styles/styles";
+import Blogs from "@components/Blogs"
+import { main } from "./style";
+// import { main } from "@styles/styles";
 import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
-
 const CoinProfiling = () => {
-
   const [selectedTab, setSelectedTab] = useState<string>("overview");
-
   const renderTabContent = () => {
     switch (selectedTab) {
       case "overview":
@@ -23,7 +22,6 @@ const CoinProfiling = () => {
         return <div>Invalid Tab</div>;
     }
   };
-
   return (
     <div css={main}>
       <Header selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -35,5 +33,10 @@ const CoinProfiling = () => {
     </div>
   );
 }
-
 export default CoinProfiling;
+
+
+
+
+
+
