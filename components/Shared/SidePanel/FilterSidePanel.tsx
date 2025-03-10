@@ -7,7 +7,6 @@ import DateRangePicker, { DateRange } from "../DateRangePicker";
 import { useState, useEffect } from "react";
 import * as styles from "./styles";
 
-// Define data as stable constants outside the component
 const PUBLISHED_BY_DATA = [
   { label: "Select All", indeterminate: true },
   { label: "Forbes" },
@@ -50,7 +49,27 @@ interface FilterSidePanelProps {
   setCustomDateRange: React.Dispatch<React.SetStateAction<DateRange | null>>;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  resetTrigger: number;
 }
+
+// Date formatting utility
+const formatDate = (date: string | Date): string => {
+  const d = new Date(date);
+  const day = d.getDate();
+  const month = d.toLocaleString("en-US", { month: "short" });
+  const year = d.getFullYear().toString().slice(-2);
+
+  let suffix = "th";
+  if (day % 10 === 1 && day !== 11) suffix = "st";
+  else if (day % 10 === 2 && day !== 12) suffix = "nd";
+  else if (day % 10 === 3 && day !== 13) suffix = "rd";
+
+  return `${day}${suffix} ${month} ${year}`;
+};
+
+const formatDateRange = (startDate: string, endDate: string): string => {
+  return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+};
 
 const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   onApplyFilters,
@@ -63,11 +82,12 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   setCustomDateRange,
   searchTerm,
   setSearchTerm,
+  resetTrigger,
 }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   useEffect(() => {
-    console.log("Filters updated:", filters); // Log state changes for debugging
+    console.log("Filters updated:", filters);
   }, [filters]);
 
   const toggleAccordion = (key: string) => {
@@ -83,7 +103,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   );
 
   const handlePublisherChange = (label: string) => {
-    console.log("Changing publisher:", label, "Current filters:", filters.publishers); // Debug log
+    console.log("Changing publisher:", label, "Current filters:", filters.publishers);
     if (label === "Select All") {
       const allPublishers = PUBLISHED_BY_DATA
         .filter((item) => item.label !== "Select All")
@@ -103,7 +123,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   };
 
   const handleDurationChange = (label: string) => {
-    console.log("Changing duration:", label, "Current filters:", filters.durations); // Debug log
+    console.log("Changing duration:", label, "Current filters:", filters.durations);
     if (label === "Select All") {
       const allDurations = DURATION_DATA
         .filter((item) => item.label !== "Select All")
@@ -127,6 +147,9 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
       ...prev,
       dateRange: label,
     }));
+    if (label !== "Custom") {
+      setCustomDateRange(null);
+    }
   };
 
   const handleDateRangePickerChange = (dateRange: DateRange) => {
@@ -180,7 +203,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
   const handleApply = () => {
     const dateRangeValue =
       filters.dateRange === "Custom" && customDateRange
-        ? `${customDateRange.startDate} - ${customDateRange.endDate}`
+        ? formatDateRange(customDateRange.startDate, customDateRange.endDate) 
         : filters.dateRange;
 
     onApplyFilters({
@@ -225,10 +248,13 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           <Accordion
             onToggle={() => toggleAccordion("publishedBy")}
             title={
-              <div css={styles.accordionTitleStyle(accordionStates.publishedBy)} onClick={(e) => {
+              <div
+                css={styles.accordionTitleStyle(accordionStates.publishedBy)}
+                onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("publishedBy");
-                }}>
+                }}
+              >
                 <Image
                   src={accordionStates.publishedBy ? AssetsImg.ic_document_white : AssetsImg.ic_document}
                   alt="doc"
@@ -267,10 +293,13 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           <Accordion
             onToggle={() => toggleAccordion("duration")}
             title={
-              <div css={styles.accordionTitleStyle(accordionStates.duration)} onClick={(e) => {
+              <div
+                css={styles.accordionTitleStyle(accordionStates.duration)}
+                onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("duration");
-                }}>
+                }}
+              >
                 <Image
                   src={accordionStates.duration ? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
                   alt="clock"
@@ -297,10 +326,13 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
           <Accordion
             onToggle={() => toggleAccordion("dateRange")}
             title={
-              <div css={styles.accordionTitleStyle(accordionStates.dateRange)} onClick={(e) => {
+              <div
+                css={styles.accordionTitleStyle(accordionStates.dateRange)}
+                onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("dateRange");
-                }}>
+                }}
+              >
                 <Image
                   src={accordionStates.dateRange ? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
                   alt="calendar"
@@ -312,7 +344,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
                 {filters.dateRange && (
                   <span>
                     ({filters.dateRange === "Custom" && customDateRange
-                      ? `${customDateRange.startDate} - ${customDateRange.endDate}`
+                      ? formatDateRange(customDateRange.startDate, customDateRange.endDate)
                       : filters.dateRange})
                   </span>
                 )}
@@ -328,9 +360,15 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
 
         <div css={styles.customDateRangePickerStyle(filters.dateRange)}>
           <DateRangePicker
+            key={resetTrigger}
             onChange={handleDateRangePickerChange}
             minDate={new Date("2000-01-01")}
             maxDate={new Date()}
+            defaultSelectedDate={
+              customDateRange
+                ? { startDate: new Date(customDateRange.startDate).getTime(), endDate: new Date(customDateRange.endDate).getTime() }
+                : undefined
+            }
           />
         </div>
 
