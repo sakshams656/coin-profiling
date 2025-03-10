@@ -1,15 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import { useState } from "react";
 import { Button, Input } from "zebpay-ui";
-import { form, inputButtonGap, errorMessageContainer, errorMessage, inputContainer } from "./styles"
+import * as styles from "./styles"
+import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 
 const EmailSubscription = ({ onSubscribe }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(true); // State to track email validity
+  const [isValidEmail, setIsValidEmail] = useState(true); 
 
-  // Function to validate email using a regex
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -24,67 +23,53 @@ const EmailSubscription = ({ onSubscribe }) => {
         setLoading(true);
         setTimeout(() => {
           setLoading(false);
-          onSubscribe(); // Call the onSubscribe function when the user subscribes
-        }, 1500); // Simulating an API call
+          onSubscribe(); 
+        }, 1500); 
       }
     } else {
-      setIsValidEmail(false); // Mark as invalid if the email is empty
+      setIsValidEmail(false);
     }
   };
 
   // Handle input change
   const handleInputChange = (target) => {
-    const value = target.value; // Extract the value from the target object
-    setEmail(value); // Update the email state
-
-    // Validate email and update isValidEmail state
+    const value = target.value; 
+    setEmail(value); 
     if (value.trim() === "") {
-      setIsValidEmail(true); // Revert to normal if input is cleared
+      setIsValidEmail(true); 
     } else {
-      setIsValidEmail(validateEmail(value)); // Validate email on change
+      setIsValidEmail(validateEmail(value)); 
     }
   };
 
-  // Styles for error state
-  const errorStyle = css`
-    color: red;
-    border-color: red;
-  `;
-
   return (
-    <div css={form}>
-      <div css={inputButtonGap}> {/* Add gap only between input and button */}
-        <div css={inputContainer}> {/* Ensure input takes full width */}
+    <div css={styles.form}>
+      <div css={styles.inputButtonGap}> 
+        <div css={styles.inputContainer}>
+          <ShimmerWrapper height={40} width={260} isLoading={loading}>
           <Input
+
             label="Enter Email Address"
-            onChange={handleInputChange} // Pass the correct onChange handler
+            onChange={handleInputChange} 
             placeholder="qwerty@gmail.com"
+            errorText={isValidEmail || email.trim() === "" ? "" : "Invalid Email ID"} 
             style={{
               name: "3s4yqf",
-              styles: `width:100%; ${!isValidEmail ? "border-color: red;" : ""}`,
+              styles: "width:100%", 
             }}
             value={email}
-            css={!isValidEmail && errorStyle} // Apply error style if email is invalid
           />
-          {/* Error message container with fixed height */}
-          <div css={errorMessageContainer}>
-            {!isValidEmail && email.trim() !== "" && ( // Show error only if email is invalid and not empty
-              <div css={errorMessage}> {/* Use the new error message CSS */}
-                Invalid email
-              </div>
-            )}
-          </div>
+          </ShimmerWrapper>
         </div>
       </div>
+      
       <Button 
         onClick={handleSubmit} 
         size="full-width" 
         type="primary"
-        loading={loading} // Set loading state on the button
-        disabled={loading || !isValidEmail} // Disable the button while loading or if email is invalid
-        style ={{
-          'margin-bottom': "1rem"
-        }}
+        loading={loading} 
+        disabled={loading || !isValidEmail} 
+        style ={styles.subButton}
       >
         Subscribe
       </Button>

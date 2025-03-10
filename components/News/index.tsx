@@ -1,47 +1,12 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import {
-  main,
-  container,
-  headerFrame,
-  header,
-  section,
-  news,
-  filterAndUpdownFrame,
-  filter,
-  updown,
-  innerDiv,
-  innerCard,
-  newsletter,
-  newsChild,
-  newsHeader,
-  mailIcon,
-  heading,
-  quote,
-  form,
-  tradingBanner,
-  topology,
-  frame,
-  anotherFrame,
-  zebpayImageDiv,
-  textWrapper,
-  title,
-  subtitle,
-  buttonGroup,
-  appButton,
-  KYC,
-  subSucess,
-  subText,
-  zebpayZebra,
-  filterTagsContainer, filterTag, resetTagButton
-} from "./styles"
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import * as styles from "./styles";
 import { getCryptoNews } from "./APIservice/apiService";
 import ArticleCard from "./ArticleCard/ArticleCard";
 import FilterSidePanel from "../Shared/SidePanel/FilterSidePanel";
-import SkeletonWrapper from "./skeletonWrapper/SkeletonWrapper";
-import Dropdown from "../Shared/Dropdown/Dropdown";
+import ShimmerWrapper from "../Shared/ShimmerWrapper/ShimmerWrapper";
 import NoNewsFound from "./NoNewsFound/NoNewsFound";
 import EmailSubscription from "./emailSubscription/EmailSubcription";
 import { Button } from "zebpay-ui";
@@ -54,6 +19,22 @@ interface Article {
   urlToImage: string;
   publishedAt: string;
   content: string;
+}
+
+interface DateRange {
+  startDate: string;
+  endDate: string;
+}
+
+interface Filters {
+  publishers: string[];
+  durations: string[];
+  dateRange: string | null;
+}
+
+interface FilterItem {
+  type: keyof Filters;
+  value: string;
 }
 
 const calculateReadingTime = (content: string) => {
@@ -74,11 +55,11 @@ const getDomain = (url: string) => {
 
 const isInDurationRange = (minutes: number, range: string) => {
   switch (range) {
-    case "01-05 Mins":
+    case "01 - 05 Mins":
       return minutes >= 1 && minutes <= 5;
-    case "05-10 Mins":
+    case "05 - 10 Mins":
       return minutes > 5 && minutes <= 10;
-    case "10-20 Mins":
+    case "10 - 20 Mins":
       return minutes > 10 && minutes <= 20;
     case "20+ Mins":
       return minutes > 20;
@@ -93,6 +74,11 @@ const isInDateRange = (publishedAt: string, range: string | null) => {
 
   if (!range || !isValidDate(publishedAt)) return true;
 
+  if (range.includes(" - ")) {
+    const [startDate, endDate] = range.split(" - ").map((d) => new Date(d));
+    return articleDate >= startDate && articleDate <= endDate;
+  }
+
   switch (range) {
     case "Last 7 Days":
       return articleDate > new Date(now.setDate(now.getDate() - 7));
@@ -102,20 +88,12 @@ const isInDateRange = (publishedAt: string, range: string | null) => {
       return articleDate > new Date(now.setMonth(now.getMonth() - 3));
     case "Last 1 Year":
       return articleDate > new Date(now.setFullYear(now.getFullYear() - 1));
-    case "Custom":
-      return true;
     default:
       return true;
   }
 };
 
 const isValidDate = (date: string): boolean => !isNaN(Date.parse(date));
-
-interface Filters {
-  publishers: string[];
-  durations: string[];
-  dateRange: string | null;
-}
 
 const NewsPage: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -126,11 +104,98 @@ const NewsPage: React.FC = () => {
   const [showNewContent, setShowNewContent] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const [filters, setFilters] = useState<Filters>({
+  // Filter + More Logic
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleTags, setVisibleTags] = useState(0);
+  const [overflowCount, setOverflowCount] = useState(0);
+
+  const [activeFilters, setActiveFilters] = useState<Filters>({
     publishers: [],
     durations: [],
     dateRange: null,
   });
+
+  const activeFiltersArray: FilterItem[] = [
+    ...activeFilters.publishers.map((value) => ({ type: "publishers", value })),
+    ...activeFilters.durations.map((value) => ({ type: "durations", value })),
+    ...(activeFilters.dateRange ? [{ type: "dateRange", value: activeFilters.dateRange }] : []),
+  ];
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container || activeFiltersArray.length === 0) {
+      setVisibleTags(0);
+      setOverflowCount(0);
+      return;
+    }
+
+    const resetButton = container.querySelector('[data-reset-button]');
+    const resetButtonWidth = resetButton?.getBoundingClientRect().width || 0;
+
+    const containerStyle = window.getComputedStyle(container);
+    const padding = parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight);
+    const gap = parseFloat(containerStyle.gap) || 8;
+
+    const availableWidth = container.clientWidth - padding - resetButtonWidth - gap * 2;
+    let totalWidth = 0;
+    let visibleCount = 0;
+
+    const tempDiv = document.createElement("div");
+    tempDiv.style.visibility = "hidden";
+    tempDiv.style.position = "absolute";
+    document.body.appendChild(tempDiv);
+
+    activeFiltersArray.forEach((filter) => {
+      const tag = document.createElement("div");
+      tag.style.display = "flex";
+      tag.style.alignItems = "center";
+      tag.style.padding = "6px 10px";
+      tag.style.gap = "6px";
+      tag.innerHTML = `
+        <img src="${
+          filter.type === "publishers"
+            ? AssetsImg.ic_document
+            : filter.type === "durations"
+            ? AssetsImg.ic_clock
+            : AssetsImg.ic_calendar
+        }" width="16" height="16" />
+        <span>${filter.value}</span>
+        <button style="margin-left: 6px;">
+          <img src="${AssetsImg.ic_cross}" width="16" height="16" />
+        </button>
+      `;
+      tempDiv.appendChild(tag);
+      const width = tag.getBoundingClientRect().width + gap;
+      if (totalWidth <= availableWidth) {
+        totalWidth += width;
+        visibleCount++;
+      }
+    });
+
+    document.body.removeChild(tempDiv);
+    const remaining = activeFiltersArray.length - visibleCount;
+    setVisibleTags(remaining > 0 ? visibleCount : activeFiltersArray.length);
+    setOverflowCount(remaining > 0 ? remaining : 0);
+  }, [activeFiltersArray.length]);
+
+  const [pendingFilters, setPendingFilters] = useState<Filters>({
+    publishers: [],
+    durations: [],
+    dateRange: null,
+  });
+
+  const [accordionStates, setAccordionStates] = useState({
+    publishedBy: false,
+    duration: false,
+    dateRange: false,
+  });
+  const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [isSorterOpen, setIsSorterOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("Latest");
+  const sorterRef = useRef<HTMLDivElement>(null);
+  const sorterButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -168,22 +233,22 @@ const NewsPage: React.FC = () => {
     setShowNewContent(true);
   };
 
-  const handleApplyFilters = (newFilters: Filters) => {
-    setFilters(newFilters);
-
+  const applyFilters = (filters: Filters) => {
     const filtered = articles.filter((article) => {
       const articleDomain = getDomain(article.url);
       const readingTimeMinutes = calculateReadingTime(article.content);
 
       const matchesPublisher =
-        newFilters.publishers.length === 0 ||
-        newFilters.publishers.some((publisher) => articleDomain.toLowerCase().includes(publisher.toLowerCase()));
+        filters.publishers.length === 0 ||
+        filters.publishers.some((publisher) =>
+          articleDomain.toLowerCase().includes(publisher.toLowerCase())
+        );
 
       const matchesDuration =
-        newFilters.durations.length === 0 ||
-        newFilters.durations.some((duration) => isInDurationRange(readingTimeMinutes, duration));
+        filters.durations.length === 0 ||
+        filters.durations.some((duration) => isInDurationRange(readingTimeMinutes, duration));
 
-      const matchesDateRange = isInDateRange(article.publishedAt, newFilters.dateRange);
+      const matchesDateRange = isInDateRange(article.publishedAt, filters.dateRange);
 
       return matchesPublisher && matchesDuration && matchesDateRange;
     });
@@ -191,79 +256,191 @@ const NewsPage: React.FC = () => {
     setFilteredArticles(filtered);
   };
 
+  const handleApplyFilters = (newFilters: Filters) => {
+    setActiveFilters(newFilters);
+    setPendingFilters(newFilters);
+    applyFilters(newFilters);
+  };
+
   const handleResetFilters = () => {
-    setFilters({ publishers: [], durations: [], dateRange: null });
+    setActiveFilters({ publishers: [], durations: [], dateRange: null });
+    setPendingFilters({ publishers: [], durations: [], dateRange: null });
+    setAccordionStates({ publishedBy: false, duration: false, dateRange: false });
+    setCustomDateRange(null);
+    setSearchTerm("");
     setFilteredArticles(articles);
   };
 
   const handleRemoveFilter = (type: keyof Filters, value: string) => {
-    setFilters((prev) => {
-      if (type === "publishers") {
-        return { ...prev, publishers: prev.publishers.filter((p) => p !== value) };
-      } else if (type === "durations") {
-        return { ...prev, durations: prev.durations.filter((d) => d !== value) };
-      } else {
-        return { ...prev, dateRange: null };
+    const updatedFilters = {
+      ...activeFilters,
+      [type]: type === "dateRange" ? null : activeFilters[type].filter((v) => v !== value),
+    };
+    setActiveFilters(updatedFilters);
+    setPendingFilters(updatedFilters);
+    applyFilters(updatedFilters);
+    if (type === "dateRange") {
+      setCustomDateRange(null);
+    }
+  };
+
+  const handleRemoveHiddenFilters = () => {
+    // Get the hidden filters (those beyond visibleTags)
+    const hiddenFilters = activeFiltersArray.slice(visibleTags);
+
+    // Create a new filters object by removing the hidden filters
+    const updatedFilters = { ...activeFilters };
+
+    hiddenFilters.forEach((filter) => {
+      if (filter.type === "publishers") {
+        updatedFilters.publishers = updatedFilters.publishers.filter((v) => v !== filter.value);
+      } else if (filter.type === "durations") {
+        updatedFilters.durations = updatedFilters.durations.filter((v) => v !== filter.value);
+      } else if (filter.type === "dateRange") {
+        updatedFilters.dateRange = null;
+        setCustomDateRange(null);
       }
     });
 
-    handleApplyFilters({
-      ...filters,
-      [type]: type === "dateRange" ? null : (filters[type] as string[]).filter((v) => v !== value),
-    });
+    setActiveFilters(updatedFilters);
+    setPendingFilters(updatedFilters);
+    applyFilters(updatedFilters);
   };
 
+  const handleSortSelect = (option: string) => {
+    setSelectedSort(option);
+    setIsSorterOpen(false);
+    let sortedArticles = [...filteredArticles];
+    switch (option) {
+      case "Latest":
+        sortedArticles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+        break;
+      case "Trending":
+        sortedArticles.sort((a, b) => b.title.length - a.title.length);
+        break;
+      case "Duration - Short to Long":
+        sortedArticles.sort((a, b) => calculateReadingTime(a.content) - calculateReadingTime(b.content));
+        break;
+      default:
+        break;
+    }
+    setFilteredArticles(sortedArticles);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sorterRef.current &&
+        !sorterRef.current.contains(event.target as Node) &&
+        sorterButtonRef.current &&
+        !sorterButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsSorterOpen(false);
+      }
+    };
+
+    if (isSorterOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSorterOpen]);
+
   return (
-    <div css={main}>
-      <div css={container}>
-        <div css={headerFrame(isScrolled)}>
-          <div css={header}>
-            <div css={news}>Crypto News</div>
-            <div css={filterAndUpdownFrame}>
-              <div css={filter}>
-                <FilterSidePanel onApplyFilters={handleApplyFilters} onResetFilters={handleResetFilters} />
-              </div>
-              <div css={updown}>
-                <Dropdown
-                  onSortChange={(value: string) => {
-                    console.log("Sort by:", value);
-                  }}
+    <div css={styles.main}>
+      <div css={styles.container}>
+        <div css={styles.headerFrame(isScrolled, activeFiltersArray.length > 0)}>
+          <div css={styles.header}>
+            <div css={styles.news}>Crypto News</div>
+            <div css={styles.filterAndUpdownFrame}>
+              <div css={styles.filter}>
+                <FilterSidePanel
+                  onApplyFilters={handleApplyFilters}
+                  onResetFilters={handleResetFilters}
+                  filters={pendingFilters}
+                  setFilters={setPendingFilters}
+                  accordionStates={accordionStates}
+                  setAccordionStates={setAccordionStates}
+                  customDateRange={customDateRange}
+                  setCustomDateRange={setCustomDateRange}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
                 />
+              </div>
+              <div css={styles.updown}>
+                <button
+                  css={styles.sorterIcon}
+                  ref={sorterButtonRef}
+                  onClick={() => setIsSorterOpen((prev) => !prev)}
+                >
+                  <Image src={AssetsImg.ic_sorter} alt="sorter" height={16} width={16} />
+                </button>
+                {isSorterOpen && (
+                  <div css={styles.sorterDropdown} ref={sorterRef}>
+                    {["Latest", "Trending", "Duration - Short to Long"].map((option) => (
+                      <button
+                        key={option}
+                        css={styles.sorterItem}
+                        onClick={() => handleSortSelect(option)}
+                      >
+                        <span>{option}</span>
+                        {selectedSort === option && (
+                          <span css={styles.sorterCheckmark}>
+                            <Image src={AssetsImg.ic_tick} alt="tick" height={16} width={16} />
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          {(filters.publishers.length > 0 || filters.durations.length > 0 || filters.dateRange) && (
-            <div css={filterTagsContainer}>
-              {filters.publishers.map((publisher) => (
-                <span key={publisher} css={filterTag}>
-                  <img src="/icons/document.svg" alt="Publisher" /> {publisher}{" "}
-                  <button onClick={() => handleRemoveFilter("publishers", publisher)}>×</button>
+          {activeFiltersArray.length > 0 && (
+            <div css={styles.filterTagsContainer} ref={containerRef}>
+              {activeFiltersArray.slice(0, visibleTags).map((filter) => (
+                <span key={`${filter.type}-${filter.value}`} css={styles.filterTag}>
+                  <Image
+                    src={
+                      filter.type === "publishers"
+                        ? AssetsImg.ic_document
+                        : filter.type === "durations"
+                        ? AssetsImg.ic_clock
+                        : AssetsImg.ic_calendar
+                    }
+                    alt="icon"
+                    width={16}
+                    height={16}
+                  />
+                  {filter.value}
+                  <button onClick={() => handleRemoveFilter(filter.type, filter.value)}>
+                    <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
+                  </button>
                 </span>
               ))}
-              {filters.durations.map((duration) => (
-                <span key={duration} css={filterTag}>
-                  <img src="/icons/clock.png" alt="Duration" /> {duration}{" "}
-                  <button onClick={() => handleRemoveFilter("durations", duration)}>×</button>
-                </span>
-              ))}
-              {filters.dateRange && (
-                <span css={filterTag}>
-                  <img src="/icons/calendar.png" alt="Date" /> {filters.dateRange}{" "}
-                  <button onClick={() => handleRemoveFilter("dateRange", filters.dateRange)}>×</button>
+              {overflowCount > 0 && (
+                <span css={styles.filterTag}>
+                  +{overflowCount} More
+                  <button onClick={handleRemoveHiddenFilters}>
+                    <Image src={AssetsImg.ic_cross} alt="cross" width={16} height={16} />
+                  </button>
                 </span>
               )}
-              <Button
-                size="small"
-                type="secondary"
-                css={resetTagButton}
-                onClick={handleResetFilters}
-              >
-                RESET
-              </Button>
+              <div data-reset-button css={{ marginLeft: "auto" }}>
+                <Button
+                  size="small"
+                  type="secondary"
+                  css={styles.resetTagButton}
+                  onClick={handleResetFilters}
+                >
+                  RESET
+                </Button>
+              </div>
             </div>
           )}
         </div>
-        <div css={section} ref={sectionRef}>
+        <div css={styles.section} ref={sectionRef}>
           {error ? (
             <div>{error}</div>
           ) : loading ? (
@@ -279,12 +456,13 @@ const NewsPage: React.FC = () => {
               {Array.from({ length: 12 }).map((_, index) => (
                 <ArticleCard
                   key={index}
-                  title={<SkeletonWrapper isLoading={loading} height={45} width={170} borderRadius={4} />}
-                  link={<SkeletonWrapper isLoading={loading} height={45} width={170} borderRadius={4} />}
-                  imageUrl={<SkeletonWrapper isLoading={loading} height={100} width={100} borderRadius={4} />}
-                  date={<SkeletonWrapper isLoading={loading} height={22} width={73} borderRadius={4} />}
-                  readingTime={<SkeletonWrapper isLoading={loading} height={22} width={73} borderRadius={4} />}
-                  domain={<SkeletonWrapper isLoading={loading} height={22} width={90} borderRadius={4} />}
+                  loading={loading}
+                  title=""
+                  link=""
+                  imageUrl=""
+                  date=""
+                  readingTime=""
+                  domain=""
                 />
               ))}
             </div>
@@ -334,98 +512,88 @@ const NewsPage: React.FC = () => {
           )}
         </div>
       </div>
-      <div css={innerDiv}>
-        <div css={innerCard}>
-          <div css={newsletter}>
-            <div css={newsChild}>
+      <div css={styles.innerDiv}>
+        <div css={styles.innerCard}>
+          <div css={styles.newsletter}>
+            <div css={styles.newsChild}>
               {showNewContent ? (
                 <div>
-                  <div css={KYC}>
-                    <Image src={AssetsImg.ic_kyc} alt="kyc"/>
-                  </div>
-                  <div css={subSucess}>Subscription Successful!</div>
-                  <div css={subText}>
-                    Thank you for subscribing! You'll now receive the latest crypto news and updates straight to your inbox
-                  </div>
-                  <div css={zebpayZebra}>
-                    <Image src={AssetsImg.ic_zebra} alt="zebra"/>
-                  </div>
+                  <ShimmerWrapper isLoading={loading} height={104} width={100} mode="dark">
+                    <div css={styles.KYC}>
+                      <Image src={AssetsImg.ic_kyc} alt="kyc" />
+                    </div>
+                  </ShimmerWrapper>
+                  <ShimmerWrapper isLoading={loading} height={20} width={200} mode="dark">
+                    <div css={styles.subSucess}>Subscription Successful!</div>
+                  </ShimmerWrapper>
+                  <ShimmerWrapper isLoading={loading} height={48} width={300} mode="dark">
+                    <div css={styles.subText}>
+                      Thank you for subscribing! You'll now receive the latest crypto news and updates straight to your inbox
+                    </div>
+                  </ShimmerWrapper>
+                  <ShimmerWrapper isLoading={loading} height={120} width={120} mode="dark">
+                    <div css={styles.zebpayZebra}>
+                      <Image src={AssetsImg.ic_zebra} alt="zebra" />
+                    </div>
+                  </ShimmerWrapper>
                 </div>
               ) : (
                 <>
-                  <div css={newsHeader}>
-                    {loading ? (
-                      <SkeletonWrapper isLoading={loading} height={80} width={80} borderRadius={4} />
-                    ) : (
-                      <div css={mailIcon}>
-                        <Image src={AssetsImg.ic_mail} alt="mail"/>
+                  <div css={styles.newsHeader}>
+                    <ShimmerWrapper isLoading={loading} height={80} width={80} mode="dark">
+                      <div css={styles.mailIcon}>
+                        <Image src={AssetsImg.ic_mail} alt="mail" />
                       </div>
-                    )}
-                    {loading ? (
-                      <SkeletonWrapper isLoading={loading} height={28} width={220} borderRadius={4} />
-                    ) : (
-                      <div css={heading}>ZebPay Weekly Newsletter!</div>
-                    )}
-                    {loading ? (
-                      <SkeletonWrapper isLoading={loading} height={48} width={255} borderRadius={4} />
-                    ) : (
-                      <div css={quote}>
+                    </ShimmerWrapper>
+                    <ShimmerWrapper isLoading={loading} height={28} width={220} mode="dark">
+                      <div css={styles.heading}>ZebPay Weekly Newsletter!</div>
+                    </ShimmerWrapper>
+                    <ShimmerWrapper isLoading={loading} height={48} width={255} mode="dark">
+                      <div css={styles.quote}>
                         Subscribe for the latest crypto news & stay updated!
                       </div>
-                    )}
+                    </ShimmerWrapper>
                   </div>
-                  {loading ? (
-                    <SkeletonWrapper isLoading={loading} height={20} width={220} borderRadius={4} />
-                  ) : (
-                    <div css={form}>
+                  <ShimmerWrapper isLoading={loading} height={34} width={255} mode="dark">
+                    <div css={styles.form}>
                       <EmailSubscription onSubscribe={onSubscribe} />
                     </div>
-                  )}
+                  </ShimmerWrapper>
                 </>
               )}
             </div>
           </div>
-          <div css={tradingBanner}>
-            <div css={topology}></div>
-            <div css={frame}>
-              <div css={anotherFrame}>
-                {loading ? (
-                  <SkeletonWrapper isLoading={loading} height={70} width={70} borderRadius={4} />
-                ) : (
-                  <div css={zebpayImageDiv}>
-                    <Image src={AssetsImg.ic_zebpayCoin} alt="zeb coin"/>
+          <div css={styles.tradingBanner}>
+            <div></div>
+            <div css={styles.frame}>
+              <div css={styles.anotherFrame}>
+                <ShimmerWrapper isLoading={loading} height={70} width={70} typeLightdDark>
+                  <div css={styles.zebpayImageDiv}>
+                    <Image src={AssetsImg.ic_zebpayCoin} alt="zeb coin" />
                   </div>
-                )}
-                <div css={textWrapper}>
-                  {loading ? (
-                    <SkeletonWrapper isLoading={loading} height={30} width={200} borderRadius={4} />
-                  ) : (
-                    <div css={title}>Stay Informed, Trade Smart</div>
-                  )}
-                  {loading ? (
-                    <SkeletonWrapper isLoading={loading} height={45} width={300} borderRadius={4} />
-                  ) : (
-                    <div css={subtitle}>
+                </ShimmerWrapper>
+                <div css={styles.textWrapper}>
+                  <ShimmerWrapper isLoading={loading} height={30} width={220} typeLightdDark>
+                    <div css={styles.title}>Stay Informed, Trade Smart</div>
+                  </ShimmerWrapper>
+                  <ShimmerWrapper isLoading={loading} height={45} width={300} typeLightdDark>
+                    <div css={styles.subtitle}>
                       Get real-time crypto updates and trade Crypto on ZebPay. Download now!
                     </div>
-                  )}
+                  </ShimmerWrapper>
                 </div>
               </div>
-              <div css={buttonGroup}>
-                {loading ? (
-                  <SkeletonWrapper isLoading={loading} height={35} width={140} borderRadius={2} />
-                ) : (
-                  <button css={appButton}>
-                    <Image src={AssetsImg.ic_appstore} alt="playstore"/>
+              <div css={styles.buttonGroup}>
+                <ShimmerWrapper isLoading={loading} height={35} width={140} typeLightdDark>
+                  <button css={styles.appButton}>
+                    <Image src={AssetsImg.ic_appstore} alt="playstore" />
                   </button>
-                )}
-                {loading ? (
-                  <SkeletonWrapper isLoading={loading} height={35} width={140} borderRadius={2} />
-                ) : (
-                  <button css={appButton}>
-                    <Image src={AssetsImg.ic_playstore} alt="playstore"/>
+                </ShimmerWrapper>
+                <ShimmerWrapper isLoading={loading} height={35} width={140} typeLightdDark>
+                  <button css={styles.appButton}>
+                    <Image src={AssetsImg.ic_playstore} alt="playstore" />
                   </button>
-                )}
+                </ShimmerWrapper>
               </div>
             </div>
           </div>

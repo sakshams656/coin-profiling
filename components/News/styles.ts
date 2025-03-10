@@ -1,17 +1,16 @@
-
 import { css } from "@emotion/react";
 import { typography, colors, utils } from "zebpay-ui";
 
 export const header = css({
   display: "flex",
   justifyContent: "space-between",
-  padding: "0 1rem",
+  padding: `0 ${utils.remConverter(16)}`,
   alignItems: "center",
   alignSelf: "stretch",
   "@media (max-width: 48rem)": {
     flexDirection: "column",
-    gap: "0.5rem",
-    padding: "0 0.5rem",
+    gap: utils.remConverter(8),
+    padding: `0 ${utils.remConverter(8)}`,
   },
 });
 
@@ -19,22 +18,22 @@ export const news = css({
   display: "flex",
   width: "auto",
   alignItems: "center",
-  gap: "0.5rem",
+  gap: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   ...typography.h6_16_bold,
   "@media (max-width: 48rem)": {
     flexDirection: "column",
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
   },
 });
 
 export const filterAndUpdownFrame = css({
   display: "flex",
   alignItems: "center",
-  gap: "1.25rem",
-  height: "1.5rem",
+  gap: utils.remConverter(20),
+  height: utils.remConverter(24),
   "@media (max-width: 48rem)": {
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
     height: "auto",
   },
 });
@@ -42,12 +41,12 @@ export const filterAndUpdownFrame = css({
 export const filter = css({
   color: colors.Zeb_Solid_White,
   display: "flex",
-  padding: "0.625rem",
+  padding: utils.remConverter(10),
   alignItems: "center",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
   "@media (max-width: 48rem)": {
-    padding: "0.25rem",
+    padding: utils.remConverter(4),
   },
 });
 
@@ -56,32 +55,31 @@ export const updown = css({
   height: utils.remConverter(36),
   width: utils.remConverter(36),
   display: "flex",
-  padding: "0.625rem",
+  padding: utils.remConverter(10),
   alignItems: "center",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
   cursor: "pointer",
   "@media (max-width: 48rem)": {
-    height: "1.5rem",
-    padding: "0.25rem",
+    height: utils.remConverter(24),
+    padding: utils.remConverter(4),
   },
 });
 
 export const newsletter = css({
   display: "flex",
   width: "inherit",
-  height: "8.5rem",
-  padding: "0.75rem",
-  paddingBottom: "1rem",
+  height: utils.remConverter(136),
+  padding: utils.remConverter(12),
+  paddingBottom: utils.remConverter(16),
   alignItems: "center",
-  gap: "0.25rem",
+  gap: utils.remConverter(4),
   flex: "1 0 0",
-  borderRadius: "0.5rem",
-  overflowY: "auto", // Enables vertical scrolling
-  overflowX: "hidden", // Prevents horizontal scrolling
+  borderRadius: utils.remConverter(8),
+  overflowY: "auto",
+  overflowX: "hidden",
   background: colors.Zeb_Solid_BG_Blue,
 
-  // Hide scrollbar for Webkit (Chrome, Safari)
   "&::-webkit-scrollbar": {
     display: "none",
   },
@@ -90,13 +88,11 @@ export const newsletter = css({
 
   "@media (max-width: 48rem)": {
     height: "auto",
-    padding: "0.5rem",
-    paddingBottom: "1rem",
-    maxHeight: "8.5rem",
+    padding: utils.remConverter(8),
+    paddingBottom: utils.remConverter(16),
+    maxHeight: utils.remConverter(136),
   },
 });
-
-
 
 export const newsChild = css({
   display: "flex",
@@ -106,7 +102,7 @@ export const newsChild = css({
   flex: "1 0 0",
   alignSelf: "stretch",
   "@media (max-width: 48rem)": {
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
   },
 });
 
@@ -116,10 +112,10 @@ export const innerCard = css({
   height: "100%",
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: "1rem",
+  gap: utils.remConverter(16),
   flexShrink: "0",
   "@media (max-width: 48rem)": {
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
   },
 });
 
@@ -127,10 +123,10 @@ export const newsHeader = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: "0.5rem",
+  gap: utils.remConverter(8),
   alignSelf: "stretch",
   "@media (max-width: 48rem)": {
-    gap: "0.25rem",
+    gap: utils.remConverter(4),
   },
 });
 
@@ -138,27 +134,27 @@ export const heading = css({
   color: colors.Zeb_Solid_White,
   fontFeatureSettings: '"clig" off, "liga" off',
   fontFamily: "Lato",
-  fontSize: "1rem",
+  fontSize: utils.remConverter(16),
   fontStyle: "normal",
   fontWeight: "700",
-  lineHeight: "1.75rem",
-  letterSpacing: "0.05rem",
+  lineHeight: utils.remConverter(28),
+  letterSpacing: utils.remConverter(0.8),
   "@media (max-width: 48rem)": {
-    fontSize: "0.875rem",
-    lineHeight: "1.5rem",
+    fontSize: utils.remConverter(14),
+    lineHeight: utils.remConverter(24),
   },
 });
 
 export const mailIcon = css({
   display: "flex",
-  width: "5rem",
-  height: "5rem",
-  padding: "1.0625rem 0.234rem",
+  width: utils.remConverter(80),
+  height: utils.remConverter(80),
+  padding: `${utils.remConverter(17)} ${utils.remConverter(3.74)}`,
   justifyContent: "center",
   alignItems: "center",
   "@media (max-width: 48rem)": {
-    width: "3rem",
-    height: "3rem",
+    width: utils.remConverter(48),
+    height: utils.remConverter(48),
   },
 });
 
@@ -167,14 +163,14 @@ export const quote = css({
   color: colors.Zeb_Solid_Light_Blue,
   fontFeatureSettings: '"clig" off, "liga" off',
   fontFamily: "Lato",
-  fontSize: "0.875rem",
+  fontSize: utils.remConverter(14),
   fontStyle: "normal",
   fontWeight: "400",
-  lineHeight: "1.5rem",
-  letterSpacing: "0.025rem",
+  lineHeight: utils.remConverter(24),
+  letterSpacing: utils.remConverter(0.4),
   "@media (max-width: 48rem)": {
-    fontSize: "0.75rem",
-    lineHeight: "1.25rem",
+    fontSize: utils.remConverter(12),
+    lineHeight: utils.remConverter(20),
   },
 });
 
@@ -182,14 +178,14 @@ export const email = css({
   flex: "1 0 0",
   fontFeatureSettings: '"clig" off, "liga" off',
   fontFamily: "Lato",
-  fontSize: "0.875rem",
+  fontSize: utils.remConverter(14),
   fontStyle: "normal",
   fontWeight: "400",
-  lineHeight: "1.5rem",
-  letterSpacing: "0.025rem",
+  lineHeight: utils.remConverter(24),
+  letterSpacing: utils.remConverter(0.4),
   "@media (max-width: 48rem)": {
-    fontSize: "0.75rem",
-    lineHeight: "1.25rem",
+    fontSize: utils.remConverter(12),
+    lineHeight: utils.remConverter(20),
   },
 });
 
@@ -199,55 +195,41 @@ export const subscribe = css({
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  gap: "0.5rem",
+  gap: utils.remConverter(8),
   color: "white",
-  borderRadius: "0.5rem",
-  marginBottom: "0.5rem",
+  borderRadius: utils.remConverter(8),
+  marginBottom: utils.remConverter(8),
   background: colors.Zeb_Gradient_Blue_01,
   ...typography.C4_12,
   "@media (max-width: 48rem)": {
-    gap: "0.4rem",
-    borderRadius: "0.375rem",
+    gap: utils.remConverter(6.4),
+    borderRadius: utils.remConverter(6),
   },
 });
 
 export const bannerImage = css({
-  width: "3rem",
-  height: "3rem",
+  width: utils.remConverter(48),
+  height: utils.remConverter(48),
   alignSelf: "center",
   flexShrink: "0",
   position: "absolute",
-  right: "1rem",
-  top: "1rem",
+  right: utils.remConverter(16),
+  top: utils.remConverter(16),
   "@media (max-width: 30rem)": {
-    width: "2rem",
-    height: "2rem",
+    width: utils.remConverter(32),
+    height: utils.remConverter(32),
   },
 });
 
-export const topology = css({
-  width: "16.75513rem",
-  height: "16.39394rem",
-  transform: "rotate(44.59deg)",
-  position: "absolute",
-  right: "-11.12863rem",
-  top: "-11rem",
-  "@media (max-width: 48rem)": {
-    width: "12rem",
-    height: "12rem",
-    right: "-8rem",
-    top: "-8rem",
-  },
-});
 
 export const frame = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "1.25rem",
+  gap: utils.remConverter(20),
   alignSelf: "stretch",
   "@media (max-width: 48rem)": {
-    gap: "0.75rem",
+    gap: utils.remConverter(12),
   },
 });
 
@@ -255,22 +237,22 @@ export const anotherFrame = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "left",
-  gap: "1.25rem",
+  gap: utils.remConverter(20),
   alignSelf: "stretch",
   "@media (max-width: 48rem)": {
-    gap: "0.75rem",
+    gap: utils.remConverter(12),
   },
 });
 
 export const zebpayImageDiv = css({
   display: "flex",
-  width: "4rem",
-  height: "4rem",
+  width: utils.remConverter(64),
+  height: utils.remConverter(64),
   justifyContent: "center",
   alignItems: "center",
   "@media (max-width: 48rem)": {
-    width: "3rem",
-    height: "3rem",
+    width: utils.remConverter(48),
+    height: utils.remConverter(48),
   },
 });
 
@@ -278,78 +260,78 @@ export const textWrapper = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: "0.25rem",
+  gap: utils.remConverter(4),
   alignSelf: "stretch",
   "@media (max-width: 48rem)": {
-    gap: "0.125rem",
+    gap: utils.remConverter(2),
   },
 });
 
 export const subtitle = css({
   alignSelf: "stretch",
-  color: "var(--Zeb_Solid-Light_Blue, var(--blue-04-light-blue, #C0C0EE))",
+  color: colors.Zeb_Solid_Light_Blue,
   fontFeatureSettings: "'liga' off, 'clig' off",
   fontFamily: "Lato",
-  fontSize: "0.875rem",
+  fontSize: utils.remConverter(14),
   fontStyle: "normal",
   fontWeight: "400",
-  lineHeight: "1.5rem",
-  letterSpacing: "0.025rem",
+  lineHeight: utils.remConverter(24),
+  letterSpacing: utils.remConverter(0.4),
   "@media (max-width: 48rem)": {
-    fontSize: "0.75rem",
-    lineHeight: "1.25rem",
+    fontSize: utils.remConverter(12),
+    lineHeight: utils.remConverter(20),
   },
 });
 
 export const button = css({
-  height: "2rem",
+  height: utils.remConverter(32),
   flex: "1 0 0",
   "@media (max-width: 48rem)": {
-    height: "1.75rem",
+    height: utils.remConverter(28),
   },
 });
 
 export const KYC = css({
-  height: "5rem",
-  width: "5rem",
+  height: utils.remConverter(80),
+  width: utils.remConverter(80),
   "@media (max-width: 48rem)": {
-    height: "4rem",
-    width: "4rem",
+    height: utils.remConverter(64),
+    width: utils.remConverter(64),
   },
 });
 
 export const subSucess = css({
-  fontSize: "1rem",
+  fontSize: utils.remConverter(16),
   fontWeight: "700",
-  marginTop: "1rem",
+  marginTop: utils.remConverter(16),
   "@media (max-width: 48rem)": {
-    fontSize: "0.875rem",
+    fontSize: utils.remConverter(14),
   },
 });
 
 export const subText = css({
-  fontSize: "0.875rem",
+  fontSize: utils.remConverter(14),
   fontWeight: "400",
   color: colors.Zeb_Solid_Light_Blue,
-  marginTop: "1rem",
-  lineHeight: "1.5rem",
+  marginTop: utils.remConverter(16),
+  lineHeight: utils.remConverter(24),
   "@media (max-width: 48rem)": {
-    fontSize: "0.75rem",
-    lineHeight: "1.25rem",
+    fontSize: utils.remConverter(12),
+    lineHeight: utils.remConverter(20),
   },
 });
 
 export const zebpayZebra = css({
   float: "right",
-  marginTop: "1.75rem",
-  marginRight: "-0.75rem",
+  marginTop: utils.remConverter(28),
+  marginRight: utils.remConverter(-12),
   color: colors.Zeb_Solid_Dark_Grey,
   opacity: "0.1",
   "@media (max-width: 75rem)": {
-    marginTop: "1.25rem",
-    marginRight: "-0.5rem",
-    height: utils.remConverter(7.5),
-    width: utils.remConverter(7.5),
+    marginTop: utils.remConverter(20),
+    marginRight: utils.remConverter(-8),
+    height: utils.remConverter(120),
+    width: utils.remConverter(120),
   },
 });
 
@@ -357,21 +339,25 @@ export const main = css({
   fontFamily: "Lato",
   display: "inline-flex",
   alignItems: "flex-start",
-  gap: "1.25rem",
+  gap: utils.remConverter(20),
   width: "100%",
-  padding: "1.25rem",
+  maxWidth: "100%",
+  padding: utils.remConverter(40),
+  paddingTop: utils.remConverter(20),
+  paddingBottom: utils.remConverter(20),
   height: "calc(100vh - 3.75rem)",
   flexShrink: 0,
-  alignSelf: "stretch",
+  //alignSelf: "stretch",
+  overflow:"hidden",
   background: colors.Zeb_Solid_BG_Blue,
-  boxShadow: "0rem 0.4375rem 0.4375rem -0.125rem rgba(97, 79, 79, 0.14)",
+  boxShadow: `0 ${utils.remConverter(7)} ${utils.remConverter(7)} ${utils.remConverter(-2)} rgba(97, 79, 79, 0.14)`,
   "@media (max-width: 75rem)": {
-    gap: "1rem",
-    padding: "1rem",
+    gap: utils.remConverter(16),
+    padding: utils.remConverter(16),
   },
   "@media (max-width: 48rem)": {
     flexDirection: "column",
-    padding: "1rem",
+    padding: utils.remConverter(16),
     height: "auto",
   },
 });
@@ -380,10 +366,10 @@ export const container = css({
   display: "flex",
   width: "75%",
   height: "100%",
-  paddingBottom: "1rem",
+  paddingBottom: utils.remConverter(16),
   flexDirection: "column",
   alignItems: "center",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_Dark_Blue,
   "@media (max-width: 75rem)": {
     width: "85%",
@@ -391,66 +377,64 @@ export const container = css({
   "@media (max-width: 48rem)": {
     width: "100%",
     height: "auto",
-    paddingBottom: "0.5rem",
+    paddingBottom: utils.remConverter(8),
   },
 });
 
-export const headerFrame = (isScrolled: boolean) =>
+export const headerFrame = (isScrolled: boolean, p0: boolean) =>
   css({
     display: "flex",
-    padding: "1rem 0",
+    padding: `${utils.remConverter(16)} 0`,
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
     alignSelf: "stretch",
     background: colors.Zeb_Solid_Dark_Blue,
     position: "sticky",
     top: 0,
-    borderRadius: "0.5rem",
-    zIndex: 10,
+    borderRadius: utils.remConverter(8),
     ...(isScrolled && {
-      boxShadow: "0rem 0.5rem 0.5rem -0.25rem #0C0C1D",
+      boxShadow: `0 ${utils.remConverter(8)} ${utils.remConverter(8)} ${utils.remConverter(-4)} #0C0C1D`,
     }),
     "@media (max-width: 75rem)": {
-      gap: "0.375rem",
-      padding: "0.75rem 0",
+      gap: utils.remConverter(6),
+      padding: `${utils.remConverter(12)} 0`,
     },
     "@media (max-width: 48rem)": {
-      gap: "0.25rem",
-      padding: "0.5rem 0",
+      gap: utils.remConverter(4),
+      padding: `${utils.remConverter(8)} 0`,
     },
   });
 
 export const section = css({
   display: "flex",
   flexWrap: "wrap",
-  height: "39.75rem",
+  height: utils.remConverter(636),
   width: "100%",
-  padding: "1rem",
-  paddingBottom: "1rem",
+  padding: utils.remConverter(16),
+  paddingBottom: utils.remConverter(16),
   flexDirection: "column",
   alignItems: "center",
-  borderRadius: "0.25rem",
+  borderRadius: utils.remConverter(4),
   background: colors.Zeb_Solid_Dark_Blue,
   overflowY: "auto",
   overflowX: "hidden",
-  position: "relative",
-  paddingRight: "0.75rem",
+  paddingRight: utils.remConverter(12),
   "&::-webkit-scrollbar": {
-    width: "0.25rem",
+    width: utils.remConverter(4),
   },
   "&::-webkit-scrollbar-thumb": {
     background: colors.Zeb_Solid_Dark_Grey,
-    borderRadius: "1.125rem",
+    borderRadius: utils.remConverter(18),
   },
   "@media (max-width: 75rem)": {
-    height: "35rem",
-    padding: "0.75rem",
+    height: utils.remConverter(560),
+    padding: utils.remConverter(12),
   },
   "@media (max-width: 48rem)": {
     width: "100%",
     height: "auto",
-    padding: "0.5rem",
+    padding: utils.remConverter(8),
   },
 });
 
@@ -458,13 +442,13 @@ export const innerDiv = css({
   display: "flex",
   width: "25%",
   height: "100%",
-  padding: "1rem",
+  padding: utils.remConverter(16),
   fontFamily: "Lato",
   color: colors.Zeb_Solid_White,
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "flex-start",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_Dark_Blue,
   "@media (max-width: 75rem)": {
     width: "30%",
@@ -472,27 +456,26 @@ export const innerDiv = css({
   "@media (max-width: 48rem)": {
     width: "100%",
     height: "auto",
-    padding: "0.5rem",
+    padding: utils.remConverter(8),
   },
 });
 
 export const tradingBanner = css({
   display: "flex",
   width: "100%",
-  padding: "0.75rem",
+  padding: utils.remConverter(12),
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: "0.25rem",
+  gap: utils.remConverter(4),
   flexShrink: "0",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background: colors.Zeb_Gradient_Dark_Blue,
-  position: "relative",
   "@media (max-width: 75rem)": {
-    padding: "1rem",
+    padding: utils.remConverter(16),
   },
   "@media (max-width: 48rem)": {
     height: "auto",
-    padding: "1rem",
+    padding: utils.remConverter(16),
   },
 });
 
@@ -500,28 +483,29 @@ export const buttonGroup = css({
   display: "flex",
   justifyContent: "space-around",
   alignItems: "flex-start",
-  gap: "0.75rem",
+  gap: utils.remConverter(12),
   alignSelf: "stretch",
   "@media (max-width: 75rem)": {
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
   },
   "@media (max-width: 48rem)": {
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
   },
 });
 
 export const appButton = css({
+  display:"flex",
   backgroundColor: colors.Zeb_Solid_BG_Blue,
-  borderRadius: "0.25rem",
-  padding: "0.4rem 1.75rem",
+  borderRadius: utils.remConverter(4),
+  padding: `${utils.remConverter(6.4)} ${utils.remConverter(28)}`,
   width: "100%",
-  border: "0.0625rem solid #A6A6A6",
+  border: `${utils.remConverter(1)} solid #A6A6A6`,
   cursor: "pointer",
   "@media (max-width: 75rem)": {
-    padding: "0.3rem 1rem",
+    padding: `${utils.remConverter(4.8)} ${utils.remConverter(16)}`,
   },
   "@media (max-width: 62.5rem)": {
-    padding: "0.1rem 0.5rem",
+    padding: `${utils.remConverter(1.6)} ${utils.remConverter(8)}`,
   },
 });
 
@@ -532,81 +516,87 @@ export const form = css({
   alignSelf: "stretch",
   width: "100%",
   "@media (max-width: 48rem)": {
-    gap: "0.5rem",
+    gap: utils.remConverter(8),
   },
 });
 
 export const title = css({
-  alignSelf: "stretch",
   color: colors.Zeb_Solid_White,
   fontFeatureSettings: "'liga' off, 'clig' off",
   fontFamily: "Lato",
-  fontSize: "1rem",
+  fontSize: utils.remConverter(16),
   fontStyle: "normal",
   fontWeight: "700",
-  lineHeight: "1.75rem",
-  letterSpacing: "0.05rem",
+  lineHeight: utils.remConverter(28),
+  letterSpacing: utils.remConverter(0.8),
   "@media (max-width: 75rem)": {
-    fontSize: "0.9rem",
-    lineHeight: "1.5rem",
+    fontSize: utils.remConverter(14.4),
+    lineHeight: utils.remConverter(24),
   },
   "@media (max-width: 48rem)": {
-    fontSize: "0.875rem",
-    lineHeight: "1.5rem",
+    fontSize: utils.remConverter(14),
+    lineHeight: utils.remConverter(24),
   },
 });
 
-
 export const filterTagsContainer = css({
   display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "0.625rem",
-  padding: "0.625rem",
+  alignItems: "center", 
+  gap: utils.remConverter(8),
+  padding: utils.remConverter(10),
+  paddingLeft: utils.remConverter(24),
+  overflowX: "hidden",
+  flexDirection: "column",  
+  justifyContent: "flex-start",  
   background: colors.Zeb_Solid_Dark_Blue,
-  borderBottom: `0.0625rem solid ${colors.Zeb_Solid_BG_Blue}`,
+  borderBottom: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_BG_Blue}`,
   width: "100%",
-  overflowX: "auto",
   overflowY: "hidden",
   scrollbarWidth: "thin",
   scrollbarColor: `${colors.Zeb_Solid_Dark_Grey} transparent`,
   "&::-webkit-scrollbar": {
-    height: "0.25rem",
+    height: utils.remConverter(4),
   },
   "&::-webkit-scrollbar-thumb": {
     background: colors.Zeb_Solid_Dark_Grey,
-    borderRadius: "0.25rem",
+    borderRadius: utils.remConverter(4),
   },
   "&::-webkit-scrollbar-track": {
     background: "transparent",
+  },
+  "@media (min-width: 48rem)": {
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: utils.remConverter(10), 
   },
 });
 
 export const filterTag = css({
   display: "flex",
   alignItems: "center",
-  padding: "0.375rem 0.625rem",
+  padding: `${utils.remConverter(6)} ${utils.remConverter(10)}`,
   background: colors.Zeb_Solid_Dark_Grey,
-  borderRadius: "0.25rem",
+  borderRadius: utils.remConverter(4),
   color: colors.Zeb_Solid_White,
-  fontSize: "0.875rem",
-  fontWeight: 400,
+  fontSize: utils.remConverter(12),
+  fontWeight: 600,
 
   img: {
-    width: "1rem",
-    height: "1rem",
-    marginRight: "0.375rem",
+    width: utils.remConverter(16),
+    height: utils.remConverter(16),
+    marginRight: utils.remConverter(6),
   },
 
   button: {
-    marginLeft: "0.375rem",
+    marginLeft: utils.remConverter(6),
+    marginRight: utils.remConverter(-8),
+    marginTop: utils.remConverter(4),
     background: "none",
     border: "none",
     color: colors.Zeb_Solid_Light_Blue,
-    fontSize: "0.875rem",
+    fontSize: utils.remConverter(14),
     cursor: "pointer",
     padding: 0,
-    lineHeight: 1,
 
     "&:hover": {
       color: colors.Zeb_Solid_White,
@@ -615,10 +605,60 @@ export const filterTag = css({
 });
 
 export const resetTagButton = css({
-  marginLeft: "auto",
-
+  marginLeft: "auto", 
+  display: "flex",
+  justifyContent: "end",
+  borderRadius: utils.remConverter(4),
   "@media (max-width: 48rem)": {
-    padding: "0.25rem 0.625rem",
-    fontSize: "0.75rem",
+    padding: `${utils.remConverter(4)} ${utils.remConverter(10)}`,
+    fontSize: utils.remConverter(12),
   },
 });
+
+export const sorterDropdown = css({
+  position: "absolute",
+  right: utils.remConverter(16),
+  top: "calc(100% + 4px)",
+  background: colors.Zeb_Solid_Dark_Blue,
+  border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_Bright_Blue}`,
+  borderRadius: utils.remConverter(8),
+  padding: utils.remConverter(12),
+  width: "231px",
+  zIndex: 1000,
+  fontFamily: "'Lato', sans-serif",
+});
+
+export const sorterItem = css({
+  display: "flex",
+  alignItems: "center",
+  ...typography.B4_14_semibold,
+  gap: "12px",
+  padding: "8px",
+  paddingBottom: "12px",
+  paddingTop: "12px",
+  width: "100%",
+  color: colors.Zeb_Solid_Light_Blue,
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  borderRadius: "4px",
+  justifyContent: "space-between",
+  fontFamily: 'Lato',
+  "&:hover": {
+    background: colors.Zeb_Solid_BG_Blue,
+    color: colors.Zeb_Solid_White,
+  },
+});
+
+export const sorterCheckmark = css({
+  fontSize: utils.remConverter(16),
+  color: colors.Zeb_Solid_White,
+  fontFamily: "'Lato', sans-serif", 
+});
+
+export const sorterIcon = css({
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  paddingTop: utils.remConverter(2)
+})

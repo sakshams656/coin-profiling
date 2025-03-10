@@ -1,61 +1,26 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
-import { css } from "@emotion/react";
-import { typography, colors, utils, Button } from "zebpay-ui";
+import { Button } from "zebpay-ui";
 import AssetsImg from "@public/images";
 import Image from "next/image";
+import * as styles from "./styles";
 
 const NoNewsFound = ({ onResetFilters }) => {
   return (
-    <div
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-        height: "100%",
-        minHeight: "50vh",
-        textAlign: "center",
-        padding: "2rem",
-        color: "#ffffff",
-      }}
-    >
+    <div css={styles.container}>
       <Image src={AssetsImg.ic_NoNews} alt="no news" width={190} height={190}/>
-      <div
-        css={{
-          ...typography.h3,
-          fontFamily: "Lato",
-          fontWeight: "700",
-          fontSize: "32px",
-          lineHeight: "48px",
-          letterSpacing: "0.8px",
-          marginBottom: "1rem",
-        }}
-      >
+      <div css={styles.noNewsTitle}>
         No News Found
       </div>
-      <div
-        css={{
-          fontFamily: "Lato",
-          fontWeight: "400",
-          fontSize: "20px",
-          lineHeight: "30px",
-          letterSpacing: "0.4px",
-          textAlign: "center",
-          color: "#C0C0EE",
-          marginBottom: "3rem",
-        }}
-      >
+      <div css={styles.noNewsHeadline}>
         News not available for the selected filters.
       </div>
       <div css={{width: "50%"}}>
         <Button
-            onClick={onResetFilters} // Use the passed onResetFilters function
+            onClick={onResetFilters} 
             size="full-width"
             type="secondary"
         >
-            RESET
+            RESET FILTER
         </Button>
       </div>
     </div>

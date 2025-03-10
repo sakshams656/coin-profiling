@@ -6,7 +6,7 @@ import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import * as styles from "./styles";
 
-import { SerializedStyles } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 import { range } from "lodash";
 
 import { ZInput } from "@components/Shared";
@@ -274,7 +274,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     }
   };
   return (
-    <div css={utils.widthPercentage(100)}>
+    <div css={utils.widthPercentage(100)} style={{marginLeft: utils.remConverter(15)}}>
       <div
         data-test-id={"dateRange"}
         ref={dateRef}
@@ -284,12 +284,12 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           label="Start Date"
           name="startDate"
           invalid={!!errorMessage}
-          placeholder="Enter start date"
+          placeholder="Select Start Date"
           customCss={styles.dateInput}
           value={
             startDateValue ? dateFormat(startDateValue, inputDateFormat) : ""
           }
-          appendix={<img src={AssetsImg.ic_calendar} alt="Calendar icon" />}
+          appendix={<img src={AssetsImg.ic_calendar.src} alt="Calendar icon" />}
           onClick={() => {
             setCalendarOpen(true);
             setEndDateOpen(false);
@@ -302,11 +302,11 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <ZInput
           label="End Date"
           name="endDate"
-          placeholder="Enter end date"
+          placeholder="Enter End Date"
           customCss={styles.dateInput}
           invalid={!!errorMessage}
           value={endDateValue ? dateFormat(endDateValue, inputDateFormat) : ""}
-          appendix={<img src={AssetsImg.ic_calendar} alt="Calendar icon" />}
+          appendix={<img src={AssetsImg.ic_calendar.src} alt="Calendar icon" />}
           onClick={() => {
             setCalendarOpen(true);
             setStartDateOpen(false);
@@ -334,7 +334,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
               >
                 <img
                   alt="arrow-left"
-                  src={AssetsImg.ic_arrow_left}
+                  src={AssetsImg.ic_arrow_left.src}
                   css={[styles.monthArrow, styles.monthArrowLeft]}
                 />
               </button>
@@ -409,7 +409,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
               >
                 <img
                   alt="arrow-right"
-                  src={AssetsImg.ic_arrow_right}
+                  src={AssetsImg.ic_arrow_right.src}
                   css={[styles.monthArrow, styles.monthArrowRight]}
                 />
               </button>

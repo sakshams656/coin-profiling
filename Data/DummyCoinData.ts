@@ -6,7 +6,7 @@ export const dummyCoinData = {
   change: "↑ 0.31%",
   rank: "# 01",
   stats: [
-    { icon: AssetsImg.ic_star, label: "Coin Rating", value: "A+" },
+    { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
     { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "58.98%" },
     { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
   ],
@@ -26,5 +26,7 @@ export const dummyCoinData = {
     maxSupply: "21,000,000 BTC",
     totalSupply: "19,716,600 BTC",
     circulatingSupply: "19,716,600 BTC",
-  }
+  },
 };
+
+
