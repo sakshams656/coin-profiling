@@ -1,14 +1,15 @@
 import React from "react";
-import NoData from "../app/images/NoData.svg";
+import AssetsImg from "@public/images";
 import { heading,subHeading,image,container } from "./style";
+import Image from "next/image";
 
 const NoDataDisplay: React.FC = () => {
   return (
     <div
       css={container}
     >
-      <img
-        src={NoData.src}
+      <Image
+        src={AssetsImg.ic_no_data}
         alt="No Data"
         css={image}
       />

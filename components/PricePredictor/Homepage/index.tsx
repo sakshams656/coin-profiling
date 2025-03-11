@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { fetchHistoricalData } from "../actions/fetchHistoricalData";
 import "chart.js/auto";
-import CryptoSelector from "../../CryptoSelector";
+import CryptoSelector from "../CryptoSelector";
 import { Toast ,Shimmer,Button} from "zebpay-ui";
-import iconImage from "../images/iconImage.png";
 import Image from "next/image";
-import predict from "../images/calculator.svg";
-import InvestmentAmount from "../../InvestAmount";
-import TimeFrame from "../../Timeframe";
-import Table from "../../Table";
-import NoTable from "../../NoTable";
+import AssetsImg from "@public/images";
+import InvestmentAmount from "../InvestAmount";
+import TimeFrame from "../Timeframe";
+import Table from "../Table";
+import NoTable from "../NoTable";
 import {
   main,
   graph,
@@ -30,8 +29,8 @@ import {
   up,
   down,
   chart,
-} from "../styles/emotionStyles";
-import PriceChart from "../../Pricechart/PriceChart";
+} from "./style";
+import PriceChart from "../Pricechart/PriceChart";
 
 const BTCPricePredictor: React.FC = () => {
   const [historicalData, setHistoricalData] = useState<Array<number[]>>([]);
@@ -78,7 +77,7 @@ const BTCPricePredictor: React.FC = () => {
               <Shimmer height={30} width={250} mode="dark" />
             ) : (
               <>
-                <Image src={predict.src} width={20} height={20} alt="image" />
+                <Image src={AssetsImg.ic_calculator} width={20} height={20} alt="image" />
                 <h3>Predict BTC Price</h3>
               </>
             )}
@@ -140,8 +139,8 @@ const BTCPricePredictor: React.FC = () => {
             <div css={currentValue}>
               <div css={innerWrapper}>
                 <div css={roww}>
-                  {loading?<Shimmer  height={68} width={68} typeLightdDark/>: <img
-                    src={iconImage.src}
+                  {loading?<Shimmer  height={68} width={68} typeLightdDark/>: <Image
+                    src={AssetsImg.i_current_value}
                     alt="Icon"
                     style={{
                       width: "4.5rem",

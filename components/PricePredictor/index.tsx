@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import LoadingState from './app/components/page[1]';
+import LoadingState from './Homepage';
 import "zebpay-ui/dist/icons/icons.css";
 
 

@@ -8,6 +8,8 @@ import ic_arrow_left from "./Icons/arrow_left.svg";
 import ic_arrow_right from "./Icons/arrow_right.svg";
 import ic_tick from "./Icons/tick.svg";
 import ic_tick_blue from "./Icons/tick_blue.svg";
+import ic_calculator from "./icons/calculator.svg";
+import ic_no_data from "./icons/NoData.svg"
 
 // illustrations
 import i_zebpay_logo from "./illustrations/zebpay-logo.png";
@@ -23,6 +25,7 @@ import i_blocker_background from "./illustrations/blocker-background.png";
 import ic_search from "./Icons/search.svg";
 import ic_search_grey from "./Icons/search_grey.svg";
 import ic_cross from "./Icons/cross.svg";
+import i_current_value from "./illustrations/current-value.png"
 
 const AssetsImg = {
   i_zebpay_logo,
@@ -45,7 +48,10 @@ const AssetsImg = {
   i_404,
   i_blocker_background,
   i_blocker_background_2,
-  i_404_bg
+  i_404_bg,
+  ic_calculator,
+  ic_no_data,
+  i_current_value,
 };
 
 export default AssetsImg;
