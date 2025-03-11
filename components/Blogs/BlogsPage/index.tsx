@@ -1,6 +1,4 @@
-
-
-import React, { useEffect, useState, useRef,useLayoutEffect } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import ArticleCard from "../ArticleCard";
 import IconsPanel from "../IconsPanel";
 import dummyArticles from "../dummyData/dummyArticles";
@@ -108,6 +106,39 @@ const NewsPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  const allFilters = [
+    ...selectedCategories.map((category) => ({
+      type: "category",
+      value: category,
+      icon: AssetsImg.ic_category_white,
+      onRemove: () => handleRemoveCategory(category),
+    })),
+    ...selectedDurations.map((duration) => ({
+      type: "duration",
+      value: duration,
+      icon: AssetsImg.ic_clock_white,
+      onRemove: () => handleRemoveDuration(duration),
+    })),
+    ...(dateRange
+      ? [
+          {
+            type: "date",
+            value: dateRange.includes(" - ")
+              ? dateRange
+                  .split(" - ")
+                  .map((date) => formatDateWithSuffix(date))
+                  .join(" - ")
+              : dateRange,
+            icon: null,
+            onRemove: () => handleRemoveDate(),
+          },
+        ]
+      : []),
+  ];
+
+  const visibleFilterItems = allFilters.slice(0, visibleFilters);
+  const hiddenFiltersCount = allFilters.length - visibleFilters;
+
   const handleCategoryChange = (categories: string[]) => {
     setSelectedCategories(categories);
   };
@@ -172,77 +203,41 @@ const NewsPage: React.FC = () => {
 
   const totalFiltersCount =
     selectedCategories.length + selectedDurations.length + (dateRange ? 1 : 0);
-    useLayoutEffect(() => {
-      const calculateVisibleFilters = () => {
-        if (!containerRef.current) return;
-    
-        const currentAllFilters = [
-          ...selectedCategories.map(category => ({ type: "category", value: category })),
-          ...selectedDurations.map(duration => ({ type: "duration", value: duration })),
-          ...(dateRange ? [{ type: "date", value: dateRange }] : [])
-        ];
-        
-        try {
-          const containerWidth = containerRef.current.offsetWidth;
-          const filterButtons = Array.from(
-            containerRef.current.children
-          ) as HTMLElement[];
-          
-          const resetButtonMargin = 0;
-          const moreButtonWidth = 0; 
-          let totalWidth = 0;
-          let visibleCount = 0;
-    
-          for (let i = 0; i < filterButtons.length; i++) {
-            const buttonWidth = filterButtons[i].offsetWidth;
-    
-            if (
-              totalWidth + buttonWidth + (currentAllFilters.length > i+1 ? moreButtonWidth : 0) >
-              containerWidth - resetButtonMargin
-            ) {
-              break;
-            }
-    
-            totalWidth += buttonWidth;
-            visibleCount++;
-          }
-    
-          if (currentAllFilters.length > 1 && visibleCount >= currentAllFilters.length) {
-            visibleCount = currentAllFilters.length ;
-          }
-    
-          setVisibleFilters(visibleCount);
-        } catch (error) {
-          console.error("Error calculating visible filters:", error);
-        }
-      };
-    
-      calculateVisibleFilters();
-    
-      const resizeObserver = new ResizeObserver(() => {
-        if (resizeTimeout.current) {
-          clearTimeout(resizeTimeout.current);
-        }
-        resizeTimeout.current = setTimeout(() => {
-          calculateVisibleFilters();
-        }, 100);
-      });
-    
-      if (containerRef.current) {
-        resizeObserver.observe(containerRef.current);
-      }
-    
-      return () => {
-        if (containerRef.current) {
-          resizeObserver.disconnect();
-        }
-        if (resizeTimeout.current) {
-          clearTimeout(resizeTimeout.current);
-        }
-      };
-    }, [selectedCategories, selectedDurations, dateRange]); 
 
-    
+  const [visibleFiltersCount, setVisibleFiltersCount] = useState<number>(0);
+  const filtersContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateVisibleFilters = () => {
+      if (!filtersContainerRef.current) return;
+
+      const containerWidth = filtersContainerRef.current.offsetWidth;
+      let totalWidth = 0;
+      let visibleCount = allFilters.length;
+
+      const filterButtons = Array.from(
+        filtersContainerRef.current.children
+      ) as HTMLElement[];
+
+      for (let i = 0; i < filterButtons.length; i++) {
+        totalWidth += filterButtons[i].offsetWidth;
+
+        if (totalWidth > containerWidth - 30) {
+          visibleCount = i;
+          break;
+        }
+      }
+
+      setVisibleFiltersCount(visibleCount);
+    };
+
+    updateVisibleFilters();
+    window.addEventListener("resize", updateVisibleFilters);
+
+    return () => {
+      window.removeEventListener("resize", updateVisibleFilters);
+    };
+  }, [allFilters]);
 
   useEffect(() => {
     let filtered = articles.filter((article) => {
@@ -325,39 +320,6 @@ const NewsPage: React.FC = () => {
     })}`;
   };
 
-  const allFilters = [
-    ...selectedCategories.map((category) => ({
-      type: "category",
-      value: category,
-      icon: AssetsImg.ic_category_white,
-      onRemove: () => handleRemoveCategory(category),
-    })),
-    ...selectedDurations.map((duration) => ({
-      type: "duration",
-      value: duration,
-      icon: AssetsImg.ic_clock_white,
-      onRemove: () => handleRemoveDuration(duration),
-    })),
-    ...(dateRange
-      ? [
-          {
-            type: "date",
-            value: dateRange.includes(" - ")
-              ? dateRange
-                  .split(" - ")
-                  .map((date) => formatDateWithSuffix(date))
-                  .join(" - ")
-              : dateRange,
-            icon: null,
-            onRemove: () => handleRemoveDate(),
-          },
-        ]
-      : []),
-  ];
-
-  const visibleFilterItems = allFilters.slice(0, visibleFilters);
-  const hiddenFiltersCount = allFilters.length - visibleFilters;
-
   return (
     <div css={main}>
       <div css={container}>
@@ -386,40 +348,44 @@ const NewsPage: React.FC = () => {
           {(selectedCategories.length > 0 ||
             selectedDurations.length > 0 ||
             dateRange) && (
-            <div css={headerBelow}>
-              <div css={selectedCategoriesContainer} ref={containerRef}>
-                {visibleFilterItems.map((filter, index) => (
-                  <button
-                    key={`${filter.type}-${filter.value}-${index}`}
-                    css={categoryButton}
-                  >
-                    {filter.icon ? (
+            <div css={headerBelow} ref={filtersContainerRef}>
+              <div css={selectedCategoriesContainer}>
+                {allFilters
+                  .slice(0, visibleFiltersCount)
+                  .map((filter, index) => (
+                    <button
+                      key={`${filter.type}-${filter.value}-${index}`}
+                      css={categoryButton}
+                    >
+                      {filter.icon ? (
+                        <Image
+                          src={filter.icon}
+                          css={clockIcon}
+                          alt={filter.type}
+                        />
+                      ) : (
+                        <i className="icon icon-calendar" css={clockIcon} />
+                      )}
+                      <span css={categoryText}>{filter.value}</span>
                       <Image
-                        src={filter.icon}
-                        css={clockIcon}
-                        alt={filter.type}
+                        src={AssetsImg.ic_cross_blue}
+                        css={closeIcon}
+                        onClick={filter.onRemove}
+                        alt="remove"
                       />
-                    ) : (
-                      <i className="icon icon-calendar" css={clockIcon} />
-                    )}
-                    <span css={categoryText}>{filter.value}</span>
-                    <Image
-                      src={AssetsImg.ic_cross_blue}
-                      css={closeIcon}
-                      onClick={filter.onRemove}
-                      alt="remove"
-                    />
-                  </button>
-                ))}
-                {hiddenFiltersCount > 0 && (
-                  <button
+                    </button>
+                  ))}
+
+                {visibleFiltersCount < allFilters.length && (
+                  <div
                     css={categoryButton}
-                    onClick={() => setVisibleFilters(allFilters.length)} 
+                    onClick={() => setVisibleFiltersCount(allFilters.length)}
                   >
-                    +{hiddenFiltersCount} More
-                  </button>
+                    +{allFilters.length - visibleFiltersCount} More
+                  </div>
                 )}
               </div>
+
               <Button
                 onClick={handleReset}
                 size="small"
