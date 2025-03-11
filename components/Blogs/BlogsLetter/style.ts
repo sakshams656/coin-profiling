@@ -124,7 +124,7 @@ export const Form = css({
   flexDirection: "column",
   alignItems: "flex-start",
   gap: utils.remConverter(8),
-  marginBottom: utils.remConverter(56),
+  marginBottom: utils.remConverter(45),
   paddingTop: utils.remConverter(16),
 
   "@media (max-width: 768px)": {

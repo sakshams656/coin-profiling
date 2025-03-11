@@ -19,7 +19,7 @@ import {
 } from "./style";
 import Image from "next/image";
 
-const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
+const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [showError, setShowError] = useState(false);
@@ -66,7 +66,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
 
             <div css={mailIcon}>
               {isLoading ? (
-                <Shimmer height={70} width={70} />
+                <Shimmer height={70} width={80} />
               ) : (
                 <Image
                   src={
@@ -80,7 +80,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
               {isLoading ? (
                 <Shimmer
                   height={28}
-                  width={220}
+                  width={250}
                 />
               ) : isSubscribed ? (
                 "Subscription Successful!"
@@ -92,7 +92,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
               {isLoading ? (
                 <Shimmer
                   height={45}
-                  width={260}
+                  width={280}
                 />
               ) : isSubscribed ? (
                 "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
@@ -111,11 +111,11 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
                 flexDirection: "column",
               }}
             >
-              <Shimmer height={20} width={220} />
-              <Shimmer height={37} width={260} />
+              <Shimmer height={20} width={250} />
+              <Shimmer height={37} width={280} />
 
               <div style={{marginTop:"2.5rem"}}>
-              <Shimmer height={32} width={260} />
+              <Shimmer height={32} width={280} />
               </div>
 
             </div>
@@ -170,4 +170,4 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
   );
 };
 
-export default NewsLetter;
+export default BlogsLetter;
