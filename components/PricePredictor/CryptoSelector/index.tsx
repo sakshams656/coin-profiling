@@ -1,24 +1,7 @@
 import React from "react";
 import { InputDropDown } from "zebpay-ui";
 import { css } from "@emotion/react";
-// import { cryptoIcon,cryptoOption,cryptoText } from "../styles/emotionStyles";
-
-const cryptoOption = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const cryptoIcon = css`
-  width: 1.5rem;
-  height: 1.5rem;
-`;
-
-const cryptoText = css`
-  font-size: 1rem;
-  color: white;
-`;
+import { cryptoIcon,cryptoOption,cryptoText } from "./style";
 
 const cryptoOptions = [
   {

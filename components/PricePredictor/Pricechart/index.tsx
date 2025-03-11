@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, IChartApi } from "lightweight-charts";
 import { Tags } from "zebpay-ui";
+import {
+  chartContainer,
+  tooltipBox,
+  tooltipLine,
+  tooltipPriceStyle,
+  tooltipDateTimeStyle,
+} from "./style";
 
 const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
@@ -216,26 +223,16 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
     };
   }, [showFutureData]);
   const historicalTagStyle = {
-    name: "1pzk433",
     styles: `position:absolute; left:${chartDimensions.width * 0.3}px; bottom:240px; z-index:1;`,
   };
 
   const predictionTagStyle = {
-    name: "1pzk433",
     styles: `position:absolute; left:${chartDimensions.width * 0.7}px; bottom:240px; z-index:1;`,
   };
 
   return (
     <>
-      <div
-        ref={chartContainerRef}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "relative",
-          overflow: "visible",
-        }}
-      />
+      <div ref={chartContainerRef} css={chartContainer} />
 
       <Tags size="medium" style={historicalTagStyle} type="default">
         Historical
@@ -248,37 +245,15 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
       {tooltip && tooltipPosition && (
         <>
           <div
-            style={{
-              position: "absolute",
-              left: tooltipPosition.x,
-              top: tooltipPosition.y,
-              height: tooltipPosition.dataY,
-              width: "1px",
-              backgroundColor: "#338FFF",
-              zIndex: 998,
-            }}
+            css={tooltipLine(
+              tooltipPosition.x,
+              tooltipPosition.y,
+              tooltipPosition.dataY
+            )}
           />
-          <div
-            style={{
-              position: "absolute",
-              left: tooltipPosition.x - 68,
-              top: tooltipPosition.y,
-              background: "#181837",
-              color: "#ffffff",
-              padding: "5px 10px",
-              borderRadius: "4px",
-              fontSize: "12px",
-              border: "1px solid #338FFF",
-              pointerEvents: "none",
-              zIndex: 999,
-              textAlign: "center",
-              minWidth: "80px",
-            }}
-          >
-            <div style={{ fontWeight: "600", fontSize: "12px" }}>
-              {tooltip.price} INR
-            </div>
-            <div style={{ fontSize: "12px", marginTop: "2px" }}>
+          <div css={tooltipBox(tooltipPosition.x - 68, tooltipPosition.y)}>
+            <div css={tooltipPriceStyle}>{tooltip.price} INR</div>
+            <div css={tooltipDateTimeStyle}>
               {tooltip.date} | {tooltip.time}
             </div>
           </div>

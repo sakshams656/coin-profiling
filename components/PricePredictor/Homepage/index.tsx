@@ -30,7 +30,7 @@ import {
   down,
   chart,
 } from "./style";
-import PriceChart from "../Pricechart/PriceChart";
+import PriceChart from "../Pricechart";
 
 const BTCPricePredictor: React.FC = () => {
   const [historicalData, setHistoricalData] = useState<Array<number[]>>([]);
@@ -152,18 +152,10 @@ const BTCPricePredictor: React.FC = () => {
                     {loading?<Shimmer style={{"margin-left":"10px"}} height={25} width={210} typeLightdDark/>:<div css={up}>
                       <div css={headerContent}>Current Value</div>
                       <div css={headerContent1}>
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 10 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M4.58 0.63L2.14 3.09a.5.5 0 0 0 .71.71L4.45 2.09v6.95a.5.5 0 1 0 1 0V2.05l1.68 1.69a.5.5 0 1 0 .71-.71L5.24 0.63a.5.5 0 0 0-.66 0Z"
-                            fill="white"
-                          />
-                        </svg>
+                        <i 
+                        style={{height:"14px"}}
+                        className="icon icon-upwards"
+                        />
                         100.31%
                       </div>
                     </div>}
@@ -181,7 +173,6 @@ const BTCPricePredictor: React.FC = () => {
               description="All price predictions are based on research model and is in continuous development. ZebPay does not hold responsible for any price prediction accuracy and is purely based for research purposes."
               style={{
                 background: "#F9C85C29",
-                // width: "100%",
               }}
               title=" Warning"
               type="info"

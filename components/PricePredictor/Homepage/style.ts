@@ -1,8 +1,9 @@
 import { css } from "@emotion/react";
+import { utils } from "zebpay-ui";
 
 export const main = css({
   display: "flex",
-  gap: "1.25rem",
+  gap: utils.remConverter(20),
   width: "100%",
   height: "100%",
 });
@@ -12,8 +13,8 @@ export const graph = css({
   flexDirection: "column",
   width: "75%",
   height: "100%",
-  padding: "1rem",
-  borderRadius: "0.5rem",
+  padding: utils.remConverter(16),
+  borderRadius: utils.remConverter(8),
   background: "var(--blue-02-dark-blue, #181837)",
 
   "@media (min-width: 568px)": {
@@ -30,10 +31,10 @@ export const predictionCards = css({
   margin: "auto",
   width: "100%",
   height: "100%",
-  gap: "1.1rem",
-  padding: "1rem",
-  paddingBottom: "0.5rem",
-  borderRadius: "0.5rem",
+  gap: utils.remConverter(17.6),
+  padding: utils.remConverter(16),
+  paddingBottom: utils.remConverter(8),
+  borderRadius: utils.remConverter(8),
   background: "var(--Zeb_Solid-BG_Blue, #222245)",
 });
 
@@ -41,7 +42,7 @@ export const heading = css({
   color: "white",
   display: "flex",
   alignItems: "center",
-  gap: "0.75rem",
+  gap: utils.remConverter(12),
   alignSelf: "stretch",
 });
 
@@ -57,7 +58,7 @@ export const fieldRow = css({
 });
 
 export const buttonWrapper = css({
-  paddingTop: "1rem",
+  paddingTop: utils.remConverter(16),
 });
 
 export const component15 = css({
@@ -66,15 +67,15 @@ export const component15 = css({
   height: "100%",
   flexDirection: "column",
   alignItems: "center",
-  gap: "0.75rem",
+  gap: utils.remConverter(12),
   alignSelf: "stretch",
   background: "var(--Zeb_Transparent/4)",
-  marginTop: "1.25rem",
+  marginTop: utils.remConverter(20),
 });
 
 export const rightSideCards = css({
   display: "flex",
-  gap: "6rem",
+  gap: utils.remConverter(96),
   width: "25%",
 
   "@media (min-width: 768px)": {
@@ -84,26 +85,26 @@ export const rightSideCards = css({
 
 export const breakdown = css({
   display: "flex",
-  padding: "1rem",
+  padding: utils.remConverter(16),
   flexDirection: "column",
-  gap: "1rem",
+  gap: utils.remConverter(16),
   justifyContent: "space-between",
   alignItems: "flex-start",
   flex: "1 0 0",
   alignSelf: "stretch",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background: "var(--blue-02-dark-blue, #181837)",
 });
 
 export const currentValue = css({
   display: "flex",
-  padding: "0.5rem",
+  padding: utils.remConverter(8),
   height: "15%",
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: "1.25rem",
+  gap: utils.remConverter(20),
   alignSelf: "stretch",
-  borderRadius: "0.5rem",
+  borderRadius: utils.remConverter(8),
   background:
     "var(--Zeb_Gradient-Dark_Blue, linear-gradient(254deg, #4a62ca -43.42%, #1b264b 148.58%))",
 });
@@ -116,28 +117,28 @@ export const coll = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "bottom",
-  gap: "0.8rem",
+  gap: utils.remConverter(12.8),
 });
 
 export const headerContent = css({
   color: "var(--Zeb_Solid-Light_Blue, var(--blue-04-light-blue, #c0c0ee))",
   fontFeatureSettings: "'liga' off, 'clig' off",
   fontFamily: "Lato",
-  fontSize: "0.875rem",
+  fontSize: utils.remConverter(14),
   fontStyle: "normal",
-  marginRight: "0.55rem",
+  marginRight: utils.remConverter(8.8),
   fontWeight: 400,
-  lineHeight: "1.5rem",
-  letterSpacing: "0.025rem",
+  lineHeight: utils.remConverter(24),
+  letterSpacing: utils.remConverter(0.4),
 });
 
 export const headerContent1 = css({
   display: "flex",
-  padding: "0rem 0.25rem",
+  padding: `0 ${utils.remConverter(4)}`,
   justifyContent: "center",
   alignItems: "center",
-  gap: "0.125rem",
-  borderRadius: "0.25rem",
+  gap: utils.remConverter(2),
+  borderRadius: utils.remConverter(4),
   border: "1px solid var(--Shimmer-Zeb_Solid-Success, #1ecaa2)",
   background: "var(--Shimmer-Zeb_Transparent-Green, rgba(30, 202, 162, 0.2))",
 });
@@ -146,30 +147,30 @@ export const up = css({
   display: "flex",
   flexDirection: "row",
   color: "var(--Shimmer-Zeb_Solid-White, #fff)",
-  gap: "0.4rem",
+  gap: utils.remConverter(6.4),
 });
 
 export const down = css({
   color: "var(--Zeb_Solid-White, #fff)",
   display: "flex",
   flexDirection: "row",
-  letterSpacing: "0.06rem",
+  letterSpacing: utils.remConverter(0.96),
 });
 
 export const cryptoSelect = css({
   color: "var(--Zeb_Solid-Light_Blue, var(--blue-04-light-blue, #c0c0ee))",
   fontFeatureSettings: "'liga' off, 'clig' off",
   fontFamily: "Lato",
-  fontSize: "0.875rem",
+  fontSize: utils.remConverter(14),
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "1.5rem",
-  letterSpacing: "0.025rem",
+  lineHeight: utils.remConverter(24),
+  letterSpacing: utils.remConverter(0.4),
 });
 
 export const chart = css({
   width: "100%",
   height: "100%",
-  borderRadius: "0.5rem",
-  border: "2px solid #338fff0a",
+  borderRadius: utils.remConverter(8),
+  border: `${utils.remConverter(2)} solid #338fff0a`,
 });
