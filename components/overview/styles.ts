@@ -7,8 +7,26 @@ export const container = css({
   padding: utils.remConverter(40),
   paddingTop: utils.remConverter(24),
   paddingBottom: utils.remConverter(24),
-  marginBottom: 0, 
-  minHeight: "100vh", 
+  marginBottom: 0,
+  minHeight: "90vh",
+  overflowY: "auto",
+  "&::-webkit-scrollbar": {
+    width: utils.remConverter(4),
+    visibility: "hidden",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: colors.Zeb_Solid_Light_Blue,
+    borderRadius: utils.remConverter(18),
+    visibility: "hidden",
+  },
+  "&.scrolled": {
+    "&::-webkit-scrollbar": {
+      visibility: "visible",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      visibility: "visible",
+    },
+  },
 });
 
 export const coinBanner = css({
@@ -106,7 +124,7 @@ export const rightContainer = css({
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   position: "sticky",
-  top: 16,
+  top: 0,
   minWidth: utils.remConverter(280),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),

@@ -273,7 +273,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               onClear: () => setSearch(""),
             }}
             rowHeight={filteredArticles.length > 0 ? 75 : 346}
-            customDropDownStyle={{
+            customDropDownStyle={css({
               width: utils.remConverter(450),
               height: utils.remConverter(400),
               ...(filteredArticles.length === 0 && {
@@ -282,7 +282,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                   borderRadius: "0.5rem",
                 },
               }),
-            }}
+            })}
           />
         )}
         {selectedTab === "overview" && (

@@ -9,7 +9,7 @@ import PerformanceGraph from "./Graph/PerformanceGraph";
 import CryptoCategories from "./Categories/CryptoCategories";
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
 
 interface InputTargetProps {
@@ -22,12 +22,37 @@ const Overview = () => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
+  const containerRef = useRef<HTMLDivElement>(null); // Add ref for the container
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = containerRef.current;
+      if (container) {
+        if (container.scrollTop > 0) {
+          container.classList.add("scrolled");
+        } else {
+          container.classList.remove("scrolled");
+        }
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
   }, []);
 
   const handleAmountChange = (target: InputTargetProps) => {
@@ -43,7 +68,7 @@ const Overview = () => {
   };
 
   return (
-    <div css={styles.container}>
+    <div css={styles.container} ref={containerRef}>
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
           <div css={styles.coinInfo}>

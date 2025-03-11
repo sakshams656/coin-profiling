@@ -622,7 +622,7 @@ const NewsPage: React.FC = () => {
                   <ShimmerWrapper isLoading={loading} height={30} width={220} typeLightdDark>
                     <div css={styles.title}>Stay Informed, Trade Smart</div>
                   </ShimmerWrapper>
-                  <ShimmerWrapper isLoading={loading} height={45} width={300} typeLightdDark>
+                  <ShimmerWrapper isLoading={loading} height={45} width={280} typeLightdDark>
                     <div css={styles.subtitle}>
                       Get real-time crypto updates and trade Crypto on ZebPay. Download now!
                     </div>
