@@ -7,9 +7,9 @@ import {
   frame461,
   component15a,
   history,
-  cols,
   row,
-  tags
+  tags,
+  tags_text
 } from "./style";
 
 const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
@@ -49,9 +49,9 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
       ) : (
         <div css={component15a}>
           <div css={history}>
-            <div css={cols}>TimeFrame</div>
-            <div css={cols}>Price</div>
-            <div css={cols}>% Chg</div>
+            <div >TimeFrame</div>
+            <div >Price</div>
+            <div >% Chg</div>
           </div>
           {dummyData.slice(1).map((item, index) => {
             const currentPrice = parsePrice(item.price);
@@ -64,27 +64,19 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
             return (
               <React.Fragment key={index + 1}>
                 <div css={row}>
-                  <div css={cols}>{item.timeFrame}</div>
-                  <div css={cols}>₹{item.price}</div>
-                  <div css={cols}>
+                  <div >{item.timeFrame}</div>
+                  <div>₹{item.price}</div>
+                  <div >
                     <Tags
                       type={
                         isUp === null ? "default" : isUp ? "success" : "error"
                       }
-                      style={{
-                        name: "1pzk433",
-                        styles: "width:200px",
-                      }}
                     >
-                      {isUp === null ? (
-                        <span style={{ fontSize: "12px", fontWeight: "400" }}>
-                          {value}
-                        </span>
-                      ) : !isUp ? (
+                      {!isUp ? (
                         <div css={tags}
                         >
                           <Icon name="icon icon-downwards" />
-                          <span style={{ fontSize: "13px", fontWeight: "600" }}>
+                          <span css={tags_text}>
                             {value}
                           </span>
                         </div>
@@ -93,7 +85,7 @@ const Table: React.FC<{ loading: boolean }> = ({ loading }) => {
                           css={tags}
                         >
                           <Icon name="icon icon-upwards" />
-                          <span style={{ fontSize: "13px", fontWeight: "600" }}>
+                          <span css={tags_text}>
                             {value}
                           </span>
                         </div>

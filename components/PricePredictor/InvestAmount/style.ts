@@ -14,7 +14,7 @@ export const warning = css({
 export const field = css({
   display: "flex",
   flexDirection: "column",
-  width: "100%",
+  width: "48%",
   gap: utils.remConverter(8),
   color: "var(--Zeb_Solid-Light_Blue, var(--blue-04-light-blue, #c0c0ee))",
   fontFeatureSettings: "'liga' off, 'clig' off",

@@ -57,10 +57,6 @@ const InvestmentAmount: React.FC<{
             }
             invalid={showError}
             placeholder="0"
-            style={{
-              styles: "width:95% ",
-              
-            }}
             disabled={loader}
             onBlur={() => {
               setShowError(false);

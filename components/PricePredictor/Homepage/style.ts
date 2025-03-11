@@ -50,6 +50,7 @@ export const fieldRow = css({
   display: "flex",
   width: "100%",
   height: "12vh",
+  flexDirection:"row",
   justifyContent: "space-between",
 
   "@media (min-width: 768px)": {

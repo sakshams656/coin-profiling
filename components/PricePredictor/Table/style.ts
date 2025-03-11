@@ -44,8 +44,6 @@ export const history = css({
   color: "#C0C0EE",
 });
 
-export const cols = css({});
-
 export const row = css({
   display: "flex",
   justifyContent: "space-between",
@@ -60,3 +58,8 @@ export const tags = css({
   flexDirection: "row",
   gap: utils.remConverter(5),
 });
+
+export const tags_text=css({
+  fontSize:`${utils.remConverter(13)}`,
+  fontWeight:"600"
+})

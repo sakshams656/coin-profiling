@@ -1,6 +1,5 @@
 import React from "react";
 import { InputDropDown } from "zebpay-ui";
-import { css } from "@emotion/react";
 import { cryptoIcon,cryptoOption,cryptoText } from "./style";
 
 const cryptoOptions = [
