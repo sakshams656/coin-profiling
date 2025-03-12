@@ -204,9 +204,7 @@ export const selectedCategoriesContainer = css({
   display: "flex",
   gap: utils.remConverter(12),
   width:"100%",
-  // paddingBottom: utils.remConverter(5),
   overflow: "hidden",
-  // justifyContent:"space-between"
 });
 
 export const categoryButton = css({

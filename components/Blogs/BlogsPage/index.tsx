@@ -110,7 +110,6 @@ const NewsPage: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // New state for filter visibility calculation
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
   const filtersContainerRef = useRef<HTMLDivElement>(null);
@@ -135,16 +134,15 @@ const NewsPage: React.FC = () => {
     })}`;
   };
 
-  // Create the filter items array
   const allFilters: FilterItem[] = [
     ...selectedCategories.map((category) => ({
-      type: "category",
+      type: "category" as const,
       value: category,
       icon: AssetsImg.ic_category_white,
       onRemove: () => handleRemoveCategory(category),
     })),
     ...selectedDurations.map((duration) => ({
-      type: "duration",
+      type: "duration" as const,
       value: duration,
       icon: AssetsImg.ic_clock_white,
       onRemove: () => handleRemoveDuration(duration),
@@ -152,7 +150,7 @@ const NewsPage: React.FC = () => {
     ...(dateRange
       ? [
           {
-            type: "date",
+            type: "date" as const,
             value: dateRange.includes(" - ")
               ? dateRange
                   .split(" - ")
@@ -166,7 +164,7 @@ const NewsPage: React.FC = () => {
       : []),
   ];
 
-  // Calculate visible tags using useLayoutEffect (similar to NewsPage)
+
   useLayoutEffect(() => {
     const container = filtersContainerRef.current;
     if (!container || allFilters.length === 0) {
@@ -175,7 +173,6 @@ const NewsPage: React.FC = () => {
       return;
     }
 
-    // const resetButton = container.querySelector('button[type="secondary"]');
     const resetButton = container.querySelector("[data-reset-button]");
     const resetButtonWidth = resetButton?.getBoundingClientRect().width || 0;
 
@@ -380,7 +377,6 @@ const NewsPage: React.FC = () => {
               <div css={selectedCategoriesContainer}>
                 {allFilters.slice(0, visibleTags).map((filter, index) => (
                   <button
-                    // style={{ paddingTop: "9px", paddingBottom: "9px" }}
                     key={`${filter.type}-${filter.value}-${index}`}
                     css={categoryButton}
                   >

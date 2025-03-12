@@ -126,6 +126,7 @@ export const Form = css({
   gap: utils.remConverter(8),
   marginBottom: utils.remConverter(45),
   paddingTop: utils.remConverter(16),
+  width:"100%",
 
   "@media (max-width: 768px)": {
     height: "auto",
@@ -139,3 +140,7 @@ export const Form = css({
     marginBottom: `${utils.remConverter(16)} !important`,
   },
 });
+
+export const input=css({
+  width:"100%"
+})

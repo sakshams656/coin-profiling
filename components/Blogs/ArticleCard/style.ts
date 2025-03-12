@@ -82,7 +82,6 @@ export const DomainName = css({
 
 export const Title = css({
   gap: utils.remConverter(18),
-  display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
   alignSelf: "stretch",
