@@ -1,6 +1,4 @@
-
-
-import React, { useEffect, useState, useRef,useLayoutEffect } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import ArticleCard from "../ArticleCard";
 import IconsPanel from "../IconsPanel";
 import dummyArticles from "../dummyData/dummyArticles";
@@ -38,6 +36,13 @@ interface Article {
   content: string;
   category: string;
   totalViews: string;
+}
+
+interface FilterItem {
+  type: "category" | "duration" | "date";
+  value: string;
+  icon: string | null;
+  onRemove: () => void;
 }
 
 const calculateReadingTime = (content: string) => {
@@ -104,9 +109,117 @@ const NewsPage: React.FC = () => {
   const [iconsPanelKey, setIconsPanelKey] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [visibleFilters, setVisibleFilters] = useState<number>(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // New state for filter visibility calculation
+  const [visibleTags, setVisibleTags] = useState(0);
+  const [overflowCount, setOverflowCount] = useState(0);
+  const filtersContainerRef = useRef<HTMLDivElement>(null);
+
+  const formatDateWithSuffix = (dateStr: string) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return "Invalid Date";
+
+    const day = date.getDate();
+    const suffix =
+      day === 1 || day === 21 || day === 31
+        ? "st"
+        : day === 2 || day === 22
+          ? "nd"
+          : day === 3 || day === 23
+            ? "rd"
+            : "th";
+
+    return `${day}${suffix} ${date.toLocaleDateString("en-GB", {
+      month: "short",
+      year: "numeric",
+    })}`;
+  };
+
+  // Create the filter items array
+  const allFilters: FilterItem[] = [
+    ...selectedCategories.map((category) => ({
+      type: "category",
+      value: category,
+      icon: AssetsImg.ic_category_white,
+      onRemove: () => handleRemoveCategory(category),
+    })),
+    ...selectedDurations.map((duration) => ({
+      type: "duration",
+      value: duration,
+      icon: AssetsImg.ic_clock_white,
+      onRemove: () => handleRemoveDuration(duration),
+    })),
+    ...(dateRange
+      ? [
+          {
+            type: "date",
+            value: dateRange.includes(" - ")
+              ? dateRange
+                  .split(" - ")
+                  .map((date) => formatDateWithSuffix(date))
+                  .join(" - ")
+              : dateRange,
+            icon: null,
+            onRemove: () => handleRemoveDate(),
+          },
+        ]
+      : []),
+  ];
+
+  // Calculate visible tags using useLayoutEffect (similar to NewsPage)
+  useLayoutEffect(() => {
+    const container = filtersContainerRef.current;
+    if (!container || allFilters.length === 0) {
+      setVisibleTags(0);
+      setOverflowCount(0);
+      return;
+    }
+
+    // const resetButton = container.querySelector('button[type="secondary"]');
+    const resetButton = container.querySelector("[data-reset-button]");
+    const resetButtonWidth = resetButton?.getBoundingClientRect().width || 0;
+
+    const containerStyle = window.getComputedStyle(container);
+    const padding =
+      parseFloat(containerStyle.paddingLeft) +
+      parseFloat(containerStyle.paddingRight);
+    const gap = parseFloat(containerStyle.gap) || 8;
+
+    const availableWidth =
+      container.clientWidth - padding - resetButtonWidth - gap * 2;
+    let totalWidth = 0;
+    let visibleCount = 0;
+
+    const tempDiv = document.createElement("div");
+    tempDiv.style.visibility = "hidden";
+    tempDiv.style.position = "absolute";
+    document.body.appendChild(tempDiv);
+
+    allFilters.forEach((filter) => {
+      const tag = document.createElement("div");
+      tag.style.display = "flex";
+      tag.style.alignItems = "center";
+      tag.style.padding = "4px 10px";
+      tag.style.gap = "12px";
+      tag.innerHTML = `
+        <span>${filter.value}</span>
+        <button >
+          <img src="${AssetsImg.ic_cross_blue}" width="16" height="16" />
+        </button>
+      `;
+      tempDiv.appendChild(tag);
+      const width = tag.getBoundingClientRect().width + gap;
+      if (totalWidth + width <= availableWidth) {
+        totalWidth += width;
+        visibleCount++;
+      }
+    });
+
+    document.body.removeChild(tempDiv);
+    const remaining = allFilters.length - visibleCount;
+    setVisibleTags(remaining > 0 ? visibleCount : allFilters.length);
+    setOverflowCount(remaining > 0 ? remaining : 0);
+  }, [allFilters.length, selectedCategories, selectedDurations, dateRange]);
 
   const handleCategoryChange = (categories: string[]) => {
     setSelectedCategories(categories);
@@ -124,12 +237,42 @@ const NewsPage: React.FC = () => {
     setSortBy(value);
   };
 
+  const handleRemoveCategory = (categoryToRemove: string) => {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.filter((category) => category !== categoryToRemove)
+    );
+  };
+
+  const handleRemoveDuration = (durationToRemove: string) => {
+    setSelectedDurations((prevDurations) =>
+      prevDurations.filter((duration) => duration !== durationToRemove)
+    );
+  };
+
+  const handleRemoveDate = () => {
+    setDateRange("");
+  };
+
+  const handleRemoveHiddenFilters = () => {
+    const hiddenFilters = allFilters.slice(visibleTags);
+
+    hiddenFilters.forEach((filter) => {
+      if (filter.type === "category") {
+        handleRemoveCategory(filter.value);
+      } else if (filter.type === "duration") {
+        handleRemoveDuration(filter.value);
+      } else if (filter.type === "date") {
+        handleRemoveDate();
+      }
+    });
+  };
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
         setArticles(dummyArticles);
         setFilteredArticles(dummyArticles);
-        setTimeout(() => setLoading(false), 4000);
+        setTimeout(() => setLoading(false), 1000);
       } catch (err) {
         console.error("Error fetching cryptocurrency news:", err);
         setError("Failed to fetch news.");
@@ -166,83 +309,8 @@ const NewsPage: React.FC = () => {
     setDateRange("");
     setSortBy("");
     setFilteredArticles(articles);
-
     setIconsPanelKey((prev) => prev + 1);
   };
-
-  const totalFiltersCount =
-    selectedCategories.length + selectedDurations.length + (dateRange ? 1 : 0);
-    useLayoutEffect(() => {
-      const calculateVisibleFilters = () => {
-        if (!containerRef.current) return;
-    
-        const currentAllFilters = [
-          ...selectedCategories.map(category => ({ type: "category", value: category })),
-          ...selectedDurations.map(duration => ({ type: "duration", value: duration })),
-          ...(dateRange ? [{ type: "date", value: dateRange }] : [])
-        ];
-        
-        try {
-          const containerWidth = containerRef.current.offsetWidth;
-          const filterButtons = Array.from(
-            containerRef.current.children
-          ) as HTMLElement[];
-          
-          const resetButtonMargin = 0;
-          const moreButtonWidth = 0; 
-          let totalWidth = 0;
-          let visibleCount = 0;
-    
-          for (let i = 0; i < filterButtons.length; i++) {
-            const buttonWidth = filterButtons[i].offsetWidth;
-    
-            if (
-              totalWidth + buttonWidth + (currentAllFilters.length > i+1 ? moreButtonWidth : 0) >
-              containerWidth - resetButtonMargin
-            ) {
-              break;
-            }
-    
-            totalWidth += buttonWidth;
-            visibleCount++;
-          }
-    
-          if (currentAllFilters.length > 1 && visibleCount >= currentAllFilters.length) {
-            visibleCount = currentAllFilters.length ;
-          }
-    
-          setVisibleFilters(visibleCount);
-        } catch (error) {
-          console.error("Error calculating visible filters:", error);
-        }
-      };
-    
-      calculateVisibleFilters();
-    
-      const resizeObserver = new ResizeObserver(() => {
-        if (resizeTimeout.current) {
-          clearTimeout(resizeTimeout.current);
-        }
-        resizeTimeout.current = setTimeout(() => {
-          calculateVisibleFilters();
-        }, 100);
-      });
-    
-      if (containerRef.current) {
-        resizeObserver.observe(containerRef.current);
-      }
-    
-      return () => {
-        if (containerRef.current) {
-          resizeObserver.disconnect();
-        }
-        if (resizeTimeout.current) {
-          clearTimeout(resizeTimeout.current);
-        }
-      };
-    }, [selectedCategories, selectedDurations, dateRange]); 
-
-    
 
   useEffect(() => {
     let filtered = articles.filter((article) => {
@@ -289,86 +357,10 @@ const NewsPage: React.FC = () => {
     setFilteredArticles(filtered);
   }, [selectedCategories, selectedDurations, dateRange, articles, sortBy]);
 
-  const handleRemoveCategory = (categoryToRemove: string) => {
-    setSelectedCategories((prevCategories) =>
-      prevCategories.filter((category) => category !== categoryToRemove)
-    );
-  };
-
-  const handleRemoveDuration = (durationToRemove: string) => {
-    setSelectedDurations((prevDurations) =>
-      prevDurations.filter((duration) => duration !== durationToRemove)
-    );
-  };
-
-  const handleRemoveDate = () => {
-    setDateRange("");
-  };
-
-  const formatDateWithSuffix = (dateStr: string) => {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return "Invalid Date";
-
-    const day = date.getDate();
-    const suffix =
-      day === 1 || day === 21 || day === 31
-        ? "st"
-        : day === 2 || day === 22
-          ? "nd"
-          : day === 3 || day === 23
-            ? "rd"
-            : "th";
-
-    return `${day}${suffix} ${date.toLocaleDateString("en-GB", {
-      month: "short",
-      year: "numeric",
-    })}`;
-  };
-
-  const allFilters = [
-    ...selectedCategories.map((category) => ({
-      type: "category",
-      value: category,
-      icon: AssetsImg.ic_category_white,
-      onRemove: () => handleRemoveCategory(category),
-    })),
-    ...selectedDurations.map((duration) => ({
-      type: "duration",
-      value: duration,
-      icon: AssetsImg.ic_clock_white,
-      onRemove: () => handleRemoveDuration(duration),
-    })),
-    ...(dateRange
-      ? [
-          {
-            type: "date",
-            value: dateRange.includes(" - ")
-              ? dateRange
-                  .split(" - ")
-                  .map((date) => formatDateWithSuffix(date))
-                  .join(" - ")
-              : dateRange,
-            icon: null,
-            onRemove: () => handleRemoveDate(),
-          },
-        ]
-      : []),
-  ];
-
-  const visibleFilterItems = allFilters.slice(0, visibleFilters);
-  const hiddenFiltersCount = allFilters.length - visibleFilters;
-
   return (
     <div css={main}>
       <div css={container}>
-        <div
-          css={headerFrame(
-            isScrolled,
-            selectedCategories.length > 0 ||
-              selectedDurations.length > 0 ||
-              dateRange !== ""
-          )}
-        >
+        <div css={headerFrame(isScrolled, allFilters.length > 0)}>
           <div css={header}>
             <div css={news}>Crypto Blogs</div>
             <IconsPanel
@@ -383,13 +375,12 @@ const NewsPage: React.FC = () => {
               selectedDateRange={dateRange}
             />
           </div>
-          {(selectedCategories.length > 0 ||
-            selectedDurations.length > 0 ||
-            dateRange) && (
-            <div css={headerBelow}>
-              <div css={selectedCategoriesContainer} ref={containerRef}>
-                {visibleFilterItems.map((filter, index) => (
+          {allFilters.length > 0 && (
+            <div css={headerBelow} ref={filtersContainerRef}>
+              <div css={selectedCategoriesContainer}>
+                {allFilters.slice(0, visibleTags).map((filter, index) => (
                   <button
+                    // style={{ paddingTop: "9px", paddingBottom: "9px" }}
                     key={`${filter.type}-${filter.value}-${index}`}
                     css={categoryButton}
                   >
@@ -411,23 +402,26 @@ const NewsPage: React.FC = () => {
                     />
                   </button>
                 ))}
-                {hiddenFiltersCount > 0 && (
+
+                {overflowCount > 0 && (
                   <button
                     css={categoryButton}
-                    onClick={() => setVisibleFilters(allFilters.length)} 
+                    onClick={handleRemoveHiddenFilters}
                   >
-                    +{hiddenFiltersCount} More
+                    +{overflowCount} More
+                    <Image
+                      src={AssetsImg.ic_cross_blue}
+                      css={closeIcon}
+                      alt="remove"
+                    />
                   </button>
                 )}
+                <div data-reset-button style={{marginLeft:"auto"}} >
+                  <Button onClick={handleReset} size="small" type="secondary">
+                    Reset
+                  </Button>
+                </div>
               </div>
-              <Button
-                onClick={handleReset}
-                size="small"
-                type="secondary"
-                style={{ marginLeft: "1rem" }}
-              >
-                Reset
-              </Button>
             </div>
           )}
         </div>

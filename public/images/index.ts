@@ -47,6 +47,23 @@ import ic_share_white from "./icons/share_white.png";
 import ic_rank from "./icons/rank.png";
 import ic_calendar_white from "./icons/ calendar_white.png";
 import ic_document_white from "./icons/document_white.png";
+import ic_app_store from "./icons/app_store.svg";
+import ic_arrow_down from "./icons/arrow_down.svg";
+import ic_category from "./icons/category.svg";
+import ic_date from "./icons/date.svg";
+import ic_duration from "./icons/duration.svg";
+import ic_google_play from "./icons/google_play.svg";
+import ic_mail from "./icons/mail.svg";
+import ic_no_blogs_found from "./icons/no_blogs_found.svg";
+import ic_seperator from "./icons/seperator.svg";
+import ic_subscribed from "./icons/subscribed.svg";
+import ic_views from "./icons/views.svg";
+import ic_zebpay from "./icons/zebpay.svg"; 
+import ic_crypto from "./icons/crypto.svg"
+import ic_reports from "./icons/reports.svg"
+import ic_cross_blue from "./icons/cross_blue.svg";
+import ic_clock_white from "./icons/clock_white.svg";
+import ic_category_white from "./icons/category_white.svg";
 
 // illustrations
 import i_zebpay_logo from "./illustrations/zebpay-logo.png";
@@ -150,7 +167,6 @@ const AssetsImg = {
   ic_clock_white,
   ic_category_white,
 
-  ic_document_white
 };
 
 export default AssetsImg;

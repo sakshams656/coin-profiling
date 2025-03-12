@@ -5,8 +5,10 @@ import { utils,typography } from 'zebpay-ui';
 
 const Blogs = () => {
   return (
-    <div css={[typography.B5_12_regular]}>Blogs</div>
-  )
-}
+    <div >
+      <NewsPage />
+    </div>
+  );
+};
 
-export default Blogs
+export default Blogs;

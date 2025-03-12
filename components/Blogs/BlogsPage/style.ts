@@ -43,7 +43,7 @@ export const headerFrame = (isScrolled, hasFilters) =>
     flexDirection: "column",
     alignItems: "flex-start",
     gap: utils.remConverter(16),
-    width: "100%",
+    // width: "100%",
     alignSelf: "stretch",
     background: colors.Zeb_Solid_Dark_Blue,
     position: "sticky",
@@ -67,6 +67,7 @@ export const headerFrame = (isScrolled, hasFilters) =>
 
 export const header = css({
   display: "flex",
+  width:"100%",
   justifyContent: "space-between",
   paddingLeft: utils.remConverter(16),
   alignItems: "center",
@@ -201,9 +202,11 @@ export const categoryWrapper = css({
 
 export const selectedCategoriesContainer = css({
   display: "flex",
-  gap: utils.remConverter(10),
-  paddingBottom: utils.remConverter(5),
+  gap: utils.remConverter(12),
+  width:"100%",
+  // paddingBottom: utils.remConverter(5),
   overflow: "hidden",
+  // justifyContent:"space-between"
 });
 
 export const categoryButton = css({
