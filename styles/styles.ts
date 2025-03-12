@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { colors } from "zebpay-ui";
 
 export const main = css({
-  fontFamily: "Lato",
+  fontFamily: ,
   backgroundColor: colors.Zeb_Solid_BG_Blue,
   height: "100vh",
   display: "flex",

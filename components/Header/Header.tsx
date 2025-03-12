@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useState, useRef, useEffect } from "react";
 import { Button, Tabs, colors, InputDropDown, utils } from "zebpay-ui";
 import { css } from "@emotion/react";

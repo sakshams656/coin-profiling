@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
 import { utils, colors } from "zebpay-ui";
+
 export const header = css({
   display: "flex",
   justifyContent: "space-between",
@@ -10,6 +11,7 @@ export const header = css({
   marginBottom: utils.remConverter(-22.4),
   boxSizing: "border-box",
 });
+
 export const tabs = css({
   width: "100%",
   marginBottom: utils.remConverter(0),

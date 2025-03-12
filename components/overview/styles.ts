@@ -6,27 +6,28 @@ export const container = css({
   width: "100%",
   padding: utils.remConverter(40),
   paddingTop: utils.remConverter(24),
-  paddingBottom: utils.remConverter(24),
+  paddingBottom: utils.remConverter(0),
+  marginTop: utils.remConverter(60),
   marginBottom: 0,
   minHeight: "90vh",
-  overflowY: "auto",
-  "&::-webkit-scrollbar": {
-    width: utils.remConverter(4),
-    visibility: "hidden",
-  },
-  "&::-webkit-scrollbar-thumb": {
-    background: colors.Zeb_Solid_Light_Blue,
-    borderRadius: utils.remConverter(18),
-    visibility: "hidden",
-  },
-  "&.scrolled": {
-    "&::-webkit-scrollbar": {
-      visibility: "visible",
-    },
-    "&::-webkit-scrollbar-thumb": {
-      visibility: "visible",
-    },
-  },
+  //overflowY: "auto",
+  // "&::-webkit-scrollbar": {
+  //   width: utils.remConverter(4),
+  //   visibility: "hidden",
+  // },
+  // "&::-webkit-scrollbar-thumb": {
+  //   background: colors.Zeb_Solid_Light_Blue,
+  //   borderRadius: utils.remConverter(18),
+  //   visibility: "hidden",
+  // },
+  // "&.scrolled": {
+  //   "&::-webkit-scrollbar": {
+  //     visibility: "visible",
+  //   },
+  //   "&::-webkit-scrollbar-thumb": {
+  //     visibility: "visible",
+  //   },
+  // },
 });
 
 export const coinBanner = css({
@@ -113,8 +114,25 @@ export const leftContainer = css({
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  overflowY: "auto",
+  //overflowY: "auto",
   paddingBottom: utils.remConverter(24),
+  // "&::-webkit-scrollbar": {
+  //   marginTop: utils.remConverter(60),
+  //   visibility: "hidden",
+  // },
+  // "&::-webkit-scrollbar-thumb": {
+  //   background: colors.Zeb_Solid_Light_Blue,
+  //   borderRadius: utils.remConverter(18),
+  //   visibility: "hidden",
+  // },
+  // "&.scrolled": {
+  //   "&::-webkit-scrollbar": {
+  //     visibility: "visible",
+  //   },
+  //   "&::-webkit-scrollbar-thumb": {
+  //     visibility: "visible",
+  //   },
+  // },
 });
 
 export const rightContainer = css({
@@ -124,7 +142,7 @@ export const rightContainer = css({
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   position: "sticky",
-  top: 0,
+  top: 76,
   minWidth: utils.remConverter(280),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),
