@@ -72,4 +72,3 @@ export const Accordion_option=css({
   margin: `0 ${utils.remConverter(16)} ${utils.remConverter(9.6)} ${utils.remConverter(16)}`,
 })
 
-export const 
