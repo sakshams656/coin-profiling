@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 
@@ -22,13 +22,13 @@ import {
 import { Shimmer } from "zebpay-ui";
 
 interface ArticleCardProps {
-  title: string;
+  title: string|ReactNode;
   link: string;
   imageUrl: string;
-  date: string;
-  totalViews: number;
-  category: string;
-  description?: string;
+  date: string|ReactNode;
+  totalViews: number|ReactNode;
+  category: string|ReactNode;
+  description?: string|ReactNode;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({

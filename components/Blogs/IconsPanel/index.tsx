@@ -12,13 +12,15 @@ import {
 } from "zebpay-ui";
 
 import {
-  Added,
-  ButtonGroup,
-  InsidePanel,
-  Title,
+  added,
+  buttonGroup,
+  insidePanel,
+  title,
   filterAndUpdownFrame,
+  iconBox,
   icon,
-  AccordionStyle,
+  accordionTitle,
+  Accordion_option,
 } from "./style";
 import { css } from "@emotion/react";
 import Dropdown from "../DropDown";
@@ -77,24 +79,6 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   const [customDateRange, setCustomDateRange] = useState<DateRange | null>(
     null
   );
-
-  const sidePanelRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      sidePanelRef.current &&
-      !sidePanelRef.current.contains(event.target as Node)
-    ) {
-      setIsPanelOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleCategorySelect = (value: string) => {
     setTempCategories((prev) =>
@@ -219,8 +203,8 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           : day % 10 === 3 && day !== 13
             ? "rd"
             : "th";
-    const month = date.toLocaleString("en-US", { month: "short" }); // "Mar"
-    const year = date.getFullYear().toString().slice(-2); // "22"
+    const month = date.toLocaleString("en-US", { month: "short" }); 
+    const year = date.getFullYear().toString().slice(-2); 
     return `${day}${suffix} ${month} ${year}`;
   };
 
@@ -236,18 +220,16 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   return (
     <div css={filterAndUpdownFrame}>
       <div
-        css={icon}
+        css={iconBox}
         onClick={() => setIsPanelOpen(true)}
         style={{ cursor: "pointer" }}
       >
-        <i
-          className="icon icon-filter"
-          css={css`
-            color:#C0C0EE
-          `}
+        <Icon
+          name="icon icon-filter"
+          style={icon}
         />
       </div>
-      <div css={icon} style={{ cursor: "pointer" }}>
+      <div css={iconBox} style={{ cursor: "pointer" }}>
         <Dropdown onSortChange={handleSortChange} />
       </div>
       <SidePanel
@@ -255,43 +237,34 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
         onClose={() => setIsPanelOpen(false)}
         title="Filter Blogs"
         open={isPanelOpen}
-        ref={sidePanelRef}
       >
-        <div css={InsidePanel}>
+        <div css={insidePanel}>
           <Accordion 
             isOpen={isCategoryOpen}
             onToggle={() => handleAccordionToggle("category")}
             title={
-              <div css={Title(isCategoryOpen)}>
+              <div css={title(isCategoryOpen)}>
                 <Image
                   src={AssetsImg.ic_reports}
-                  css={css`
-                    margin-right: 0.5rem;
-                  `}
+                  css={accordionTitle}
+                  alt="Reports"
                 />
                 Category
                 {selectedCategories.length > 0 && (
-                  <span css={Added}>({selectedCategories.join(", ")})</span>
+                  <span css={added}>({selectedCategories.join(", ")})</span>
                 )}
               </div>
             }
-            style={{
-              marginBottom: "0.6rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
+            style={Accordion_option}
           >
             <div
-              css={css`
-                margin-top: 12px;
-                font-family: "Lato", "Noto_Serif", sans-serif;
-              `}
+
             >
               <div
                 css={css`
                   display: flex;
                   align-items: center;
-                  margin-bottom: 12px;
+                  margin: 12px 0;
                 `}
               >
                 <Checkbox
@@ -352,29 +325,22 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             isOpen={isDurationOpen}
             onToggle={() => handleAccordionToggle("duration")}
             title={
-              <div css={Title(isDurationOpen)}>
+              <div css={title(isDurationOpen)}>
                 <Image
                   src={AssetsImg.ic_duration}
-                  css={css`
-                    margin-right: 0.5rem;
-                  `}
+                  css={accordionTitle}
+                  alt="duration"
                 />
                 Duration
                 {selectedDurations.length > 0 && (
-                  <span css={Added}>({selectedDurations.join(", ")})</span>
+                  <span css={added}>({selectedDurations.join(", ")})</span>
                 )}
               </div>
             }
-            style={{
-              marginBottom: "0.6rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
+            style={Accordion_option}
           >
             <div
-              css={css`
-                margin-top: 12px;
-              `}
+
             >
               {[
                 { label: "01 - 05 Mins", value: "01 - 05 Mins" },
@@ -416,13 +382,9 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           <Accordion
             isOpen={isDateRangeOpen}
             onToggle={() => handleAccordionToggle("dateRange")}
-            style={{
-              marginBottom: "0.6rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
+            style={Accordion_option}
             title={
-              <div css={Title(isDateRangeOpen)}>
+              <div css={title(isDateRangeOpen)}>
                 <i
                   className="icon icon-calendar"
                   css={css`
@@ -445,9 +407,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             }
           >
             <div
-              css={css`
-                margin-top: 12px;
-              `}
+
             >
               {[
                 { label: "Last 7 Days", value: "Last 7 Days" },
@@ -497,20 +457,17 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
               margin-top: ${utils.remConverter(-8)};
               padding: ${utils.remConverter(16)};
               background-color: ${colors.Zeb_Solid_BG_Blue};
-              border-radius: ${utils.remConverter(4)};
-              // display: ${filters.dateRange === "Custom" ? "block" : "none"};
             `}
           >
             <DateRangePicker
               onChange={handleDateRangePickerChange}
               minDate={new Date("2000-01-01")}
               maxDate={new Date()}
-              // style={{"padding":"100px"}}
             />
           </div>
         )}
 
-        <div css={ButtonGroup}>
+        <div css={buttonGroup}>
           <Button onClick={handleResetFilters} size="medium" type="secondary">
             Reset
           </Button>

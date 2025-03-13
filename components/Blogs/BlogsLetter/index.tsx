@@ -16,6 +16,7 @@ import {
   quote,
   Form,
   Subscribe,
+  input,
 } from "./style";
 import Image from "next/image";
 
@@ -32,7 +33,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
     return regex.test(email);
   };
 
-  const handleEmailChange = (target: InputTargetProps) => {
+  const handleEmailChange = (target: {value:string}) => {
     const newEmail = target.value;
     setEmail(newEmail);
     const isValid = validateEmail(newEmail);
@@ -124,21 +125,19 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
               <>
                 <div css={Form}>
                   <Input
-                    errorText={showError}
+                    invalid={showError}
                     disabled={isSubmitting}
                     label="Enter Email Address"
                     value={email}
                     onChange={handleEmailChange}
                     placeholder="qwerty@gmail.com"
-                    style={{
-                      width: "100%",
-                    }}
+                    style={input}
                     onFocus={() => setIsInputFocus(true)}
                     onBlur={() => setIsInputFocus(false)}
                   />
                   {showError && <span css={ErrorText}>Invalid email ID</span>}
                 </div>
-                <div css={Subscribe} isValid={isValidEmail}>
+                <div css={Subscribe} >
                   <Button
                     onClick={handleSubmit}
                     size="full-width"

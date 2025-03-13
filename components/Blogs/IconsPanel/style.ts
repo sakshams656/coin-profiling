@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import { typography, colors, utils } from "zebpay-ui";
 
-export const InsidePanel = css({
+export const insidePanel = css({
   color: "white",
   fontSize: utils.remConverter(12),
   display: "flex",
@@ -11,7 +11,7 @@ export const InsidePanel = css({
   padding: `${utils.remConverter(16)} ${utils.remConverter(16)} ${utils.remConverter(16)}`,
 });
 
-export const Title = (isDateRangeOpen) =>
+export const title = (isDateRangeOpen) =>
   css({
     fontSize: utils.remConverter(12),
     lineHeight: utils.remConverter(18),
@@ -23,7 +23,7 @@ export const Title = (isDateRangeOpen) =>
     justifyContent: "center",
   });
 
-export const ButtonGroup = css({
+export const buttonGroup = css({
   position: "absolute",
   bottom: utils.remConverter(16),
   right: utils.remConverter(16),
@@ -32,7 +32,7 @@ export const ButtonGroup = css({
   marginRight: utils.remConverter(16),
 });
 
-export const Added = css({
+export const added = css({
   fontSize: utils.remConverter(14),
   color: "white",
   marginLeft: utils.remConverter(8),
@@ -48,14 +48,28 @@ export const filterAndUpdownFrame = css({
   },
 });
 
-export const icon = css({
+export const iconBox = css({
   padding: utils.remConverter(8),
   borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
 });
 
-export const AccordionStyle = css({
+export const accordionStyle = css({
   marginBottom: utils.remConverter(9.6),
   marginLeft: utils.remConverter(16),
   marginRight: utils.remConverter(16),
 });
+
+export const icon=css({
+  color:"#C0C0EE"
+})
+
+export const accordionTitle=css({
+  marginRight:utils.remConverter(8)
+})
+
+export const Accordion_option=css({
+  margin: `0 ${utils.remConverter(16)} ${utils.remConverter(9.6)} ${utils.remConverter(16)}`,
+})
+
+export const 

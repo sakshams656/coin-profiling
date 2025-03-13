@@ -139,3 +139,7 @@ export const Form = css({
     marginBottom: `${utils.remConverter(16)} !important`,
   },
 });
+
+export const input =css({
+  width:"100%",
+})
