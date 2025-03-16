@@ -1,6 +1,6 @@
 import AssetsImg from "@public/images";
 
-import {info,rating} from "../components/Overview/actions/api"
+import {info,rating} from "../actions/overviewApi"
 
 export const real_data=async()=>{
   try{

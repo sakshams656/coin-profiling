@@ -1,10 +1,14 @@
 import axios from "@utils/axios";
+import {COINMARKETCAP_LATEST,COINMARKETCAP_INFO} from "@constants/api"
 
-const COINMARKETCAP_API_URL1 = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/info";
-const COINMARKETCAP_API_URL2 = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest";
-const COINMARKETCAP_API_URL3 = "https://pro-api.coinmarketcap.com/v1/partners/flipside-crypto/fcas/listings/latest";
 
-const API_KEY = "001b370a-47bd-492e-8582-91e1e25128ae"; 
+// const COINMARKETCAP_API_URL1 = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/info";
+// const COINMARKETCAP_API_URL2 = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest";
+// const COINMARKETCAP_API_URL3 = "https://pro-api.coinmarketcap.com/v1/partners/flipside-crypto/fcas/listings/latest";
+
+// const API_KEY = process.env.CMC_API_KEY; 
+const API_KEY="001b370a-47bd-492e-8582-91e1e25128ae"
+
 
 
 export interface CoinData {
@@ -34,14 +38,14 @@ export interface CoinData {
 export const data = async (): Promise<DataApiResponse> => {
   try {
     const response = await axios({
-      url: COINMARKETCAP_API_URL1,
+      url: COINMARKETCAP_INFO,
       method: "GET",
       headers: {
         "X-CMC_PRO_API_KEY": API_KEY,
         "Accept": "application/json"
       },
       params: {
-        id: "1"
+        id: "2"
       }
     });
 
@@ -93,7 +97,7 @@ export interface QuoteUSD {
 export const info = async (): Promise<InfoApiResponse> => {
     try {
       const response = await axios({
-        url: COINMARKETCAP_API_URL2,
+        url: COINMARKETCAP_LATEST,
         method: "GET",
         headers: {
           "X-CMC_PRO_API_KEY": API_KEY,
@@ -111,23 +115,23 @@ export const info = async (): Promise<InfoApiResponse> => {
     }
   };
 
-  export const rating = async (): Promise<any> => {
-    try {
-      const response = await axios({
-        url: COINMARKETCAP_API_URL3,
-        method: "GET",
-        headers: {
-          "X-CMC_PRO_API_KEY": API_KEY,
-          "Accept": "application/json"
-        },
-        params: {
-          id: "1"
-        }
-      });
+  // export const rating = async (): Promise<any> => {
+  //   try {
+  //     const response = await axios({
+  //       url: COINMARKETCAP_API_URL3,
+  //       method: "GET",
+  //       headers: {
+  //         "X-CMC_PRO_API_KEY": API_KEY,
+  //         "Accept": "application/json"
+  //       },
+  //       params: {
+  //         id: "1"
+  //       }
+  //     });
   
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching cryptocurrency info:", error);
-      throw error;
-    }
-  };
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error fetching cryptocurrency info:", error);
+  //     throw error;
+  //   }
+  // };

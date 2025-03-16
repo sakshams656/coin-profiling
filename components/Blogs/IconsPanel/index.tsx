@@ -20,7 +20,11 @@ import {
   iconBox,
   icon,
   accordionTitle,
-  Accordion_option,
+  accordion_option,
+  accordion_option_inside,
+  box,
+  customDate,
+  calendar_icon,
 } from "./style";
 import { css } from "@emotion/react";
 import Dropdown from "../DropDown";
@@ -255,31 +259,24 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                 )}
               </div>
             }
-            style={Accordion_option}
+            style={accordion_option}
           >
             <div
 
             >
               <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  margin: 12px 0;
-                `}
+                css={accordion_option_inside}
               >
                 <Checkbox
                   indeterminate
-                  name="test-checkbox"
                   checked={tempCategories.length === categoryOptions.length}
                   onChange={(e) => handleSelectAll(e.checked)}
-                  style={{ marginRight: "1rem" }}
+                  style={box}
                   value={1}
                 />
                 <label
                   htmlFor="selectAll"
-                  css={css`
-                    font-size: 14px;
-                  `}
+                  style={{fontSize:"14px"}}
                 >
                   Select All
                 </label>
@@ -290,18 +287,13 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
               {categoryOptions.map((option, index) => (
                 <React.Fragment key={option.value}>
                   <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      margin: 12px 0;
-                    `}
+                    css={accordion_option_inside}
                   >
                     <Checkbox
-                      name="category-checkbox"
                       checked={tempCategories.includes(option.value)}
                       onChange={() => handleCategorySelect(option.value)}
                       value={option.value}
-                      style={{ marginRight: "1rem" }}
+                      style={box}
                     />
                     <label
                       htmlFor={`category-${option.value}`}
@@ -337,7 +329,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                 )}
               </div>
             }
-            style={Accordion_option}
+            style={accordion_option}
           >
             <div
 
@@ -350,18 +342,13 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
               ].map((option, index) => (
                 <React.Fragment key={option.value}>
                   <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      margin: 12px 0;
-                    `}
+                    css={accordion_option_inside}
                   >
                     <Checkbox
-                      name="duration-checkbox"
                       checked={tempDurations.includes(option.value)}
                       onChange={() => handleDurationSelect(option.value)}
                       value={option.value}
-                      style={{ marginRight: "1rem" }}
+                      style={box}
                     />
                     <label
                       htmlFor={`duration-${option.value}`}
@@ -382,25 +369,18 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           <Accordion
             isOpen={isDateRangeOpen}
             onToggle={() => handleAccordionToggle("dateRange")}
-            style={Accordion_option}
+            style={accordion_option}
             title={
               <div css={title(isDateRangeOpen)}>
-                <i
-                  className="icon icon-calendar"
-                  css={css`
-                    margin-right: 0.5rem;
-                    font-size: 20px;
-                  `}
+                <Icon
+                  name="icon icon-calendar"
+                  style={calendar_icon}
                 />
                 <div
-                  css={css`
-                    display: flex;
-                    align-items: center;
-                  `}
                 >
                   Date Range
                   {(tempDateRange || isCustomDate) && (
-                    <span css={Added}>({selectedDateRangeLabel})</span>
+                    <span css={added}>({selectedDateRangeLabel})</span>
                   )}
                 </div>
               </div>
@@ -418,11 +398,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
               ].map((option, index) => (
                 <React.Fragment key={option.value}>
                   <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      margin: 12px 0;
-                    `}
+                    css={accordion_option_inside}
                   >
                     <Radio
                       name="date-range-checkbox"
@@ -432,7 +408,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                       }
                       onChange={() => handleDateRangeSelect(option.value)}
                       value={option.value}
-                      style={{ marginRight: "1rem" }}
+                      style={box}
                     />
                     <label
                       htmlFor={`date-range-${option.value}`}
@@ -453,11 +429,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
 
         {isCustomDate && (
           <div
-            css={css`
-              margin-top: ${utils.remConverter(-8)};
-              padding: ${utils.remConverter(16)};
-              background-color: ${colors.Zeb_Solid_BG_Blue};
-            `}
+            css={customDate}
           >
             <DateRangePicker
               onChange={handleDateRangePickerChange}

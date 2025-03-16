@@ -6,7 +6,7 @@ import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
-import { data } from "../actions/api";
+import { data } from "../../../actions/overviewApi";
 
 const CoinInfo: React.FC = () => {
   const [activeTab, setActiveTab] = useState("How BTC works");

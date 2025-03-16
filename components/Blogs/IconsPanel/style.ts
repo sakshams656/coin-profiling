@@ -68,7 +68,28 @@ export const accordionTitle=css({
   marginRight:utils.remConverter(8)
 })
 
-export const Accordion_option=css({
+export const accordion_option=css({
   margin: `0 ${utils.remConverter(16)} ${utils.remConverter(9.6)} ${utils.remConverter(16)}`,
 })
 
+export const accordion_option_inside=css({
+  display:"flex",
+  alignItems:"center",
+  margin:`${utils.remConverter(12)} 0`,
+})
+
+export const box=css({
+  marginRight:utils.remConverter(16),
+})
+
+export const customDate=css({
+  marginTop:utils.remConverter(-8),
+  padding:utils.remConverter(16),
+  backgroundColor:colors.Zeb_Solid_BG_Blue,
+})
+
+export const calendar_icon=css({
+  marginRight:utils.remConverter(8),
+  fontSize:utils.remConverter(18)
+
+})
