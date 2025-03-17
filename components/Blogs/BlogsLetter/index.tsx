@@ -1,6 +1,6 @@
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon, Input, Button, CircularLoader, Shimmer } from "zebpay-ui";
 import AssetsImg from "@public/images";
 
@@ -20,6 +20,17 @@ import {
 } from "./style";
 import Image from "next/image";
 
+const useDebounce=(value:string,delay:number)=>{
+  const [debouncedValue,setDebouncedValue]=useState(value);
+
+  useEffect(()=>{
+    const timer=setTimeout(()=>setDebouncedValue(value),delay);
+    return ()=>clearTimeout(timer);
+  },[value,delay]);
+
+  return debouncedValue
+}
+
 const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -27,6 +38,8 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isInputFocus, setIsInputFocus] = useState(false);
+
+  const debounceEmail=useDebounce(email,2000);
 
   const validateEmail = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -36,10 +49,18 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const handleEmailChange = (target: {value:string}) => {
     const newEmail = target.value;
     setEmail(newEmail);
-    const isValid = validateEmail(newEmail);
-    setIsValidEmail(isValid);
-    setShowError(newEmail.includes("@") && !isValid);
+    // const isValid = validateEmail(newEmail);
+    // setIsValidEmail(isValid);
+    // setShowError(newEmail.includes("@") && !isValid);
   };
+
+  useEffect(()=>{
+    // if(debounceEmail){
+      const isValid = validateEmail(debounceEmail);
+      setIsValidEmail(isValid);
+      setShowError(debounceEmail.includes("@") && !isValid);
+    // }
+  },[debounceEmail])
 
   const handleSubmit = () => {
     if (isValidEmail && email && !isSubmitting) {
@@ -125,7 +146,8 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
               <>
                 <div css={Form}>
                   <Input
-                    invalid={showError}
+                    // invalid={ showError }
+                    errorText= {showError &&"Invalid Email ID"}
                     disabled={isSubmitting}
                     label="Enter Email Address"
                     value={email}
@@ -135,7 +157,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
                     onFocus={() => setIsInputFocus(true)}
                     onBlur={() => setIsInputFocus(false)}
                   />
-                  {showError && <span css={ErrorText}>Invalid email ID</span>}
+                  {/* {showError && <span css={ErrorText}>Invalid email ID</span>} */}
                 </div>
                 <div css={Subscribe} >
                   <Button
