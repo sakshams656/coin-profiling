@@ -94,6 +94,8 @@ export const titleStyle = css({
   textOverflow: "ellipsis",
   maxWidth: "100%",
   lineHeight: 1.5,
+  minHeight: utils.remConverter(46),
+  maxHeight: utils.remConverter(46)
 });
 
 export const infoFooterStyle = css({

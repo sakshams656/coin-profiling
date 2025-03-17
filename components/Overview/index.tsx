@@ -11,6 +11,7 @@ import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
+import { data as fetchCoinData, info as fetchCoinInfo } from "@actions/coinName";
 
 interface InputTargetProps {
   value: string | number;
@@ -22,13 +23,58 @@ const Overview = () => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
-  const containerRef = useRef<HTMLDivElement>(null); // Add ref for the container
+  const [coinData, setCoinData] = useState<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    const fetchData = async () => {
+      try {
+        const [infoResponse, dataResponse] = await Promise.all([
+          fetchCoinInfo(), 
+          fetchCoinData(), 
+        ]);
+
+        console.log("CoinMarketCap Quotes Response:", JSON.stringify(infoResponse.data, null, 2));
+        console.log("CoinMarketCap Info Response:", JSON.stringify(dataResponse.data, null, 2));
+
+        const coinInfo = infoResponse.data?.["2"]; 
+        const coinMeta = dataResponse.data?.["2"]; 
+
+        if (!coinInfo || !coinInfo.quote || !coinInfo.quote.USD || !coinMeta) {
+          throw new Error("Invalid API response: Missing required data");
+        }
+
+        setCoinData({
+          name: coinMeta.name || "Unknown Coin",
+          logo: coinMeta.logo || AssetsImg.ic_btc_coin, // Use API logo or fallback
+          price: coinInfo.quote.USD.price
+            ? `₹${coinInfo.quote.USD.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
+            : "₹0.00",
+          change: coinInfo.quote.USD.percent_change_24h !== undefined
+            ? `${coinInfo.quote.USD.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.USD.percent_change_24h).toFixed(2)}%`
+            : "↑ 0.00%",
+          rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
+          stats: [
+            { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
+            {
+              icon: AssetsImg.ic_lineschart,
+              label: "Mkt Dominance",
+              value: coinInfo.quote.USD.market_cap_dominance
+                ? `${coinInfo.quote.USD.market_cap_dominance.toFixed(2)}%`
+                : "0.00%",
+            },
+            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+          ],
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching coin data:", error);
+        setCoinData(dummyCoinData); // Fallback to dummy data
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -67,25 +113,28 @@ const Overview = () => {
     setTimePeriod(tab);
   };
 
+  const coinLogo = coinData?.logo || AssetsImg.ic_btc_coin;
+  console.log("Coin logo being used:", coinLogo); 
+
   return (
     <div css={styles.container} ref={containerRef}>
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
           <div css={styles.coinInfo}>
-            <Image src={AssetsImg.ic_btc_coin} alt="coin" width={56} height={56} />
+            <Image src={coinLogo} alt="coin" width={56} height={56} onError={() => console.error("Image failed to load:", coinLogo)} />
             <div>
-              <h3>{dummyCoinData.name}</h3>
+              <h3>{coinData?.name || "Loading..."}</h3>
               <div css={styles.priceInfo}>
-                <span>{dummyCoinData.price}</span>
-                <span css={styles.positiveChange}>{dummyCoinData.change}</span>
-                <span css={styles.tag}>{dummyCoinData.rank}</span>
+                <span>{coinData?.price || "₹0.00"}</span>
+                <span css={styles.positiveChange}>{coinData?.change || "↑ 0.00%"}</span>
+                <span css={styles.tag}>{coinData?.rank || "# 00"}</span>
               </div>
             </div>
           </div>
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-          {dummyCoinData.stats.map((stat, index) => (
+          {coinData?.stats?.map((stat: any, index: number) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />
@@ -200,4 +249,3 @@ const Overview = () => {
 };
 
 export default Overview;
-

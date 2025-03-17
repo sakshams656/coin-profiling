@@ -120,7 +120,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
   }, [resetTrigger]);
 
   useEffect(() => {
-    console.log("Filters updated:", state.filters);
   }, [state.filters]);
 
   const toggleAccordion = (key: "publishedBy" | "duration" | "dateRange") => {
@@ -291,7 +290,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
                   disableShadow
                   onChange={(target) => dispatch({ type: "SET_SEARCH_TERM", searchTerm: target.value })}
                   onClear={() => dispatch({ type: "SET_SEARCH_TERM", searchTerm: "" })}
-                  onFocus={() => console.log("Search input focused")}
                   placeholder="Search"
                   style={{ name: "3s4yqf", styles: "width: 100%;" }}
                   value={state.searchTerm}
