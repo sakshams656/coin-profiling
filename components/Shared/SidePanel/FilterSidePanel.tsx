@@ -1,10 +1,11 @@
-import { Button, Checkbox, colors, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
-import { Accordion, utils } from "zebpay-ui";
+import { Button, Checkbox, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
+import { Accordion } from "zebpay-ui";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 import DateRangePicker, { DateRange } from "../DateRangePicker";
-import { useState, useEffect } from "react";
+import { useReducer, useEffect, useState } from "react";
 import * as styles from "./styles";
+import { DateRangeOptions } from "@typings/api/shared";
 
 const PUBLISHED_BY_DATA = [
   { label: "Select All", indeterminate: true },
@@ -22,11 +23,11 @@ const DURATION_DATA = [
 ];
 
 const DATE_RANGE_DATA = [
-  { label: "Last 7 Days" },
-  { label: "Last 1 Month" },
-  { label: "Last 3 Months" },
-  { label: "Last 1 Year" },
-  { label: "Custom" },
+  { label: DateRangeOptions.SEVEN_DAYS },
+  { label: DateRangeOptions.ONE_MONTH },
+  { label: DateRangeOptions.THREE_MONTH },
+  { label: DateRangeOptions.ONE_YEAR },
+  { label: DateRangeOptions.CUSTOM_RANGE },
 ];
 
 interface Filters {
@@ -35,23 +36,63 @@ interface Filters {
   dateRange: string | null;
 }
 
+interface FilterState {
+  filters: Filters;
+  accordionStates: { publishedBy: boolean; duration: boolean; dateRange: boolean };
+  customDateRange: DateRange | null;
+  searchTerm: string;
+}
+
+type FilterAction =
+  | { type: "TOGGLE_ACCORDION"; key: "publishedBy" | "duration" | "dateRange" }
+  | { type: "SET_PUBLISHERS"; publishers: string[] }
+  | { type: "SET_DURATIONS"; durations: string[] }
+  | { type: "SET_DATE_RANGE"; dateRange: string | null }
+  | { type: "SET_CUSTOM_DATE_RANGE"; customDateRange: DateRange | null }
+  | { type: "SET_SEARCH_TERM"; searchTerm: string }
+  | { type: "RESET" };
+
+const initialState: FilterState = {
+  filters: { publishers: [], durations: [], dateRange: null },
+  accordionStates: { publishedBy: false, duration: false, dateRange: false },
+  customDateRange: null,
+  searchTerm: "",
+};
+
+const filterReducer = (state: FilterState, action: FilterAction): FilterState => {
+  switch (action.type) {
+    case "TOGGLE_ACCORDION":
+      return {
+        ...state,
+        accordionStates: {
+          publishedBy: action.key === "publishedBy" ? !state.accordionStates.publishedBy : false,
+          duration: action.key === "duration" ? !state.accordionStates.duration : false,
+          dateRange: action.key === "dateRange" ? !state.accordionStates.dateRange : false,
+        },
+      };
+    case "SET_PUBLISHERS":
+      return { ...state, filters: { ...state.filters, publishers: action.publishers } };
+    case "SET_DURATIONS":
+      return { ...state, filters: { ...state.filters, durations: action.durations } };
+    case "SET_DATE_RANGE":
+      return { ...state, filters: { ...state.filters, dateRange: action.dateRange } };
+    case "SET_CUSTOM_DATE_RANGE":
+      return { ...state, customDateRange: action.customDateRange };
+    case "SET_SEARCH_TERM":
+      return { ...state, searchTerm: action.searchTerm };
+    case "RESET":
+      return initialState;
+    default:
+      return state;
+  }
+};
+
 interface FilterSidePanelProps {
   onApplyFilters: (filters: Filters) => void;
   onResetFilters: () => void;
-  filters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-  accordionStates: { publishedBy: boolean; duration: boolean; dateRange: boolean };
-  setAccordionStates: React.Dispatch<
-    React.SetStateAction<{ publishedBy: boolean; duration: boolean; dateRange: boolean }>
-  >;
-  customDateRange: DateRange | null;
-  setCustomDateRange: React.Dispatch<React.SetStateAction<DateRange | null>>;
-  searchTerm: string;
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   resetTrigger: number;
 }
 
-// Date formatting utility
 const formatDate = (date: string | Date): string => {
   const d = new Date(date);
   const day = d.getDate();
@@ -70,89 +111,65 @@ const formatDateRange = (startDate: string, endDate: string): string => {
   return `${formatDate(startDate)} - ${formatDate(endDate)}`;
 };
 
-const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
-  onApplyFilters,
-  onResetFilters,
-  filters,
-  setFilters,
-  accordionStates,
-  setAccordionStates,
-  customDateRange,
-  setCustomDateRange,
-  searchTerm,
-  setSearchTerm,
-  resetTrigger,
-}) => {
+const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onResetFilters, resetTrigger }) => {
+  const [state, dispatch] = useReducer(filterReducer, initialState);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   useEffect(() => {
-    console.log("Filters updated:", filters);
-  }, [filters]);
+    dispatch({ type: "RESET" });
+  }, [resetTrigger]);
 
-  const toggleAccordion = (key: string) => {
-    setAccordionStates({
-      publishedBy: key === "publishedBy" ? !accordionStates.publishedBy : false,
-      duration: key === "duration" ? !accordionStates.duration : false,
-      dateRange: key === "dateRange" ? !accordionStates.dateRange : false,
-    });
+  useEffect(() => {
+    console.log("Filters updated:", state.filters);
+  }, [state.filters]);
+
+  const toggleAccordion = (key: "publishedBy" | "duration" | "dateRange") => {
+    dispatch({ type: "TOGGLE_ACCORDION", key });
   };
 
   const filteredPublishedByData = PUBLISHED_BY_DATA.filter((item) =>
-    item.label.toLowerCase().includes(searchTerm.toLowerCase())
+    item.label.toLowerCase().includes(state.searchTerm.toLowerCase())
   );
 
   const handlePublisherChange = (label: string) => {
-    console.log("Changing publisher:", label, "Current filters:", filters.publishers);
     if (label === "Select All") {
-      const allPublishers = PUBLISHED_BY_DATA
-        .filter((item) => item.label !== "Select All")
-        .map((item) => item.label);
-      setFilters((prev) => ({
-        ...prev,
-        publishers: prev.publishers.length === allPublishers.length ? [] : allPublishers,
-      }));
-    } else {
-      setFilters((prev) => {
-        const newPublishers = prev.publishers.includes(label)
-          ? prev.publishers.filter((item) => item !== label)
-          : [...prev.publishers, label];
-        return { ...prev, publishers: newPublishers };
+      const allPublishers = PUBLISHED_BY_DATA.filter((item) => item.label !== "Select All").map((item) => item.label);
+      dispatch({
+        type: "SET_PUBLISHERS",
+        publishers: state.filters.publishers.length === allPublishers.length ? [] : allPublishers,
       });
+    } else {
+      const newPublishers = state.filters.publishers.includes(label)
+        ? state.filters.publishers.filter((item) => item !== label)
+        : [...state.filters.publishers, label];
+      dispatch({ type: "SET_PUBLISHERS", publishers: newPublishers });
     }
   };
 
   const handleDurationChange = (label: string) => {
-    console.log("Changing duration:", label, "Current filters:", filters.durations);
     if (label === "Select All") {
-      const allDurations = DURATION_DATA
-        .filter((item) => item.label !== "Select All")
-        .map((item) => item.label);
-      setFilters((prev) => ({
-        ...prev,
-        durations: prev.durations.length === allDurations.length ? [] : allDurations,
-      }));
-    } else {
-      setFilters((prev) => {
-        const newDurations = prev.durations.includes(label)
-          ? prev.durations.filter((item) => item !== label)
-          : [...prev.durations, label];
-        return { ...prev, durations: newDurations };
+      const allDurations = DURATION_DATA.filter((item) => item.label !== "Select All").map((item) => item.label);
+      dispatch({
+        type: "SET_DURATIONS",
+        durations: state.filters.durations.length === allDurations.length ? [] : allDurations,
       });
+    } else {
+      const newDurations = state.filters.durations.includes(label)
+        ? state.filters.durations.filter((item) => item !== label)
+        : [...state.filters.durations, label];
+      dispatch({ type: "SET_DURATIONS", durations: newDurations });
     }
   };
 
   const handleDateRangeChange = (label: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      dateRange: label,
-    }));
+    dispatch({ type: "SET_DATE_RANGE", dateRange: label });
     if (label !== "Custom") {
-      setCustomDateRange(null);
+      dispatch({ type: "SET_CUSTOM_DATE_RANGE", customDateRange: null });
     }
   };
 
   const handleDateRangePickerChange = (dateRange: DateRange) => {
-    setCustomDateRange(dateRange);
+    dispatch({ type: "SET_CUSTOM_DATE_RANGE", customDateRange: dateRange });
   };
 
   const renderCheckboxes = (
@@ -165,7 +182,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
       const isLast = index === data.length - 1;
       const checked = selectedValues.includes(item.label);
       const indeterminate = item.indeterminate
-        ? selectedValues.length > 0 && selectedValues.length < (data.length - 1)
+        ? selectedValues.length > 0 && selectedValues.length < data.length - 1
         : false;
 
       return (
@@ -201,23 +218,20 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
 
   const handleApply = () => {
     const dateRangeValue =
-      filters.dateRange === "Custom" && customDateRange
-        ? formatDateRange(customDateRange.startDate, customDateRange.endDate) 
-        : filters.dateRange;
+      state.filters.dateRange === "Custom" && state.customDateRange
+        ? formatDateRange(state.customDateRange.startDate, state.customDateRange.endDate)
+        : state.filters.dateRange;
 
     onApplyFilters({
-      publishers: filters.publishers,
-      durations: filters.durations,
+      publishers: state.filters.publishers,
+      durations: state.filters.durations,
       dateRange: dateRangeValue,
     });
     setIsPanelOpen(false);
   };
 
   const handleReset = () => {
-    setFilters({ publishers: [], durations: [], dateRange: null });
-    setAccordionStates({ publishedBy: false, duration: false, dateRange: false });
-    setCustomDateRange(null);
-    setSearchTerm("");
+    dispatch({ type: "RESET" });
     onResetFilters();
     setIsPanelOpen(false);
   };
@@ -248,41 +262,41 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
             onToggle={() => toggleAccordion("publishedBy")}
             title={
               <div
-                css={styles.accordionTitleStyle(accordionStates.publishedBy)}
+                css={styles.accordionTitleStyle(state.accordionStates.publishedBy)}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("publishedBy");
                 }}
               >
                 <Image
-                  src={accordionStates.publishedBy ? AssetsImg.ic_document_white : AssetsImg.ic_document}
+                  src={state.accordionStates.publishedBy ? AssetsImg.ic_document_white : AssetsImg.ic_document}
                   alt="doc"
                   height={20}
                   width={20}
                   css={styles.iconAccordian}
                 />
                 Published By{" "}
-                {filters.publishers.length > 0 &&
-                  (filters.publishers.includes("Select All")
-                    ? `(${getSelectedNames(PUBLISHED_BY_DATA, filters.publishers)})`
-                    : `(${filters.publishers.join(", ")})`)}
+                {state.filters.publishers.length > 0 &&
+                  (state.filters.publishers.includes("Select All")
+                    ? `(${getSelectedNames(PUBLISHED_BY_DATA, state.filters.publishers)})`
+                    : `(${state.filters.publishers.join(", ")})`)}
               </div>
             }
-            isOpen={accordionStates.publishedBy}
+            isOpen={state.accordionStates.publishedBy}
           >
-            {accordionStates.publishedBy && (
+            {state.accordionStates.publishedBy && (
               <div>
                 <SearchInput
                   autoFocus
                   disableShadow
-                  onChange={(target) => setSearchTerm(target.value)}
-                  onClear={() => setSearchTerm("")}
+                  onChange={(target) => dispatch({ type: "SET_SEARCH_TERM", searchTerm: target.value })}
+                  onClear={() => dispatch({ type: "SET_SEARCH_TERM", searchTerm: "" })}
                   onFocus={() => console.log("Search input focused")}
                   placeholder="Search"
                   style={{ name: "3s4yqf", styles: "width: 100%;" }}
-                  value={searchTerm}
+                  value={state.searchTerm}
                 />
-                {renderCheckboxes(filteredPublishedByData, true, filters.publishers, handlePublisherChange)}
+                {renderCheckboxes(filteredPublishedByData, true, state.filters.publishers, handlePublisherChange)}
               </div>
             )}
           </Accordion>
@@ -293,30 +307,30 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
             onToggle={() => toggleAccordion("duration")}
             title={
               <div
-                css={styles.accordionTitleStyle(accordionStates.duration)}
+                css={styles.accordionTitleStyle(state.accordionStates.duration)}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("duration");
                 }}
               >
                 <Image
-                  src={accordionStates.duration ? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
+                  src={state.accordionStates.duration ? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
                   alt="clock"
                   height={20}
                   width={20}
                   css={styles.iconAccordian}
                 />
                 Duration{" "}
-                {filters.durations.length > 0 &&
-                  (filters.durations.includes("Select All")
-                    ? `(${getSelectedNames(DURATION_DATA, filters.durations)})`
-                    : `(${filters.durations.join(", ")})`)}
+                {state.filters.durations.length > 0 &&
+                  (state.filters.durations.includes("Select All")
+                    ? `(${getSelectedNames(DURATION_DATA, state.filters.durations)})`
+                    : `(${state.filters.durations.join(", ")})`)}
               </div>
             }
-            isOpen={accordionStates.duration}
+            isOpen={state.accordionStates.duration}
           >
-            {accordionStates.duration && (
-              <div>{renderCheckboxes(DURATION_DATA, true, filters.durations, handleDurationChange)}</div>
+            {state.accordionStates.duration && (
+              <div>{renderCheckboxes(DURATION_DATA, true, state.filters.durations, handleDurationChange)}</div>
             )}
           </Accordion>
         </div>
@@ -326,46 +340,46 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({
             onToggle={() => toggleAccordion("dateRange")}
             title={
               <div
-                css={styles.accordionTitleStyle(accordionStates.dateRange)}
+                css={styles.accordionTitleStyle(state.accordionStates.dateRange)}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleAccordion("dateRange");
                 }}
               >
                 <Image
-                  src={accordionStates.dateRange ? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
+                  src={state.accordionStates.dateRange ? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
                   alt="calendar"
                   height={20}
                   width={20}
                   css={styles.iconAccordian}
                 />
                 Date Range{" "}
-                {filters.dateRange && (
+                {state.filters.dateRange && (
                   <span>
-                    ({filters.dateRange === "Custom" && customDateRange
-                      ? formatDateRange(customDateRange.startDate, customDateRange.endDate)
-                      : filters.dateRange})
+                    ({state.filters.dateRange === "Custom" && state.customDateRange
+                      ? formatDateRange(state.customDateRange.startDate, state.customDateRange.endDate)
+                      : state.filters.dateRange})
                   </span>
                 )}
               </div>
             }
-            isOpen={accordionStates.dateRange}
+            isOpen={state.accordionStates.dateRange}
           >
-            {accordionStates.dateRange && (
-              <div>{renderCheckboxes(DATE_RANGE_DATA, false, [filters.dateRange || ""], handleDateRangeChange)}</div>
+            {state.accordionStates.dateRange && (
+              <div>{renderCheckboxes(DATE_RANGE_DATA, false, [state.filters.dateRange || ""], handleDateRangeChange)}</div>
             )}
           </Accordion>
         </div>
 
-        <div css={styles.customDateRangePickerStyle(filters.dateRange)}>
+        <div css={styles.customDateRangePickerStyle(state.filters.dateRange)}>
           <DateRangePicker
             key={resetTrigger}
             onChange={handleDateRangePickerChange}
             minDate={new Date("2000-01-01")}
             maxDate={new Date()}
             defaultSelectedDate={
-              customDateRange
-                ? { startDate: new Date(customDateRange.startDate).getTime(), endDate: new Date(customDateRange.endDate).getTime() }
+              state.customDateRange
+                ? { startDate: new Date(state.customDateRange.startDate).getTime(), endDate: new Date(state.customDateRange.endDate).getTime() }
                 : undefined
             }
           />

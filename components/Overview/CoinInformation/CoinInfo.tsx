@@ -5,10 +5,59 @@ import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
+import { data } from "@actions/coinName";
 
 const CoinInfo: React.FC = () => {
   const [activeTab, setActiveTab] = useState("How BTC works");
   const [loading, setLoading] = useState(true);
+  const [launchDate, setLaunchDate] = useState("");
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await data();
+        console.log("API Response in Component:", response); 
+        if (!response || !response.data || !response.data["1"]) {
+          throw new Error("Invalid API response structure");
+        }
+        const date_launched = response.data["1"].date_launched;
+        const description = response.data["1"].description || "No description available";
+        setLaunchDate(formatDate(date_launched));
+        setDescription(description);
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+        setLaunchDate("N/A");
+        setDescription("Unable to load description");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  function formatDate(isoDateString: string) {
+    if (!isoDateString || isoDateString === "N/A") return "N/A";
+    const date = new Date(isoDateString);
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,9 +70,9 @@ const CoinInfo: React.FC = () => {
     <div css={styles.coinInfoContainer}>
       <ShimmerWrapper width={150} height={24} isLoading={loading}>
         <span css={styles.title}>Coin Information</span>
-        <span css={styles.launchInfo}>Launched : Jan 2009</span>
+        <span css={styles.launchInfo}>{launchDate}</span>
       </ShimmerWrapper>
-      
+
       <div css={styles.dataContainer}>
         <div css={styles.leftSidebar}>
           <ShimmerWrapper height={200} width={200} isLoading={loading}>
@@ -59,17 +108,20 @@ const CoinInfo: React.FC = () => {
             </div>
           </ShimmerWrapper>
         </div>
-        
+
         <div css={styles.contentArea}>
-          <ShimmerWrapper height={30} width={90} isLoading={loading} style={css({ marginLeft: "1rem", marginTop: "1rem" })}>
-            <div css={styles.contentHeader}>
-              {activeTab.replace("BTC", "").trim()}
-            </div>
+          <ShimmerWrapper
+            height={30}
+            width={90}
+            isLoading={loading}
+            style={css({ marginLeft: "1rem", marginTop: "1rem" })}
+          >
+            <div css={styles.contentHeader}>{activeTab.replace("BTC", "").trim()}</div>
           </ShimmerWrapper>
-          
+
           <div css={styles.contentBody}>
             <ShimmerWrapper height={250} width={700} isLoading={loading}>
-              <p>{tabContent[activeTab]}</p>
+              {activeTab === "About BTC" ? <p>{description}</p> : <p>{tabContent[activeTab]}</p>}
             </ShimmerWrapper>
           </div>
         </div>

@@ -9,25 +9,27 @@ export const container = css({
   paddingBottom: utils.remConverter(0),
   marginTop: utils.remConverter(60),
   marginBottom: 0,
-  minHeight: "90vh",
-  //overflowY: "auto",
-  // "&::-webkit-scrollbar": {
-  //   width: utils.remConverter(4),
-  //   visibility: "hidden",
-  // },
-  // "&::-webkit-scrollbar-thumb": {
-  //   background: colors.Zeb_Solid_Light_Blue,
-  //   borderRadius: utils.remConverter(18),
-  //   visibility: "hidden",
-  // },
-  // "&.scrolled": {
-  //   "&::-webkit-scrollbar": {
-  //     visibility: "visible",
-  //   },
-  //   "&::-webkit-scrollbar-thumb": {
-  //     visibility: "visible",
-  //   },
-  // },
+  height: `calc(100vh - ${utils.remConverter(60)})`,
+  overflowY: "auto",
+  boxSizing: "border-box",
+  "&::-webkit-scrollbar": {
+    width: utils.remConverter(4),
+    visibility: "hidden",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: colors.Zeb_Solid_Light_Blue,
+    borderRadius: utils.remConverter(18),
+    visibility: "hidden",
+  },
+  "&.scrolled": {
+    "&::-webkit-scrollbar": {
+      visibility: "visible",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      visibility: "visible",
+    },
+    boxShadow: `0 ${utils.remConverter(8)} ${utils.remConverter(8)} ${utils.remConverter(-4)} #0C0C1D`, 
+  },
 });
 
 export const coinBanner = css({
@@ -114,25 +116,7 @@ export const leftContainer = css({
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  //overflowY: "auto",
   paddingBottom: utils.remConverter(24),
-  // "&::-webkit-scrollbar": {
-  //   marginTop: utils.remConverter(60),
-  //   visibility: "hidden",
-  // },
-  // "&::-webkit-scrollbar-thumb": {
-  //   background: colors.Zeb_Solid_Light_Blue,
-  //   borderRadius: utils.remConverter(18),
-  //   visibility: "hidden",
-  // },
-  // "&.scrolled": {
-  //   "&::-webkit-scrollbar": {
-  //     visibility: "visible",
-  //   },
-  //   "&::-webkit-scrollbar-thumb": {
-  //     visibility: "visible",
-  //   },
-  // },
 });
 
 export const rightContainer = css({
@@ -142,7 +126,7 @@ export const rightContainer = css({
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   position: "sticky",
-  top: 76,
+  top: 0,
   minWidth: utils.remConverter(280),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),

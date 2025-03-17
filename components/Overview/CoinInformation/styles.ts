@@ -114,7 +114,6 @@ export const contentHeader = css({
   paddingTop: utils.remConverter(0),
   marginLeft: utils.remConverter(0),
   backgroundColor: colors.Zeb_Solid_BG_Blue,
-  zIndex: 10,
   boxShadow: `0 ${utils.remConverter(16)} ${utils.remConverter(8)} rgba(0, 0, 0, 0.2)`,
 });
 

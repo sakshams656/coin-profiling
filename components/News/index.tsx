@@ -18,11 +18,6 @@ interface Article {
   content: string;
 }
 
-interface DateRange {
-  startDate: string;
-  endDate: string;
-}
-
 interface Filters {
   publishers: string[];
   durations: string[];
@@ -126,7 +121,6 @@ const NewsPage: React.FC = () => {
     dateRange: null,
   });
 
-
   const activeFiltersArray: FilterItem[] = [
     ...activeFilters.publishers.map((value) => ({ type: "publishers" as const, value })),
     ...activeFilters.durations.map((value) => ({ type: "durations" as const, value })),
@@ -215,19 +209,6 @@ const NewsPage: React.FC = () => {
     setOverflowCount(remaining > 0 ? remaining + (visibleCount > 0 ? 1 : 0) : 0);
   }, [activeFiltersArray.length]);
 
-  const [pendingFilters, setPendingFilters] = useState<Filters>({
-    publishers: [],
-    durations: [],
-    dateRange: null,
-  });
-
-  const [accordionStates, setAccordionStates] = useState({
-    publishedBy: false,
-    duration: false,
-    dateRange: false,
-  });
-  const [customDateRange, setCustomDateRange] = useState<DateRange | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
   const [resetTrigger, setResetTrigger] = useState(0);
 
   const [isSorterOpen, setIsSorterOpen] = useState(false);
@@ -301,18 +282,14 @@ const NewsPage: React.FC = () => {
 
   const handleApplyFilters = (newFilters: Filters) => {
     setActiveFilters(newFilters);
-    setPendingFilters(newFilters);
     applyFilters(newFilters);
   };
 
   const handleResetFilters = () => {
-    setActiveFilters({ publishers: [], durations: [], dateRange: null });
-    setPendingFilters({ publishers: [], durations: [], dateRange: null });
-    setAccordionStates({ publishedBy: false, duration: false, dateRange: false });
-    setCustomDateRange(null);
-    setSearchTerm("");
-    setResetTrigger((prev) => prev + 1);
-    setFilteredArticles(articles);
+    const resetFilters: Filters = { publishers: [], durations: [], dateRange: null };
+    setActiveFilters(resetFilters);
+    setFilteredArticles(articles); // Reset filtered articles to original list
+    setResetTrigger((prev) => prev + 1); // Trigger reset in FilterSidePanel
   };
 
   const handleRemoveFilter = (type: keyof Filters, value: string) => {
@@ -321,12 +298,7 @@ const NewsPage: React.FC = () => {
       [type]: type === "dateRange" ? null : activeFilters[type].filter((v) => v !== value),
     };
     setActiveFilters(updatedFilters);
-    setPendingFilters(updatedFilters);
     applyFilters(updatedFilters);
-    if (type === "dateRange") {
-      setCustomDateRange(null);
-      setResetTrigger((prev) => prev + 1);
-    }
   };
 
   const handleRemoveHiddenFilters = () => {
@@ -340,13 +312,10 @@ const NewsPage: React.FC = () => {
         updatedFilters.durations = updatedFilters.durations.filter((v) => v !== filter.value);
       } else if (filter.type === "dateRange") {
         updatedFilters.dateRange = null;
-        setCustomDateRange(null);
-        setResetTrigger((prev) => prev + 1);
       }
     });
 
     setActiveFilters(updatedFilters);
-    setPendingFilters(updatedFilters);
     applyFilters(updatedFilters);
   };
 
@@ -401,14 +370,6 @@ const NewsPage: React.FC = () => {
                 <FilterSidePanel
                   onApplyFilters={handleApplyFilters}
                   onResetFilters={handleResetFilters}
-                  filters={pendingFilters}
-                  setFilters={setPendingFilters}
-                  accordionStates={accordionStates}
-                  setAccordionStates={setAccordionStates}
-                  customDateRange={customDateRange}
-                  setCustomDateRange={setCustomDateRange}
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
                   resetTrigger={resetTrigger}
                 />
               </div>
@@ -632,7 +593,7 @@ const NewsPage: React.FC = () => {
               <div css={styles.buttonGroup}>
                 <ShimmerWrapper isLoading={loading} height={35} width={140} typeLightdDark>
                   <button css={styles.appButton}>
-                    <Image src={AssetsImg.ic_appstore} alt="playstore" />
+                    <Image src={AssetsImg.ic_appstore} alt="appstore" />
                   </button>
                 </ShimmerWrapper>
                 <ShimmerWrapper isLoading={loading} height={35} width={140} typeLightdDark>

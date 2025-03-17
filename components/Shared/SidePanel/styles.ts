@@ -50,7 +50,6 @@ export const iconAccordian = css({
 });
 
 export const sidePanelStyle = css({
-  zIndex: 1,
 });
 
 export const accordionTitleStyle = (isOpen: boolean) => css({
