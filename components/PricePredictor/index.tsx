@@ -4,7 +4,7 @@ import LoadingState from './Homepage';
 import "zebpay-ui/dist/icons/icons.css";
 
 
-const Home: React.FC = () => {
+const PricePredictor: React.FC = () => {
   return (
     <div style={{ fontFamily: 'Lato' }}>
       <LoadingState />
@@ -12,4 +12,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default PricePredictor;

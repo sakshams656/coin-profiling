@@ -6,6 +6,8 @@ import { main } from "./style";
 // import { main } from "@styles/styles";
 import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
+import PricePredictor from "@components/PricePredictor";
+
 const CoinProfiling = () => {
   const [selectedTab, setSelectedTab] = useState<string>("overview");
   const renderTabContent = () => {
@@ -13,7 +15,7 @@ const CoinProfiling = () => {
       case "overview":
         return <Overview />;
       case "pricePredictor":
-        return <div>This is Tab 2</div>;
+        return <PricePredictor/>;
       case "news":
         return <NewsPage/>;
       case "blogs":
