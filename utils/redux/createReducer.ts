@@ -4,7 +4,6 @@ interface Action {
 }
 
 interface Handlers<State> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [type: string]: (state: State, payload: any) => State;
 }
 

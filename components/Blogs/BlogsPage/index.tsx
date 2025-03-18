@@ -134,14 +134,17 @@ const NewsPage: React.FC = () => {
     })}`;
   };
 
+
   const allFilters: FilterItem[] = [
     ...selectedCategories.map((category) => ({
+      type: "category" as const,
       type: "category" as const,
       value: category,
       icon: AssetsImg.ic_category_white,
       onRemove: () => handleRemoveCategory(category),
     })),
     ...selectedDurations.map((duration) => ({
+      type: "duration" as const,
       type: "duration" as const,
       value: duration,
       icon: AssetsImg.ic_clock_white,
@@ -150,6 +153,7 @@ const NewsPage: React.FC = () => {
     ...(dateRange
       ? [
           {
+            type: "date" as const,
             type: "date" as const,
             value: dateRange.includes(" - ")
               ? dateRange
@@ -163,6 +167,7 @@ const NewsPage: React.FC = () => {
         ]
       : []),
   ];
+
 
 
   useLayoutEffect(() => {
@@ -431,8 +436,8 @@ const NewsPage: React.FC = () => {
                   <ArticleCard
                     key={index}
                     title={<Shimmer height={18} width={300} />}
-                    link={<Shimmer height={22} width={205} />}
-                    imageUrl={<Shimmer height={110} width={205} />}
+                    link=""
+                    imageUrl=""
                     date={<Shimmer height={20} width={120} />}
                     totalViews={<Shimmer height={20} width={120} />}
                     category={<Shimmer height={24} width={150} />}

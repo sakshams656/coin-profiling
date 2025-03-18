@@ -6,10 +6,47 @@ import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
+import { data } from "../../../actions/overviewApi";
 
 const CoinInfo: React.FC = () => {
   const [activeTab, setActiveTab] = useState("How BTC works");
   const [loading, setLoading] = useState(true);
+  const [launchDate,setLaunchDate]=useState("");
+  const [description,setDescription]=useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await data();
+        const date_launched = response.data["1"].date_launched;
+        const description = response.data["1"].description;
+        setLaunchDate(formatDate(date_launched));
+        setDescription(description);
+        console.log(description);
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
+
+
+function formatDate(isoDateString:string) {
+
+  const date = new Date(isoDateString);
+  
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${day} ${month} ${year}`;
+
+}
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,7 +59,7 @@ const CoinInfo: React.FC = () => {
     <div css={styles.coinInfoContainer}>
       <ShimmerWrapper width={150} height={24} isLoading={loading}>
         <span css={styles.title}>Coin Information</span>
-        <span css={styles.launchInfo}>Launched : Jan 2009</span>
+        <span css={styles.launchInfo}>{launchDate}</span>
       </ShimmerWrapper>
       
       <div css={styles.dataContainer}>
@@ -70,7 +107,7 @@ const CoinInfo: React.FC = () => {
           
           <div css={styles.contentBody}>
             <ShimmerWrapper height={250} width={700} isLoading={loading}>
-              <p>{tabContent[activeTab]}</p>
+              {activeTab=="About BTC"?<p>{description}</p>:<p>{tabContent[activeTab]}</p>}
             </ShimmerWrapper>
           </div>
         </div>
