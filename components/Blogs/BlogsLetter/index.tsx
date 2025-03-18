@@ -17,7 +17,7 @@ import {
   Form,
   Subscribe,
   input,
-  input,
+  // input,
 } from "./style";
 import Image from "next/image";
 
@@ -48,7 +48,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   };
 
   const handleEmailChange = (target: {value:string}) => {
-  const handleEmailChange = (target: { value: string }) => {
+  // const handleEmailChange = (target: { value: string }) => {
     const newEmail = target.value;
     setEmail(newEmail);
     // const isValid = validateEmail(newEmail);
@@ -156,14 +156,14 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
                     onChange={handleEmailChange}
                     placeholder="qwerty@gmail.com"
                     style={input}
-                    style={input}
+                    // style={input}
                     onFocus={() => setIsInputFocus(true)}
                     onBlur={() => setIsInputFocus(false)}
                   />
                   {/* {showError && <span css={ErrorText}>Invalid email ID</span>} */}
                 </div>
                 <div css={Subscribe} >
-                <div css={Subscribe}>
+                {/* <div css={Subscribe}> */}
                   <Button
                     onClick={handleSubmit}
                     size="full-width"
