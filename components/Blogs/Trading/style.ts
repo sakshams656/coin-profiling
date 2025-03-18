@@ -3,12 +3,12 @@ import { css } from "@emotion/react";
 import { typography, colors, utils } from "zebpay-ui";
 
 export const ButtonStyle = css({
-  flex: 1,
+  // flex: 1,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  maxWidth: utils.remConverter(160),
-  height: "auto",
+  // maxWidth: utils.remConverter(160),
+  // height: "auto",
   background: "none",
   border: "none",
   cursor: "pointer",
@@ -21,7 +21,7 @@ export const ButtonStyle = css({
 });
 
 export const image = css({
-  height: utils.remConverter(48),
+  height: "auto",
   width: "100%",
   maxWidth: "100%",
   "@media (max-width: 768px)": {
@@ -34,7 +34,7 @@ export const image = css({
 
 export const tradingBanner = css({
   display: "flex",
-  height: "auto",
+  // height: "50%",
   minHeight: utils.remConverter(192),
   padding: utils.remConverter(12),
   flexDirection: "column",
@@ -63,7 +63,7 @@ export const anotherFrame = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
-  gap: utils.remConverter(6),
+  gap: utils.remConverter(12),
   "@media (max-width: 768px), (max-width: 480px)": {
     gap: utils.remConverter(2),
   },
@@ -71,18 +71,8 @@ export const anotherFrame = css({
 
 export const zebpayImageDiv = css({
   display: "flex",
-  width: "clamp(2.5rem, 5vw, 4rem)",
-  height: "clamp(2.5rem, 5vw, 4rem)",
   justifyContent: "center",
   alignItems: "center",
-  "@media (max-width: 768px)": {
-    width: "clamp(2rem, 4vw, 3rem)",
-    height: "clamp(1rem, 3vw, 2rem)",
-  },
-  "@media (max-width: 480px)": {
-    width: "clamp(1.8rem, 3.5vw, 2.5rem)",
-    height: "clamp(1rem, 3vw, 2rem)",
-  },
 });
 
 export const textWrapper = css({
@@ -120,9 +110,10 @@ export const subtitle = css({
 
 export const buttonGroup = css({
   display: "flex",
-  justifyContent: "center",
-  gap: utils.remConverter(12),
-  alignSelf: "stretch",
+  width:"100%",
+  justifyContent: "space-between",
+  gap: utils.remConverter(8),
+  // alignSelf: "stretch",
   "@media (max-width: 768px)": {
     gap: utils.remConverter(8),
     justifyContent: "center",

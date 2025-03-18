@@ -29,3 +29,7 @@ export const optionStyle = (isSelected) =>
     alignItems: "center",
     justifyContent: "space-between",
   });
+
+  export const icon=css({
+    color:"#C0C0EE"
+  })

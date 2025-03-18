@@ -1,7 +1,5 @@
-
-
 import { useEffect, useState } from "react";
-import { Icon, Input, Button, CircularLoader, Shimmer } from "zebpay-ui";
+import { Input, Button, Shimmer } from "zebpay-ui";
 import AssetsImg from "@public/images";
 
 import {
@@ -17,7 +15,7 @@ import {
   Form,
   Subscribe,
   input,
-  // input,
+  loading,
 } from "./style";
 import Image from "next/image";
 
@@ -48,20 +46,16 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   };
 
   const handleEmailChange = (target: {value:string}) => {
-  // const handleEmailChange = (target: { value: string }) => {
+
     const newEmail = target.value;
     setEmail(newEmail);
-    // const isValid = validateEmail(newEmail);
-    // setIsValidEmail(isValid);
-    // setShowError(newEmail.includes("@") && !isValid);
+
   };
 
   useEffect(()=>{
-    // if(debounceEmail){
       const isValid = validateEmail(debounceEmail);
       setIsValidEmail(isValid);
       setShowError(debounceEmail.includes("@") && !isValid);
-    // }
   },[debounceEmail])
 
   const handleSubmit = () => {
@@ -85,7 +79,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <div css={newsletter}>
       <div css={newsChild}>
-        <div>
+        {/* <div> */}
           <div css={newsHeader}>
 
             <div css={mailIcon}>
@@ -103,7 +97,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
             <div css={heading}>
               {isLoading ? (
                 <Shimmer
-                  height={28}
+                  height={26}
                   width={250}
                 />
               ) : isSubscribed ? (
@@ -128,18 +122,13 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
 
           {isLoading ? (
             <div
-              style={{
-                marginTop: "1.5rem",
-                gap: "0.3rem",
-                display: "flex",
-                flexDirection: "column",
-              }}
+              css={loading}
             >
               <Shimmer height={20} width={250} />
-              <Shimmer height={37} width={280} />
+              <Shimmer height={35} width={280} />
 
-              <div style={{marginTop:"2.5rem"}}>
-              <Shimmer height={32} width={280} />
+              <div style={{marginTop:"2.0rem"}}>
+              <Shimmer height={30} width={280} />
               </div>
 
             </div>
@@ -148,7 +137,6 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
               <>
                 <div css={Form}>
                   <Input
-                    // invalid={ showError }
                     errorText= {showError &&"Invalid Email ID"}
                     disabled={isSubmitting}
                     label="Enter Email Address"
@@ -156,14 +144,11 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
                     onChange={handleEmailChange}
                     placeholder="qwerty@gmail.com"
                     style={input}
-                    // style={input}
                     onFocus={() => setIsInputFocus(true)}
                     onBlur={() => setIsInputFocus(false)}
                   />
-                  {/* {showError && <span css={ErrorText}>Invalid email ID</span>} */}
                 </div>
                 <div css={Subscribe} >
-                {/* <div css={Subscribe}> */}
                   <Button
                     onClick={handleSubmit}
                     size="full-width"
@@ -179,7 +164,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
               </>
             )
           )}
-        </div>
+        {/* </div> */}
 
         {isSubscribed && (
           <div css={Subscribed}>

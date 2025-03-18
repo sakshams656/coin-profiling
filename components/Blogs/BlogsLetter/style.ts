@@ -27,11 +27,12 @@ export const Subscribed = css({
   display: "flex",
 });
 
-export const Subscribe = (isValid: boolean) =>
+export const Subscribe  =
   css({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    marginTop:"auto",
 
     "@media (max-width: 768px)": {
       maxWidth: utils.remConverter(130),
@@ -42,7 +43,7 @@ export const Subscribe = (isValid: boolean) =>
   });
 
 export const newsletter = css({
-  height: "10vh",
+  height: "auto",
   padding: utils.remConverter(12),
   alignItems: "center",
   gap: utils.remConverter(4),
@@ -51,7 +52,7 @@ export const newsletter = css({
   background: colors.Zeb_Solid_BG_Blue,
 
   "@media (max-width: 768px)": {
-    height: "10vh",
+    height: "auto",
     padding: utils.remConverter(16),
   },
   "@media (max-width: 480px)": {
@@ -63,10 +64,10 @@ export const newsletter = css({
 
 export const newsChild = css({
   display: "flex",
-  height: "20%",
+  height: "100%",
   flexDirection: "column",
   justifyContent: "space-between",
-  alignItems: "flex-start",
+  gap:utils.remConverter(20),
   flex: "1 0 0",
   alignSelf: "stretch",
 
@@ -89,7 +90,9 @@ export const newsHeader = css({
 });
 
 export const heading = css({
+  // display:"flex",
   color: colors.Zeb_Solid_White,
+  // justifyContent:"space-between",
   fontFeatureSettings: `"clig" off, "liga" off`,
   fontFamily: "Lato",
   fontSize: utils.remConverter(16),
@@ -124,8 +127,8 @@ export const Form = css({
   flexDirection: "column",
   alignItems: "flex-start",
   gap: utils.remConverter(8),
-  marginBottom: utils.remConverter(28),
-  paddingTop: utils.remConverter(16),
+  // marginBottom: utils.remConverter(28),
+  // paddingTop: utils.remConverter(16),
   width:"100%",
 
   "@media (max-width: 768px)": {
@@ -143,4 +146,11 @@ export const Form = css({
 
 export const input=css({
   width:"100%"
+})
+
+export const loading =css({
+  marginTop:utils.remConverter(24),
+  gap:utils.remConverter(4.8),
+  display:"flex",
+  flexDirection:"column"
 })

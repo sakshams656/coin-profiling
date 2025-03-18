@@ -4,14 +4,14 @@ import { typography, colors, utils } from "zebpay-ui";
 
 export const CardContainer = css({
   display: "flex",
-  height: "40vh",
+  // height: "14%",
   flexDirection: "column",
   alignItems: "center",
   padding: utils.remConverter(12),
   borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
   overflow: "hidden",
-  flex: "1 1 27%",
+  flex: "1 1 30%",
   maxWidth: "33%",
   "&.hover-active:hover": {
     border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_Bright_Blue}`,
