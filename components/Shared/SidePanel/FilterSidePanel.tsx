@@ -6,6 +6,7 @@ import DateRangePicker, { DateRange } from "../DateRangePicker";
 import { useReducer, useEffect, useState } from "react";
 import * as styles from "./styles";
 import { DateRangeOptions } from "@typings/api/shared";
+import { dateFormat } from "@utils/date"; 
 
 const PUBLISHED_BY_DATA = [
   { label: "Select All", indeterminate: true },
@@ -93,21 +94,24 @@ interface FilterSidePanelProps {
   resetTrigger: number;
 }
 
-const formatDate = (date: string | Date): string => {
+const formatDate = (date: Date | string): string => {
   const d = new Date(date);
   const day = d.getDate();
-  const month = d.toLocaleString("en-US", { month: "short" });
-  const year = d.getFullYear().toString().slice(-2);
-
-  let suffix = "th";
-  if (day % 10 === 1 && day !== 11) suffix = "st";
-  else if (day % 10 === 2 && day !== 12) suffix = "nd";
-  else if (day % 10 === 3 && day !== 13) suffix = "rd";
-
-  return `${day}${suffix} ${month} ${year}`;
+  const suffix = getDaySuffix(day);
+  return dateFormat(d, `d'${suffix}' MMM yy`);
 };
 
-const formatDateRange = (startDate: string, endDate: string): string => {
+const getDaySuffix = (day: number): string => {
+  if (day >= 11 && day <= 13) return "th";
+  switch (day % 10) {
+    case 1: return "st";
+    case 2: return "nd";
+    case 3: return "rd";
+    default: return "th";
+  }
+};
+
+const formatDateRange = (startDate: string | Date, endDate: string | Date): string => {
   return `${formatDate(startDate)} - ${formatDate(endDate)}`;
 };
 

@@ -84,9 +84,18 @@ const styles = {
   }),
 
   statsTitle: css({
+    color: colors.Zeb_Solid_Light_Blue,
+    fontSize: utils.remConverter(14),
+    fontWeight: 400,
+    display: "flex",
+    alignItems: "center",
+    gap: utils.remConverter(4),
+  }),
+
+  performanceTitle: css({
     color: colors.Zeb_Solid_White,
     fontSize: utils.remConverter(14),
-    fontWeight: 600,
+    fontWeight: 400,
     display: "flex",
     alignItems: "center",
     gap: utils.remConverter(4),
@@ -109,7 +118,7 @@ const styles = {
   statsValue: css({
     color: colors.Zeb_Solid_White,
     fontSize: utils.remConverter(16),
-    fontWeight: 700,
+    fontWeight: 400,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",

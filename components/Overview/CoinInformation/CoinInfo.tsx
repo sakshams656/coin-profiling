@@ -5,59 +5,16 @@ import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
-import { data } from "@actions/coinName";
 
-const CoinInfo: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("How BTC works");
+interface CoinInfoProps {
+  launchDate: string;
+  description: string;
+  symbol: string;
+}
+
+const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) => {
+  const [activeTab, setActiveTab] = useState(`About ${symbol}`);
   const [loading, setLoading] = useState(true);
-  const [launchDate, setLaunchDate] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await data();
-        console.log("API Response in Component:", response); 
-        if (!response || !response.data || !response.data["1"]) {
-          throw new Error("Invalid API response structure");
-        }
-        const date_launched = response.data["1"].date_launched;
-        const description = response.data["1"].description || "No description available";
-        setLaunchDate(formatDate(date_launched));
-        setDescription(description);
-      } catch (error) {
-        console.error("Error fetching crypto data:", error);
-        setLaunchDate("N/A");
-        setDescription("Unable to load description");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  function formatDate(isoDateString: string) {
-    if (!isoDateString || isoDateString === "N/A") return "N/A";
-    const date = new Date(isoDateString);
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -65,6 +22,20 @@ const CoinInfo: React.FC = () => {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Define tab names dynamically using the symbol
+  const tabs = {
+    about: `About ${symbol}`,
+    howWorks: `How ${symbol} works`,
+    howToBuy: `How to buy ${symbol}`,
+    whyToBuy: `Why to buy ${symbol}`,
+  };
+
+  // Map dynamic tab names to static tabContent keys
+  const getContentKey = (tab: string) => {
+    if (tab === tabs.about) return "About BTC"; // Assuming description replaces this
+    return tab.replace(symbol, "BTC"); // Map back to BTC-based keys
+  };
 
   return (
     <div css={styles.coinInfoContainer}>
@@ -78,32 +49,32 @@ const CoinInfo: React.FC = () => {
           <ShimmerWrapper height={200} width={200} isLoading={loading}>
             <div>
               <button
-                css={styles.getTabStyle(activeTab === "About BTC")}
-                onClick={() => setActiveTab("About BTC")}
+                css={styles.getTabStyle(activeTab === tabs.about)}
+                onClick={() => setActiveTab(tabs.about)}
               >
-                <Image src={AssetsImg.ic_document} alt="About BTC" width={16} height={16} />
-                <span>About BTC</span>
+                <Image src={AssetsImg.ic_document} alt={tabs.about} width={16} height={16} />
+                <span>{tabs.about}</span>
               </button>
               <button
-                css={styles.getTabStyle(activeTab === "How BTC works")}
-                onClick={() => setActiveTab("How BTC works")}
+                css={styles.getTabStyle(activeTab === tabs.howWorks)}
+                onClick={() => setActiveTab(tabs.howWorks)}
               >
-                <Image src={AssetsImg.ic_settings} alt="How BTC works" width={16} height={16} />
-                <span>How BTC works</span>
+                <Image src={AssetsImg.ic_settings} alt={tabs.howWorks} width={16} height={16} />
+                <span>{tabs.howWorks}</span>
               </button>
               <button
-                css={styles.getTabStyle(activeTab === "How to buy BTC")}
-                onClick={() => setActiveTab("How to buy BTC")}
+                css={styles.getTabStyle(activeTab === tabs.howToBuy)}
+                onClick={() => setActiveTab(tabs.howToBuy)}
               >
-                <Image src={AssetsImg.ic_wallet} alt="How to buy BTC" width={16} height={16} />
-                <span>How to buy BTC</span>
+                <Image src={AssetsImg.ic_wallet} alt={tabs.howToBuy} width={16} height={16} />
+                <span>{tabs.howToBuy}</span>
               </button>
               <button
-                css={styles.getTabStyle(activeTab === "Why to buy BTC")}
-                onClick={() => setActiveTab("Why to buy BTC")}
+                css={styles.getTabStyle(activeTab === tabs.whyToBuy)}
+                onClick={() => setActiveTab(tabs.whyToBuy)}
               >
-                <Image src={AssetsImg.ic_shield} alt="Why to buy BTC" width={16} height={16} />
-                <span>Why to buy BTC</span>
+                <Image src={AssetsImg.ic_shield} alt={tabs.whyToBuy} width={16} height={16} />
+                <span>{tabs.whyToBuy}</span>
               </button>
             </div>
           </ShimmerWrapper>
@@ -116,12 +87,16 @@ const CoinInfo: React.FC = () => {
             isLoading={loading}
             style={css({ marginLeft: "1rem", marginTop: "1rem" })}
           >
-            <div css={styles.contentHeader}>{activeTab.replace("BTC", "").trim()}</div>
+            <div css={styles.contentHeader}>{activeTab.replace(symbol, "").trim()}</div>
           </ShimmerWrapper>
 
           <div css={styles.contentBody}>
             <ShimmerWrapper height={250} width={700} isLoading={loading}>
-              {activeTab === "About BTC" ? <p>{description}</p> : <p>{tabContent[activeTab]}</p>}
+              {activeTab === tabs.about ? (
+                <p>{description}</p>
+              ) : (
+                <p>{tabContent[getContentKey(activeTab)] || "Content not available"}</p>
+              )}
             </ShimmerWrapper>
           </div>
         </div>

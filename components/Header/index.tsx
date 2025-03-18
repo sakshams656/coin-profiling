@@ -2,19 +2,21 @@ import { useState, useRef, useEffect } from "react";
 import { Button, Tabs, colors, InputDropDown, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 import * as styles from "./styles";
-import * as searchStyles from "./SearchStyle"; 
+import * as searchStyles from "./SearchStyle";
 import NOOB from "@constants/noob";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 import { getCryptoNews } from "@components/News/APIservice/apiService";
 import NofilterNews from "./NoNews/NoFilterNews";
-import Dropdown from "./Dropdown/Dropdown" ;
+import Dropdown from "./Dropdown/Dropdown";
 import { generateToast } from "@components/Shared";
 import { ToastType } from "@components/Shared/GenerateToast";
+import { data as fetchCoinData } from "@actions/OverviewAPIs";
 
 interface HeaderProps {
   selectedTab: string;
   setSelectedTab: (tab: string) => void;
+  coinId: string; 
 }
 
 export type OptionsType = {
@@ -33,7 +35,7 @@ interface NewsArticle {
   };
 }
 
-const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
+const Header = ({ selectedTab, setSelectedTab, coinId }: HeaderProps) => {
   const [, setIsPopperOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -42,10 +44,33 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isStarFilled, setIsStarFilled] = useState(false); 
+  const [isStarFilled, setIsStarFilled] = useState(false);
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+  const [coinSymbol, setCoinSymbol] = useState("BTC"); 
   const shareMenuRef = useRef<HTMLDivElement>(null);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const fetchCoinSymbol = async () => {
+      if (!coinId) return; 
+
+      try {
+        const response = await fetchCoinData({ id: coinId }); 
+        const coinMeta = response.data?.[coinId]; 
+        if (coinMeta && coinMeta.symbol) {
+          setCoinSymbol(coinMeta.symbol);
+        } else {
+          console.error("Invalid API response structure for coinId:", coinId);
+          setCoinSymbol("BTC"); 
+        }
+      } catch (error) {
+        console.error("Error fetching coin symbol for coinId:", coinId, error);
+        setCoinSymbol("BTC"); 
+      }
+    };
+
+    fetchCoinSymbol();
+  }, [coinId]); 
 
   const calculateReadingTime = (content: string) => {
     const wordsPerMinute = 200;
@@ -71,13 +96,13 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
   const handleStarClick = () => {
     setIsStarFilled((prev) => {
       const newState = !prev;
-      console.log(`Star state changing from ${prev} to ${newState}`); 
+      console.log(`Star state changing from ${prev} to ${newState}`);
       const toastType = newState ? ToastType.success : ToastType.success;
       const toastData = {
         title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
         description: newState
-          ? "Bitcoin has been added to your favourites."
-          : "Bitcoin has been removed from your favourites.",
+          ? `${coinSymbol} has been added to your favourites.`
+          : `${coinSymbol} has been removed from your favourites.`,
         type: toastType,
       };
       generateToast(toastData);
@@ -165,7 +190,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
           </div>
           <div css={searchStyles.articleFooter}>
             <span css={searchStyles.articleFooterSpan}>
-              <Image src={AssetsImg.ic_clock_blue} alt="clock" width={14} height={14} css/>
+              <Image src={AssetsImg.ic_clock_blue} alt="clock" width={14} height={14} />
               {calculateReadingTime(article.content)} min read
             </span>
             <Image src={AssetsImg.ic_seperator} alt="Separator" height={16} width={16} />
@@ -219,8 +244,8 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               },
               width: utils.remConverter(280),
               button: {
-                backgroundColor: colors.Zeb_Solid_Dark_Blue
-              }
+                backgroundColor: colors.Zeb_Solid_Dark_Blue,
+              },
             })}
             minimumInputDirection="right"
             contentHeading={
@@ -238,9 +263,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               error
                 ? [
                     {
-                      label: (
-                        <div>{error}</div>
-                      ),
+                      label: <div>{error}</div>,
                       value: "error",
                     },
                   ]
@@ -307,8 +330,8 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
           shareMenuRef={shareMenuRef}
         />
 
-        <Button onClick={NOOB} size="medium" type="primary">
-          TRADE COIN_NAME
+        <Button onClick={NOOB} size="medium" type="primary" width={150}>
+          {`TRADE ${coinSymbol}`}
         </Button>
       </div>
     </div>

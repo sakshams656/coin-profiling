@@ -1,24 +1,28 @@
 import Image from "next/image";
-import * as styles from "./styles";
-import { dummyCoinData } from "../../Data/DummyCoinData";
+import * as styles from "./styles"; 
+import { dummyCoinData } from "../../Data/DummyCoinData"; 
 import { Button, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
-import CoinInfo from "./CoinInformation/CoinInfo";
-import PerformanceGraph from "./Graph/PerformanceGraph";
-import CryptoCategories from "./Categories/CryptoCategories";
+import CoinInfo from "./CoinInformation/CoinInfo"; 
+import PerformanceGraph from "./Graph/PerformanceGraph"; 
+import CryptoCategories from "./Categories/CryptoCategories"; 
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
-import { data as fetchCoinData, info as fetchCoinInfo } from "@actions/coinName";
+import { data as fetchCoinData, info as fetchCoinInfo } from "@actions/OverviewAPIs";
 
 interface InputTargetProps {
   value: string | number;
   name?: string;
 }
 
-const Overview = () => {
+interface OverviewProps {
+  coinId: string; 
+}
+
+const Overview: React.FC<OverviewProps> = ({ coinId }) => {
   const [loading, setLoading] = useState(true);
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
@@ -28,25 +32,41 @@ const Overview = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!coinId) return;
+
       try {
         const [infoResponse, dataResponse] = await Promise.all([
-          fetchCoinInfo(), 
-          fetchCoinData(), 
+          fetchCoinInfo({ id: coinId }),
+          fetchCoinData({ id: coinId }),
         ]);
 
         console.log("CoinMarketCap Quotes Response:", JSON.stringify(infoResponse.data, null, 2));
         console.log("CoinMarketCap Info Response:", JSON.stringify(dataResponse.data, null, 2));
 
-        const coinInfo = infoResponse.data?.["2"]; 
-        const coinMeta = dataResponse.data?.["2"]; 
+        const coinInfo = infoResponse.data?.[coinId];
+        const coinMeta = dataResponse.data?.[coinId];
 
         if (!coinInfo || !coinInfo.quote || !coinInfo.quote.USD || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
         }
 
+        const formatDate = (isoDateString: string) => {
+          if (!isoDateString) return "N/A";
+          const date = new Date(isoDateString);
+          const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+          ];
+          const day = date.getDate().toString().padStart(2, "0");
+          const month = months[date.getMonth()];
+          const year = date.getFullYear();
+          return `${day} ${month} ${year}`;
+        };
+
         setCoinData({
           name: coinMeta.name || "Unknown Coin",
-          logo: coinMeta.logo || AssetsImg.ic_btc_coin, // Use API logo or fallback
+          symbol: coinMeta.symbol || "Unknown",
+          logo: coinMeta.logo || AssetsImg.ic_btc_coin,
           price: coinInfo.quote.USD.price
             ? `₹${coinInfo.quote.USD.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
             : "₹0.00",
@@ -65,17 +85,47 @@ const Overview = () => {
             },
             { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
           ],
+
+          marketStats: {
+            marketCap: coinInfo.quote.USD.market_cap
+              ? `$${coinInfo.quote.USD.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+              : "N/A",
+            fullyDilutedCap: coinInfo.quote.USD.fully_diluted_market_cap
+              ? `$${coinInfo.quote.USD.fully_diluted_market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+              : "N/A",
+            volume24h: coinInfo.quote.USD.volume_24h
+              ? `$${coinInfo.quote.USD.volume_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+              : "N/A",
+            maxSupply: coinInfo.max_supply
+              ? coinInfo.max_supply.toLocaleString("en-US")
+              : "N/A",
+            totalSupply: coinInfo.total_supply
+              ? coinInfo.total_supply.toLocaleString("en-US")
+              : "N/A",
+            circulatingSupply: coinInfo.circulating_supply
+              ? coinInfo.circulating_supply.toLocaleString("en-US")
+              : "N/A",
+          },
+          trading: dummyCoinData.trading,
+          launchDate: formatDate(coinMeta.date_launched),
+          description: coinMeta.description || "No description available",
         });
         setLoading(false);
       } catch (error) {
         console.error("Error fetching coin data:", error);
-        setCoinData(dummyCoinData); // Fallback to dummy data
+        setCoinData({
+          ...dummyCoinData,
+          logo: AssetsImg.ic_btc_coin,
+          launchDate: "N/A",
+          description: "Unable to load description",
+          symbol: "Unknown",
+        });
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [coinId]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,7 +164,6 @@ const Overview = () => {
   };
 
   const coinLogo = coinData?.logo || AssetsImg.ic_btc_coin;
-  console.log("Coin logo being used:", coinLogo); 
 
   return (
     <div css={styles.container} ref={containerRef}>
@@ -151,8 +200,15 @@ const Overview = () => {
       <div css={styles.contentWrapper}>
         <div css={styles.leftContainer}>
           <PerformanceGraph />
-          <Statistics />
-          <CoinInfo />
+          <Statistics
+            coinLogo={coinLogo}
+            marketStats={coinData?.marketStats || dummyCoinData.marketStats}
+          />
+          <CoinInfo
+            launchDate={coinData?.launchDate || "N/A"}
+            description={coinData?.description || "No description available"}
+            symbol={coinData?.symbol || "Unknown"}
+          />
           <CryptoCategories />
         </div>
         <div css={styles.rightContainer}>
