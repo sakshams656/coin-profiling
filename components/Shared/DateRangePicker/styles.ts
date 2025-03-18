@@ -34,7 +34,8 @@ const disabledElement = {
 
 export const dateRangePickerContainer = css({
   gap: utils.remConverter(10),
-  position: "relative"
+  position: "relative",
+  width:"30.3rem",          
 });
 
 export const dateRangePickerNavigation = css({

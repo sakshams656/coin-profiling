@@ -45,11 +45,15 @@ export const activeFormLabel = (isMobile?: boolean) =>
 export const inputGroup = css({
   border: "1px solid transparent",
   borderRadius: "8px",
-  position: "relative"
+  position: "relative",
+  // display:"flex",
+  // flexDirection:"row",
+  // justifyContent:"space-between"
 });
 
 export const focusedInputGroup = (isMobile?: boolean) =>
   css({
+    marginRight: utils.remConverter(26),
     borderColor: colors.Zeb_Solid_Bright_Blue,
     boxShadow: isMobile
       ? colors.Zeb_Effects_Soft_Shadow
@@ -62,7 +66,7 @@ export const formControl = (isMobile?: boolean) => {
     background: `${
       isMobile ? colors.Zeb_Solid_Light_Blue_01 : colors.Zeb_Solid_Dark_Blue
     }!important`,
-    borderRadius: "0.5rem",
+    borderRadius: "0.5rem 0 0 0.5rem ",
     border: "none",
     ...typography.B4_14_semibold,
     color: `${
@@ -106,7 +110,7 @@ export const formControlRounded = css({
 
 export const inputGroupText = (isMobile?: boolean) => {
   return css({
-    padding: `${utils.remConverter(4)} ${utils.remConverter(12)}`,
+    padding: `${utils.remConverter(10)}  ${utils.remConverter(18)}`,
     background: isMobile
       ? colors.Zeb_Solid_Light_Blue_01
       : colors.Zeb_Solid_Dark_Blue,
@@ -145,5 +149,6 @@ export const inputIcon = css({
 export const labelContainer = css({
   display: "flex",
   justifyContent: "space-between",
-  alignItems: "center"
+  alignItems: "center",
+  paddingLeft: utils.remConverter(8)
 });
