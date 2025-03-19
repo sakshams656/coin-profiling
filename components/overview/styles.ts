@@ -57,24 +57,6 @@ export const priceInfo = css({
   gap: utils.remConverter(8),
 });
 
-export const positiveChange = css({
-  backgroundColor: "rgba(46, 204, 113, 0.2)",
-  color: "#2ECC71",
-  padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
-  borderRadius: utils.remConverter(8),
-  border: `${utils.remConverter(1)} solid #2ECC71`,
-  fontSize: utils.remConverter(14),
-});
-
-export const tag = css({
-  border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_White}`,
-  padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
-  borderRadius: utils.remConverter(8),
-  backgroundColor: colors.Zeb_BG_Light_Blue,
-  fontSize: utils.remConverter(14),
-  color: colors.Zeb_Solid_White,
-});
-
 export const statsContainer = css({
   display: "flex",
   gap: utils.remConverter(16),
@@ -259,3 +241,19 @@ export const returnsButton = css({
   marginLeft: utils.remConverter(-1),
   borderRadius: `${0} ${0} ${utils.remConverter(0.5)} ${utils.remConverter(0.5)}`,
 });
+
+export const coinName = css({
+  fontSize: utils.remConverter(16),
+  fontWeight: 600,
+})
+
+export const coinPrice = css({
+  fontSize: utils.remConverter(20),
+  fontWeight: 700
+})
+
+export const coinsInfoBox = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: utils.remConverter(8)
+})

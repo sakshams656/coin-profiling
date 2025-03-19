@@ -1,7 +1,7 @@
 import Image from "next/image";
 import * as styles from "./styles"; 
 import { dummyCoinData } from "../../Data/DummyCoinData"; 
-import { Button, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
+import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
 import CoinInfo from "./CoinInformation/CoinInfo"; 
@@ -171,12 +171,35 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
           <div css={styles.coinInfo}>
             <Image src={coinLogo} alt="coin" width={56} height={56} onError={() => console.error("Image failed to load:", coinLogo)} />
-            <div>
-              <h3>{coinData?.name || "Loading..."}</h3>
+            <div css={styles.coinsInfoBox}>
+              <span css={styles.coinName}>{coinData?.name}</span>
               <div css={styles.priceInfo}>
-                <span>{coinData?.price || "₹0.00"}</span>
-                <span css={styles.positiveChange}>{coinData?.change || "↑ 0.00%"}</span>
-                <span css={styles.tag}>{coinData?.rank || "# 00"}</span>
+                <span css={styles.coinPrice}>{coinData?.price || "₹0.00"}</span>
+                <Tags
+                  isStroke
+                  size="medium"
+                  style={{
+                    name: '1pzk433',
+                    styles: 'width:100px'
+                  }}
+                  type="success"
+                  css={{borderRadius: utils.remConverter(4)}}
+                >
+                  {coinData?.change}
+                </Tags>
+
+                <Tags
+                  isStroke
+                  size="medium"
+                  style={{
+                    name: '1pzk433',
+                    styles: 'width:100px'
+                  }}
+                  type="default"
+                  css={{borderRadius: utils.remConverter(4)}}
+                >
+                  {coinData?.rank || "#00"}
+                </Tags>
               </div>
             </div>
           </div>
