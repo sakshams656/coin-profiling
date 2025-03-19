@@ -1,11 +1,31 @@
 import { css } from "@emotion/react";
-import { utils } from "zebpay-ui";
+import { utils,colors } from "zebpay-ui";
+
+// export const main = css({
+//   display: "flex",
+//   gap: utils.remConverter(20),
+//   width: "100%",
+//   height: "88vh",
+// });
 
 export const main = css({
-  display: "flex",
+  fontFamily: "Lato",
+  display: "inline-flex",
+  alignItems: "flex-start",
   gap: utils.remConverter(20),
   width: "100%",
-  height: "88vh",
+  padding: utils.remConverter(40),
+  paddingTop: utils.remConverter(20),
+  paddingBottom: utils.remConverter(20),
+  height: "calc(100vh - 3.75rem)",
+  overflowY: "hidden",
+  flexShrink: 0,
+  alignSelf: "stretch",
+  background: colors.Zeb_Solid_BG_Blue,
+  boxShadow: `0px ${utils.remConverter(7)} ${utils.remConverter(7)} -${utils.remConverter(2)} rgba(97, 79, 79, 0.14)`,
+  "@media (max-width: 768px)": {
+    flexDirection: "column",
+  },
 });
 
 export const graph = css({
@@ -78,6 +98,7 @@ export const rightSideCards = css({
   display: "flex",
   gap: utils.remConverter(96),
   width: "25%",
+  height:"100%",
 
   "@media (min-width: 768px)": {
     width: "25%",
