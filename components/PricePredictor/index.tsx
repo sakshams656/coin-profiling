@@ -1,10 +1,15 @@
-import React from 'react'
-import { typography } from 'zebpay-ui'
+"use client"
+import React from 'react';
+import LoadingState from './Homepage';
+import "zebpay-ui/dist/icons/icons.css";
 
-const PricePredictor = () => {
+
+const PricePredictor: React.FC = () => {
   return (
-    <div css={[typography.B5_12_regular]}>Price Predictor</div>
-  )
-}
+    <div style={{ fontFamily: 'Lato' }}>
+      <LoadingState />
+    </div>
+  );
+};
 
-export default PricePredictor
+export default PricePredictor;
