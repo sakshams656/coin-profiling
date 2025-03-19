@@ -43,7 +43,6 @@ interface IconsPanelProps {
   selectedDateRange: string;
 }
 
-
 interface State {
   isPanelOpen: boolean;
   tempCategories: string[];
@@ -55,7 +54,6 @@ interface State {
   isCustomDate: boolean;
   customDateRange: DateRange | null;
 }
-
 
 type Action =
   | { type: "TOGGLE_PANEL"; payload: boolean }
@@ -69,8 +67,8 @@ type Action =
   | { type: "HANDLE_DURATION_SELECT"; payload: string }
   | { type: "HANDLE_DATE_RANGE_SELECT"; payload: string }
   | { type: "RESET_FILTERS" }
-  | { type: "SELECT_ALL_CATEGORIES"; payload: boolean };
-
+  | { type: "SELECT_ALL_CATEGORIES"; payload: boolean }
+  | { type: "SELECT_ALL_DURATIONS"; payload: boolean };
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -145,6 +143,13 @@ const reducer = (state: State, action: Action): State => {
               "Market Analysis",
               "Others",
             ]
+          : [], 
+      };
+    case "SELECT_ALL_DURATIONS":
+      return {
+        ...state,
+        tempDurations: action.payload
+          ? ["01 - 05 Mins", "05 - 10 Mins", "10 - 20 Mins", "20+ Mins"]
           : [],
       };
     default:
@@ -175,7 +180,6 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-
 
   useEffect(() => {
     dispatch({ type: "SET_TEMP_CATEGORIES", payload: selectedCategories });
@@ -227,6 +231,13 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
     { label: "Crypto", value: "Crypto" },
     { label: "Market Analysis", value: "Market Analysis" },
     { label: "Others", value: "Others" },
+  ];
+
+  const durationOptions = [
+    "01 - 05 Mins",
+    "05 - 10 Mins",
+    "10 - 20 Mins",
+    "20+ Mins",
   ];
 
   const dateRangeLabels: Record<string, string> = {
@@ -298,10 +309,10 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             <div>
               <div css={accordion_option_inside}>
                 <Checkbox
-                  indeterminate
-                  checked={
-                    state.tempCategories.length === categoryOptions.length
+                  indeterminate={
+                    state.tempCategories.length != categoryOptions.length
                   }
+                  checked={state.tempCategories.length > 0}
                   onChange={(e) =>
                     dispatch({
                       type: "SELECT_ALL_CATEGORIES",
@@ -370,6 +381,28 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             }
             style={accordion_option}
           >
+            <div css={accordion_option_inside}>
+              <Checkbox
+                indeterminate={
+                  state.tempDurations.length !== durationOptions.length
+                }
+                checked={state.tempDurations.length > 0}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SELECT_ALL_DURATIONS",
+                    payload: e.checked,
+                  })
+                }
+                style={box}
+                value={1}
+              />
+              <label htmlFor="selectAll" style={{ fontSize: "14px" }}>
+                Select All
+              </label>
+            </div>
+
+            <Divider spacing={2} />
+
             <div>
               {[
                 { label: "01 - 05 Mins", value: "01 - 05 Mins" },

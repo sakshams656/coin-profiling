@@ -18,8 +18,8 @@ const CoinInfo: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await data();
-        const date_launched = response.data["1"].date_launched;
-        const description = response.data["1"].description;
+        const date_launched = response.data["BTC"][0].date_launched;
+        const description = response.data["BTC"][0].description;
         setLaunchDate(formatDate(date_launched));
         setDescription(description);
         console.log(description);

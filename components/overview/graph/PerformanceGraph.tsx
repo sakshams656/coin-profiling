@@ -3,9 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, ColorType } from "lightweight-charts";
 import { colors, Tabs } from "zebpay-ui";
 import { chartContainer, header, innerChartContainer, performanceGraphContainer, performanceTag, title } from "./styles";
-import { dummyData1M, dummyData1W, dummyData1Y, dummyData24h } from "../../../Data/DummyChartData";
+import { dummyData1M, dummyData1W, dummyData1Y, dummyData24h ,fetchData} from "../../../Data/DummyChartData";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
+import { info } from "@actions/overviewApi";
 
 const PerformanceGraph: React.FC = () => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -13,23 +14,56 @@ const PerformanceGraph: React.FC = () => {
   const [chartInstance, setChartInstance] = useState<any>(null);
   const [seriesInstance, setSeriesInstance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [percentageChange24h, setPercentChange24h] = useState<string | null>(null);
+  const [chartData, setChartData] = useState<Array<{ time: string; value: number }>>([]);
 
-  const dataByPeriod = {
-    "24H": dummyData24h,
-    "1W": dummyData1W,
-    "1M": dummyData1M,
-    "1Y": dummyData1Y,
-  };
-
-  // Initialize chart only when loading is false
   useEffect(() => {
-    if (!chartContainerRef.current || loading) return;
-
-    const handleResize = () => {
-      if (chartInstance) {
-        chartInstance.applyOptions({ width: chartContainerRef.current.clientWidth });
+    const fetchDataAsync = async () => {
+      try {
+        const response = await info();
+        const change = response.data["BTC"][0].quote.USD.percent_change_24h;
+        const formattedChange = `${change > 0 ? "↑" : "↓"} ${Math.abs(change).toFixed(2)}%`;
+        setPercentChange24h(formattedChange);
+      } catch (error) {
+        console.error("Error fetching percentage change:", error);
       }
     };
+    fetchDataAsync();
+  }, []);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      setLoading(true);
+      try {
+        let duration = "1";
+        switch (timePeriod) {
+          case "3D":
+            duration = "3";
+            break;
+          case "1W":
+            duration = "7";
+            break;
+          case "1M":
+            duration = "30";
+            break;
+        }
+        const data = await fetchData(duration);
+        const uniqueData = data.reduce((acc: { time: string; value: number }[], current) => {
+          if (!acc.find((item) => item.time === current.time)) acc.push(current);
+          return acc;
+        }, []);
+        setChartData(uniqueData);
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChartData();
+  }, [timePeriod]);
+
+  useEffect(() => {
+    if (!chartContainerRef.current || loading) return;
 
     const chart = createChart(chartContainerRef.current, {
       layout: {
@@ -46,54 +80,51 @@ const PerformanceGraph: React.FC = () => {
         borderColor: colors.Zeb_Transparent_4,
       },
       priceScale: {
-        borderColor: colors.Zeb_Transparent_4,
+        visible: false,
+        borderVisible: false, 
       },
     });
-    chart.timeScale().fitContent();
 
-    const series = chart.addSeries(AreaSeries, {
+    const series = chart.addSeries(AreaSeries,{
       lineColor: colors.Zeb_Solid_Green,
       topColor: "rgba(46, 204, 113, 0.4)",
       bottomColor: "rgba(46, 204, 113, 0.1)",
     });
-    series.setData(dataByPeriod["24H"]);
 
     setChartInstance(chart);
     setSeriesInstance(series);
 
+    const handleResize = () => {
+      if (chartContainerRef.current) {
+        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+      }
+    };
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (chart) chart.remove();
-    };
-  }, [loading]); 
-
-  useEffect(() => {
-    if (seriesInstance) {
-      seriesInstance.setData(dataByPeriod[timePeriod]);
-      if (chartInstance) {
-        chartInstance.timeScale().fitContent();
+      if (chart) {
+        chart.remove();
+        setChartInstance(null);
+        setSeriesInstance(null);
       }
-    }
-  }, [timePeriod, seriesInstance, chartInstance]);
+    };
+  }, [loading]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!seriesInstance || !chartInstance) return; 
+    seriesInstance.setData(chartData);
+    chartInstance.timeScale().fitContent();
+  }, [chartData, seriesInstance, chartInstance]);
 
   return (
     <div css={performanceGraphContainer}>
-      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({marginBottom: "1rem"})}>
+      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({ marginBottom: "1rem" })}>
         <div css={header}>
           <span css={title}>Performance</span>
-          <span css={performanceTag}>↑ 0.31% | 24H</span>
+          <span css={performanceTag}>{percentageChange24h} | 24H</span>
         </div>
       </ShimmerWrapper>
-
       <ShimmerWrapper height={263} width={1000} isLoading={loading}>
         <div css={innerChartContainer}>
           <div css={chartContainer} ref={chartContainerRef} />
@@ -101,10 +132,10 @@ const PerformanceGraph: React.FC = () => {
             onChange={(tab) => setTimePeriod(tab)}
             selectedTab={timePeriod}
             tabsList={[
-              { tab: "24H", title: <>24H</> },
+              { tab: "24H", title: "24H" },
+              { tab: "3D", title: "3D" },
               { tab: "1W", title: "1W" },
               { tab: "1M", title: "1M" },
-              { tab: "1Y", title: "1Y" },
             ]}
             type="secondary"
           />

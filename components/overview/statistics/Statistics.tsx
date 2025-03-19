@@ -18,7 +18,6 @@ const Statistics: React.FC = () => {
     const fetchData = async () => {
       try {
         const data = await real_data();
-        // console.log(response);
         setData(data);
 
       } catch (error) {
@@ -51,7 +50,7 @@ const Statistics: React.FC = () => {
       <div css={styles.upperSection}>
           <div css={[styles.statsCard, styles.largeCard]}>
             <ShimmerWrapper height={24} width={300} isLoading={loading}>
-              <div css={styles.statsTitle}>Performance (LTP - {coinData.performance.ltp})</div>
+              <div css={styles.statsTitle}>Performance (LTP - {data.performance.ltp})</div>
             </ShimmerWrapper>
             <ShimmerWrapper height={67} width={600} isLoading={loading}>
             <div>
@@ -71,10 +70,10 @@ const Statistics: React.FC = () => {
               </div>
               <div css={styles.statsSubRow}>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Red }}>
-                  {coinData.performance.low24h}
+                  {data.performance.low24h}
                 </div>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Green }}>
-                  {coinData.performance.high24h}
+                  {data.performance.high24h}
                 </div>
               </div>
             </div>

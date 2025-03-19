@@ -60,3 +60,12 @@ export interface CoinData {
       [key: string]: CoinInfo;
     };
   }
+
+  export interface ChartData {
+    t: number; 
+    y: number; 
+  }
+  
+  export interface ChartResponse {
+    data: ChartData[];
+  }

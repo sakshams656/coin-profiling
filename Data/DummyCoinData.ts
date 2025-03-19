@@ -1,11 +1,15 @@
 import AssetsImg from "@public/images";
 
-import {info} from "../actions/overviewApi"
+import {info,chart} from "../actions/overviewApi"
 
 export const real_data=async()=>{
   try{
     const response =await info();
-    const data=response.data[1];
+    const data=response.data["BTC"][0];
+    const performance_data=await chart();
+
+    const prices=performance_data.data.map((item:{y:number})=>item.y);
+
 
     return{
       name:data.name,
@@ -18,9 +22,9 @@ export const real_data=async()=>{
         { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
       ],
       performance: {
-        ltp: "₹51,18,683.57",
-        low24h: "₹48,64,887.52",
-        high24h: "₹51,18,683.57",
+        ltp: `${prices[prices.length-1].toLocaleString()}`,
+        low24h: `₹${Math.min(...prices).toLocaleString()}`,
+        high24h: `₹${Math.max(...prices).toLocaleString()}`,
       },
       trading: {
         activeBuyers: "77%",
