@@ -171,6 +171,10 @@ const AssetsImg = {
   ic_cross_blue,
   ic_clock_white,
   ic_category_white,
+  ic_calculator,
+  i_current_value,
+
+
 
 };
 

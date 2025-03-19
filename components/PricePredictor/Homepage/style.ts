@@ -5,7 +5,7 @@ export const main = css({
   display: "flex",
   gap: utils.remConverter(20),
   width: "100%",
-  height: "100%",
+  height: "88vh",
 });
 
 export const graph = css({

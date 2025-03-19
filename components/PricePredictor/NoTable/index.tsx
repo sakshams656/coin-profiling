@@ -9,7 +9,7 @@ const NoDataDisplay: React.FC = () => {
       css={container}
     >
       <Image
-        src={AssetsImg.ic_no_data}
+        src={AssetsImg.i_illustration_09}
         alt="No Data"
         css={image}
       />
