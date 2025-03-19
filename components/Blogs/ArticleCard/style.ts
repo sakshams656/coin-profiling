@@ -13,6 +13,7 @@ export const CardContainer = css({
   overflow: "hidden",
   flex: "1 1 30%",
   maxWidth: "33%",
+  border: `${utils.remConverter(1)} solid transparent`,
   "&.hover-active:hover": {
     border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_Bright_Blue}`,
     boxShadow: `0px ${utils.remConverter(8)} ${utils.remConverter(8)} ${utils.remConverter(-4)} #0c0c1d`,

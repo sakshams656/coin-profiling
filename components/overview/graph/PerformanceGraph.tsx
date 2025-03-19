@@ -76,12 +76,17 @@ const PerformanceGraph: React.FC = () => {
         vertLines: { color: colors.Zeb_Solid_Dark_Blue },
         horzLines: { color: colors.Zeb_Transparent_4 },
       },
+      crosshair:{
+        vertLine:false,
+        horzLine:false,
+      },
       timeScale: {
         borderColor: colors.Zeb_Transparent_4,
       },
       priceScale: {
         visible: false,
         borderVisible: false, 
+        
       },
     });
 
@@ -89,6 +94,7 @@ const PerformanceGraph: React.FC = () => {
       lineColor: colors.Zeb_Solid_Green,
       topColor: "rgba(46, 204, 113, 0.4)",
       bottomColor: "rgba(46, 204, 113, 0.1)",
+      
     });
 
     setChartInstance(chart);
