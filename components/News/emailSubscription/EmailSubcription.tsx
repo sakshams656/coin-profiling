@@ -77,7 +77,6 @@ const EmailSubscription = ({ onSubscribe }) => {
         type="primary"
         loading={loading}
         disabled={loading || (!email.trim() ? false : !isValidEmail)}
-        style={styles.subButton}
       >
         Subscribe
       </Button>

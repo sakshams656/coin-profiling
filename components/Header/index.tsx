@@ -306,7 +306,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
           shareMenuRef={shareMenuRef}
         />
 
-        <Button onClick={NOOB} size="medium" type="primary" width={150}>
+        <Button onClick={NOOB} size="small" type="primary" width={150}>
           {`TRADE ${coinSymbol}`}
         </Button>
       </div>

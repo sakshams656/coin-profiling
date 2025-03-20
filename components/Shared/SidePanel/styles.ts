@@ -39,10 +39,10 @@ export const accordionWrapper = css({
 
 export const buttonWrapper = css({
   position: "absolute",
-  bottom: "20px",
-  right: "30px",
+  bottom: utils.remConverter(20),
+  right: utils.remConverter(30),
   display: "flex",
-  gap: "10px",
+  gap: utils.remConverter(10),
 });
 
 export const iconAccordian = css({

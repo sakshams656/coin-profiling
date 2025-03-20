@@ -6,7 +6,7 @@ import FilterSidePanel from "../Shared/SidePanel/FilterSidePanel";
 import ShimmerWrapper from "../Shared/ShimmerWrapper/ShimmerWrapper";
 import NoNewsFound from "./NoNewsFound/NoNewsFound";
 import EmailSubscription from "./emailSubscription/EmailSubcription";
-import { Button } from "zebpay-ui";
+import { Button, utils } from "zebpay-ui";
 import Image from "next/image";
 import AssetsImg from "@public/images";
 
@@ -156,12 +156,12 @@ const NewsPage: React.FC = () => {
     const moreTag = document.createElement("div");
     moreTag.style.display = "flex";
     moreTag.style.alignItems = "center";
-    moreTag.style.padding = "6px 10px";
-    moreTag.style.gap = "6px";
+    moreTag.style.padding = `${utils.remConverter(6)} ${utils.remConverter(10)}`;
+    moreTag.style.gap = utils.remConverter(6);
     moreTag.style.whiteSpace = "nowrap";
     moreTag.innerHTML = `
       <span>+X More</span>
-      <button style="margin-left: 6px;">
+      <button style="margin-left: ${utils.remConverter(6)};">
         <img src="${AssetsImg.ic_cross}" width="16" height="16" />
       </button>
     `;
@@ -172,8 +172,8 @@ const NewsPage: React.FC = () => {
       const tag = document.createElement("div");
       tag.style.display = "flex";
       tag.style.alignItems = "center";
-      tag.style.padding = "6px 10px";
-      tag.style.gap = "6px";
+      tag.style.padding = `${utils.remConverter(6)} ${utils.remConverter(10)}`;
+      tag.style.gap = utils.remConverter(6);
       tag.style.whiteSpace = "nowrap";
       tag.innerHTML = `
         <img src="${
@@ -184,7 +184,7 @@ const NewsPage: React.FC = () => {
             : AssetsImg.ic_calendar
         }" width="16" height="16" />
         <span>${filter.value}</span>
-        <button style="margin-left: 6px;">
+        <button style="margin-left: ${utils.remConverter(6)};">
           <img src="${AssetsImg.ic_cross}" width="16" height="16" />
         </button>
       `;

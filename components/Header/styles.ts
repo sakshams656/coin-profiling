@@ -8,6 +8,7 @@ export const header = css({
   width: "100%",
   paddingTop: utils.remConverter(8),
   paddingLeft: utils.remConverter(40),
+  paddingRight: utils.remConverter(40),
   marginBottom: utils.remConverter(-22.4),
   boxSizing: "border-box",
 });
@@ -21,7 +22,6 @@ export const tabs = css({
 export const headerButton = css({
   position: "relative",
   marginBottom: utils.remConverter(32),
-  marginRight: utils.remConverter(40),
   display: "flex",
   alignItems: "center",
   gap: utils.remConverter(16),

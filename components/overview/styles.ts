@@ -4,7 +4,7 @@ import { colors, utils } from "zebpay-ui";
 export const container = css({
   fontFamily: "Lato",
   width: "100%",
-  padding: utils.remConverter(40),
+  padding: utils.remConverter(36),
   paddingTop: utils.remConverter(24),
   paddingBottom: utils.remConverter(0),
   //marginTop: utils.remConverter(60),
@@ -109,7 +109,7 @@ export const rightContainer = css({
   color: colors.Zeb_Solid_White,
   position: "sticky",
   top: 0,
-  minWidth: utils.remConverter(280),
+  minWidth: utils.remConverter(310),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),
   display: "flex",
@@ -151,7 +151,7 @@ export const investmentBox = css({
   flexDirection: "column",
   background: colors.Zeb_Solid_Dark_Blue,
   borderRadius: utils.remConverter(8),
-  padding: utils.remConverter(16),
+  padding: utils.remConverter(12),
   width: "100%",
   maxWidth: utils.remConverter(300),
   border: `${utils.remConverter(1)} solid ${colors.Zeb_BG_Blue}`,
@@ -207,6 +207,7 @@ export const investedAmountText = css({
   color: colors.Zeb_Solid_Light_Blue,
   fontSize: utils.remConverter(12),
   fontWeight: 400,
+  marginTop: utils.remConverter(8)
 });
 
 export const investedAmountValue = css({

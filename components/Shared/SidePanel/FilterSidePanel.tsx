@@ -178,7 +178,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
     const allOptions = data.filter((item) => item.label !== "Select All").map((item) => item.label);
     const isAllSelected = allOptions.every((opt) => selectedValues.includes(opt));
     const isIndeterminate = selectedValues.length > 0 && !isAllSelected;
-    console.log(isIndeterminate)
 
     return data.map((item, index) => {
       const isLast = index === data.length - 1;
