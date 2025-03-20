@@ -16,6 +16,7 @@ export const title = (isDateRangeOpen) =>
     fontSize: utils.remConverter(12),
     lineHeight: utils.remConverter(18),
     letterSpacing: utils.remConverter(0.4),
+    fontWeight:"600",
     color: isDateRangeOpen ? "white" : colors.Zeb_Solid_Light_Blue,
     fontFamily: `"Lato", "Noto-serif"`,
     display: "flex",
@@ -33,9 +34,10 @@ export const buttonGroup = css({
 });
 
 export const added = css({
-  fontSize: utils.remConverter(14),
+  fontSize: utils.remConverter(12),
   color: "white",
   marginLeft: utils.remConverter(8),
+  fontWeight:"600",
 });
 
 export const filterAndUpdownFrame = css({
@@ -65,7 +67,7 @@ export const icon=css({
 })
 
 export const accordionTitle=css({
-  marginRight:utils.remConverter(8)
+  marginRight:utils.remConverter(12)
 })
 
 export const accordion_option=css({
@@ -75,7 +77,7 @@ export const accordion_option=css({
 export const accordion_option_inside=css({
   display:"flex",
   alignItems:"center",
-  margin:`${utils.remConverter(12)} 0`,
+  margin:`${utils.remConverter(12)} 0 ${utils.remConverter(12)} ${utils.remConverter(3)}`,
 })
 
 export const box=css({
@@ -92,4 +94,10 @@ export const calendar_icon=css({
   marginRight:utils.remConverter(8),
   fontSize:utils.remConverter(18)
 
+})
+
+export const custom_span=css({
+  color:"#C2C2DD",
+  marginLeft:utils.remConverter(8),
+  fontWeight:"400"
 })

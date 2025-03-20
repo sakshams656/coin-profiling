@@ -23,6 +23,7 @@ import {
   box,
   customDate,
   calendar_icon,
+  custom_span,
 } from "./style";
 import { css } from "@emotion/react";
 import Dropdown from "../DropDown";
@@ -265,7 +266,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   const selectedDateRangeLabel =
     state.isCustomDate && state.customDateRange
       ? `${formatDate(new Date(state.customDateRange.startDate))} - ${formatDate(new Date(state.customDateRange.endDate))}`
-      : dateRangeLabels[state.tempDateRange] || "Select Date";
+      : dateRangeLabels[state.tempDateRange] || " - ";
 
   return (
     <div css={filterAndUpdownFrame}>
@@ -294,13 +295,15 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             title={
               <div css={title(state.isCategoryOpen)}>
                 <Image
-                  src={AssetsImg.ic_reports}
+                  src={state.isCategoryOpen? AssetsImg.ic_document_white : AssetsImg.ic_document}
+                  alt="doc"
+                  height={20}
+                  width={20}
                   css={accordionTitle}
-                  alt="Reports"
                 />
                 Category
-                {selectedCategories.length > 0 && (
-                  <span css={added}>({selectedCategories.join(", ")})</span>
+                {state.tempCategories.length > 0 && (
+                  <span css={added}>({state.tempCategories.join(", ")})</span>
                 )}
               </div>
             }
@@ -369,13 +372,15 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             title={
               <div css={title(state.isDurationOpen)}>
                 <Image
-                  src={AssetsImg.ic_duration}
+                  src={state.isDurationOpen? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
+                  alt="doc"
+                  height={20}
+                  width={20}
                   css={accordionTitle}
-                  alt="duration"
                 />
                 Duration
-                {selectedDurations.length > 0 && (
-                  <span css={added}>({selectedDurations.join(", ")})</span>
+                {state.tempDurations.length > 0 && (
+                  <span css={added}>({state.tempDurations.join(", ")})</span>
                 )}
               </div>
             }
@@ -447,12 +452,20 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             style={accordion_option}
             title={
               <div css={title(state.isDateRangeOpen)}>
-                <Icon name="icon icon-calendar" style={calendar_icon} />
+                <Image
+                  src={state.isDateRangeOpen? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
+                  alt="doc"
+                  height={20}
+                  width={20}
+                  css={accordionTitle}
+                />
                 <div>
                   Date Range
-                  {(state.tempDateRange || state.isCustomDate) && (
+                  {(state.tempDateRange || state.isCustomDate) ? (
                     <span css={added}>({selectedDateRangeLabel})</span>
-                  )}
+                  ):
+                  <span css={added}>(Last 1 Year)</span>
+                  }
                 </div>
               </div>
             }
@@ -469,7 +482,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                   <div css={accordion_option_inside}>
                     <Radio
                       name="date-range-checkbox"
-                      checked={
+                      selected={
                         state.tempDateRange === option.value ||
                         (state.isCustomDate && option.value === "custom")
                       }
@@ -488,7 +501,11 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                         font-size: 14px;
                       `}
                     >
-                      {option.label}
+                      {
+                      option.label==="Custom"?
+                      <span>{option.label} <span css={custom_span}>Upto 1 Year</span> </span>:
+                      option.label
+                      } 
                     </label>
                   </div>
 
