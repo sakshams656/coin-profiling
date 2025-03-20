@@ -3,7 +3,6 @@ import { Input, Button, Shimmer } from "zebpay-ui";
 import AssetsImg from "@public/images";
 
 import {
-  ErrorText,
   ButtonStyle,
   Subscribed,
   newsletter,
