@@ -17,7 +17,7 @@ const CoinProfiling = () => {
       case "news":
         return <NewsPage/>;
       case "blogs":
-        return <Blogs/>;
+        return <Blogs />;
       default:
         return <div>Invalid Tab</div>;
     }
