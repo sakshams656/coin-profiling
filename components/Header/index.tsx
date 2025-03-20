@@ -11,12 +11,11 @@ import NofilterNews from "./NoNews/NoFilterNews";
 import Dropdown from "./Dropdown/Dropdown";
 import { generateToast } from "@components/Shared";
 import { ToastType } from "@components/Shared/GenerateToast";
-import { data as fetchCoinData } from "@actions/OverviewAPIs";
 
 interface HeaderProps {
   selectedTab: string;
   setSelectedTab: (tab: string) => void;
-  coinId: string; 
+  coinSymbol: string; 
 }
 
 export type OptionsType = {
@@ -35,7 +34,7 @@ interface NewsArticle {
   };
 }
 
-const Header = ({ selectedTab, setSelectedTab, coinId }: HeaderProps) => {
+const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const [, setIsPopperOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -46,31 +45,8 @@ const Header = ({ selectedTab, setSelectedTab, coinId }: HeaderProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isStarFilled, setIsStarFilled] = useState(false);
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
-  const [coinSymbol, setCoinSymbol] = useState("BTC"); 
   const shareMenuRef = useRef<HTMLDivElement>(null);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const fetchCoinSymbol = async () => {
-      if (!coinId) return; 
-
-      try {
-        const response = await fetchCoinData({ id: coinId }); 
-        const coinMeta = response.data?.[coinId]; 
-        if (coinMeta && coinMeta.symbol) {
-          setCoinSymbol(coinMeta.symbol);
-        } else {
-          console.error("Invalid API response structure for coinId:", coinId);
-          setCoinSymbol("BTC"); 
-        }
-      } catch (error) {
-        console.error("Error fetching coin symbol for coinId:", coinId, error);
-        setCoinSymbol("BTC"); 
-      }
-    };
-
-    fetchCoinSymbol();
-  }, [coinId]); 
 
   const calculateReadingTime = (content: string) => {
     const wordsPerMinute = 200;

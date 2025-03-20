@@ -3,9 +3,9 @@ import CoinProfiling from "@components/CoinProfiling";
 
 const CoinProfilingPage = () => {
   const router = useRouter();
-  const { coinId } = router.query;
+  const { coinSymbol } = router.query; 
   
-  return <CoinProfiling coinId={coinId as string} />;
+  return <CoinProfiling coinSymbol={coinSymbol as string} />; 
 };
 
 export default CoinProfilingPage;

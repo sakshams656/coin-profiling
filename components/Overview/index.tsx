@@ -19,10 +19,10 @@ interface InputTargetProps {
 }
 
 interface OverviewProps {
-  coinId: string; 
+  coinSymbol: string; 
 }
 
-const Overview: React.FC<OverviewProps> = ({ coinId }) => {
+const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [loading, setLoading] = useState(true);
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
@@ -32,19 +32,22 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!coinId) return;
+      if (!coinSymbol) return;
 
       try {
         const [infoResponse, dataResponse] = await Promise.all([
-          fetchCoinInfo({ id: coinId }),
-          fetchCoinData({ id: coinId }),
+          fetchCoinInfo({ symbol: coinSymbol }),
+          fetchCoinData({ symbol: coinSymbol }),
         ]);
 
         console.log("CoinMarketCap Quotes Response:", JSON.stringify(infoResponse.data, null, 2));
         console.log("CoinMarketCap Info Response:", JSON.stringify(dataResponse.data, null, 2));
 
-        const coinInfo = infoResponse.data?.[coinId];
-        const coinMeta = dataResponse.data?.[coinId];
+        const coinInfo = infoResponse.data?.[coinSymbol]?.[0];
+        const coinMeta = dataResponse.data?.[coinSymbol]?.[0];
+
+        //console.log("coinInfo:", JSON.stringify(coinInfo, null, 2));
+        //console.log("coinMeta:", JSON.stringify(coinMeta, null, 2));
 
         if (!coinInfo || !coinInfo.quote || !coinInfo.quote.USD || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
@@ -85,7 +88,6 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
             },
             { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
           ],
-
           marketStats: {
             marketCap: coinInfo.quote.USD.market_cap
               ? `$${coinInfo.quote.USD.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
@@ -125,7 +127,7 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
     };
 
     fetchData();
-  }, [coinId]);
+  }, [coinSymbol]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -187,7 +189,6 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
                 >
                   {coinData?.change}
                 </Tags>
-
                 <Tags
                   isStroke
                   size="medium"

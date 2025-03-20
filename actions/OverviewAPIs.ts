@@ -1,10 +1,10 @@
 import axios from "@utils/axios";
-import {COINMARKETCAP_LATEST,COINMARKETCAP_INFO} from "@constants/api"
+import { COINMARKETCAP_LATEST, COINMARKETCAP_INFO } from "@constants/api";
 import { DataApiResponse, InfoApiResponse } from "@typings/api/shared/Overview";
 
-const API_KEY = "298b13cf-edee-40a0-865f-7969c7a95526"
+const API_KEY = "298b13cf-edee-40a0-865f-7969c7a95526";
 
-export const data = async (p0: { id: string }): Promise<DataApiResponse> => {
+export const data = async (p0: { symbol: string }): Promise<DataApiResponse> => {
   try {
     const response = await axios({
       url: COINMARKETCAP_INFO,
@@ -14,7 +14,7 @@ export const data = async (p0: { id: string }): Promise<DataApiResponse> => {
         Accept: "application/json",
       },
       params: {
-        id: p0.id, 
+        symbol: p0.symbol, 
       },
     });
     // console.log("CoinMarketCap Info Response:", JSON.stringify(response.data, null, 2));
@@ -25,7 +25,7 @@ export const data = async (p0: { id: string }): Promise<DataApiResponse> => {
   }
 };
 
-export const info = async (p0: { id: string }): Promise<InfoApiResponse> => {
+export const info = async (p0: { symbol: string }): Promise<InfoApiResponse> => {
   try {
     const response = await axios({
       url: COINMARKETCAP_LATEST,
@@ -35,7 +35,7 @@ export const info = async (p0: { id: string }): Promise<InfoApiResponse> => {
         Accept: "application/json",
       },
       params: {
-        id: p0.id, 
+        symbol: p0.symbol, 
       },
     });
     // console.log("CoinMarketCap Quotes Response:", JSON.stringify(response.data, null, 2));

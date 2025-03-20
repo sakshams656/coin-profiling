@@ -7,16 +7,16 @@ import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
 
 interface CoinProfilingProps {
-  coinId: string;
+  coinSymbol: string;
 }
 
-const CoinProfiling: React.FC<CoinProfilingProps> = ({ coinId }) => {
+const CoinProfiling: React.FC<CoinProfilingProps> = ({ coinSymbol }) => {
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
   const renderTabContent = () => {
     switch (selectedTab) {
       case "overview":
-        return <Overview coinId={coinId} />;
+        return <Overview coinSymbol={coinSymbol} />; 
       case "pricePredictor":
         return <div>This is Tab 2</div>;
       case "news":
@@ -31,7 +31,7 @@ const CoinProfiling: React.FC<CoinProfilingProps> = ({ coinId }) => {
   return (
     <div css={main}>
       <div css={headerWrapper}>
-        <Header selectedTab={selectedTab} setSelectedTab={setSelectedTab} coinId={coinId} />
+        <Header selectedTab={selectedTab} setSelectedTab={setSelectedTab} coinSymbol={coinSymbol} /> 
         <Divider color="#181837" spacing={0} />
       </div>
       {renderTabContent()}
