@@ -88,7 +88,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
               ) : (
                 <Image
                   src={
-                    isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.ic_mail
+                    isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.i_mail
                   }
                   alt={isSubscribed ? "Subscribed" : "Mail"}
                 />

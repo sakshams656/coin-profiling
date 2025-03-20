@@ -53,6 +53,7 @@ import ic_category from "./icons/category.svg";
 import ic_date from "./icons/date.svg";
 import ic_duration from "./icons/duration.svg";
 import ic_google_play from "./icons/google_play.svg";
+import ic_seperator from "./icons/seperator.svg"
 
 import ic_no_blogs_found from "./icons/no_blogs_found.svg";
 
@@ -82,10 +83,11 @@ import ic_cross from "./Icons/cross.svg";
 import ic_investmentIcon from "./illustrations/investmentIcon.png";
 import ic_no_search from "./illustrations/no-search.png";
 import ic_tb_gradient from './illustrations/trading_banner_gradient.png'
-// import ic_no_search from "./illustrations/no-search.png";
+import i_mail from "./illustrations/mail.png"
 
 const AssetsImg = {
   i_zebpay_logo,
+  i_mail,
   i_illustration_01,
   i_illustration_03,
   i_illustration_06,
@@ -120,7 +122,6 @@ const AssetsImg = {
   ic_zebpayCoin,
   ic_zebra,
   ic_NoNews,
-  // ic_mail,
   ic_kyc,
   ic_info,
   ic_settings,
@@ -132,7 +133,7 @@ const AssetsImg = {
   ic_share,
   ic_clock,
   ic_info_white,
-  // ic_seperator,
+  ic_seperator,
   ic_copy_link,
   ic_whatsapp,
   ic_instagram,
@@ -150,8 +151,6 @@ const AssetsImg = {
   ic_calendar_white,
   ic_document_white,
 
-  // ic_document_white,
-
   ic_app_store,
   ic_arrow_down,
   ic_category,
@@ -159,9 +158,7 @@ const AssetsImg = {
   ic_duration,
   ic_google_play,
 
-
   ic_no_blogs_found,
-
 
   ic_subscribed,
   ic_views,
@@ -171,7 +168,6 @@ const AssetsImg = {
   ic_cross_blue,
   ic_clock_white,
   ic_category_white,
-
 
 };
 

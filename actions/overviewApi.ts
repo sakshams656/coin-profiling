@@ -68,7 +68,7 @@ export const info = async (): Promise<InfoApiResponse> => {
         }
       });
   
-      return response.data ;
+      return response.data as ChartResponse;
     } catch (error) {
       console.error("Error fetching graph info:", error);
       throw error;
