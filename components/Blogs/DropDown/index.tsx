@@ -84,7 +84,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
               {selectedOption?.value === option.value && (
                 <Image
                   src={AssetsImg.ic_tick}
-                  alt="tick"
+                  // alt="tick"
                   width={20}
                   height={20}
                 />
