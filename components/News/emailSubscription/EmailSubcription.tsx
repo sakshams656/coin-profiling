@@ -9,7 +9,7 @@ const EmailSubscription = ({ onSubscribe }) => {
   const [loading, setLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const [debouncedEmail] = useDebounce(email, 5000); // 5000ms = 5 seconds
+  const [debouncedEmail] = useDebounce(email, 1000); 
 
   // Email validation regex
   const validateEmail = (email: string) => {
@@ -19,9 +19,9 @@ const EmailSubscription = ({ onSubscribe }) => {
 
   useEffect(() => {
     if (debouncedEmail.trim() === "") {
-      setIsValidEmail(true); // No error if empty
+      setIsValidEmail(true); 
     } else {
-      setIsValidEmail(validateEmail(debouncedEmail)); // Validate after 5 seconds
+      setIsValidEmail(validateEmail(debouncedEmail));
     }
   }, [debouncedEmail]);
 
@@ -45,7 +45,7 @@ const EmailSubscription = ({ onSubscribe }) => {
   const handleInputChange = (target) => {
     const value = target.value;
     setEmail(value);
-    // Reset isValidEmail to true on every change to clear error while typing
+
     setIsValidEmail(true);
   };
 
