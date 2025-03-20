@@ -40,21 +40,15 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           fetchCoinData({ symbol: coinSymbol }),
         ]);
 
-        console.log("CoinMarketCap Quotes Response:", JSON.stringify(infoResponse.data, null, 2));
-        console.log("CoinMarketCap Info Response:", JSON.stringify(dataResponse.data, null, 2));
-
         const coinInfo = infoResponse.data?.[coinSymbol]?.[0];
         const coinMeta = dataResponse.data?.[coinSymbol]?.[0];
-
-        //console.log("coinInfo:", JSON.stringify(coinInfo, null, 2));
-        //console.log("coinMeta:", JSON.stringify(coinMeta, null, 2));
 
         if (!coinInfo || !coinInfo.quote || !coinInfo.quote.USD || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
         }
 
-        const formatDate = (isoDateString: string) => {
-          if (!isoDateString) return "N/A";
+        const formatDate = (isoDateString: string | null) => {
+          if (!isoDateString) return null; 
           const date = new Date(isoDateString);
           const months = [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -118,7 +112,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         setCoinData({
           ...dummyCoinData,
           logo: AssetsImg.ic_btc_coin,
-          launchDate: "N/A",
+          launchDate: null, 
           description: "Unable to load description",
           symbol: "Unknown",
         });
@@ -229,7 +223,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             marketStats={coinData?.marketStats || dummyCoinData.marketStats}
           />
           <CoinInfo
-            launchDate={coinData?.launchDate || "N/A"}
+            launchDate={coinData?.launchDate} 
             description={coinData?.description || "No description available"}
             symbol={coinData?.symbol || "Unknown"}
           />
