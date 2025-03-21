@@ -9,6 +9,7 @@ import {
   tooltipDateTimeStyle,
 } from "./style";
 
+
 const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);

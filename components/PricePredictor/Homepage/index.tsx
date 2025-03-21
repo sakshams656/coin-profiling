@@ -9,6 +9,7 @@ import InvestmentAmount from "../InvestAmount";
 import TimeFrame from "../Timeframe";
 import Table from "../Table";
 import NoTable from "../NoTable";
+import { generateToast } from "@components/Shared";
 import {
   main,
   graph,
@@ -50,17 +51,27 @@ const BTCPricePredictor: React.FC = () => {
     setHistoricalData(reduceDataPoints(data));
     setTimeout(()=>{
     setLoading(false);
-    setLoader(false);},3000)
+    setLoader(false)},2000)
   };
 
   const handlePredictClick = () => {
-    if (!isPredictButtonEnabled) return;
+
+    if (!isPredictButtonEnabled) {
+      generateToast({
+        title: "Kindly fill all the details to proceed ahead",
+        description: `Ensure all the fields have been filled to predict ${crypto.charAt(0).toUpperCase()+crypto.slice(1)} future price.`,
+        type: "info",
+        duration: 3000,
+      });
+      return;
+    }
+
     setLoader(true);
     setTimeout(() => {
       fetchData();
       setShowTable(true);
       setLoader(false);
-    }, 3000);
+    }, 2000);
   };
 
   const reduceDataPoints = (data: Array<number[]>) => {
@@ -111,17 +122,21 @@ const BTCPricePredictor: React.FC = () => {
             {loading ? (
               <Shimmer  height={40} width={960} />
             ) : (
+              <>
               <Button
                 onClick={handlePredictClick}
                 size="full-width"
                 type="primary"
-                disabled={!isPredictButtonEnabled}
                 loading={loader}
                 style={{ height: "42px", width: "100%" }}
               >
                 Predict {crypto} Future Price
               </Button>
+              
+              </>
+              
             )}
+            
           </div>
         </div>
         <div css={component15}>
