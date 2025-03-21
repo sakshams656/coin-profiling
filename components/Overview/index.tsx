@@ -295,12 +295,14 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             <ShimmerWrapper height={106} width={280} isLoading={loading} style={styles.labelMarginBottom}>
               <div css={styles.investmentBox}>
                 <div css={styles.investmentBoxContent}>
-                  <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
-                  <div>
-                    <p css={styles.IBlabel}>Current Value</p>
-                    <p css={styles.IBvalue}>₹0.00</p>
+                  <div css={styles.percentageBox}>
+                    <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
+                    <div>
+                      <p css={styles.IBlabel}>Current Value</p>
+                      <p css={styles.IBvalue}>₹0.00</p>
                   </div>
-                  <div css={styles.percentageBox}>- 0.00%</div>
+                  </div>
+                  <Tags type={"default"}>- 0.00%</Tags>
                 </div>
                 <Divider spacing={2} />
                 <p css={styles.investedAmountText}>

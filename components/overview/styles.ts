@@ -172,12 +172,10 @@ export const IBvalue = css({
 });
 
 export const percentageBox = css({
-  background: "#C0C0EE33",
-  padding: `${utils.remConverter(4)} ${utils.remConverter(4)}`,
-  borderRadius: utils.remConverter(4),
-  fontSize: utils.remConverter(14),
-  color: colors.Zeb_Solid_White,
-  alignSelf: "flex-end",
+  display: "flex", 
+  alignItems: "center", 
+  justifyContent: "space-between", 
+  gap: `${utils.remConverter(8)}`
 });
 
 export const statisticsContainer = css({

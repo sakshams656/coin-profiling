@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as styles from "./styles";
 import { getCryptoNews } from "./APIservice/apiService";
 import ArticleCard from "./ArticleCard/ArticleCard";
-import FilterSidePanel from "../Shared/SidePanel/FilterSidePanel";
+import FilterSidePanel from "../Shared/SidePanel";
 import ShimmerWrapper from "../Shared/ShimmerWrapper/ShimmerWrapper";
 import NoNewsFound from "./NoNewsFound/NoNewsFound";
 import EmailSubscription from "./emailSubscription/EmailSubcription";

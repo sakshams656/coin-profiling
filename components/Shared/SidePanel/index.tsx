@@ -170,20 +170,30 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
   };
 
   const renderCheckboxes = (
-    data: { label: string; indeterminate?: boolean }[],
+    data: { label: string }[],
     isCheckbox: boolean,
     selectedValues: string[],
     onChange: (label: string) => void
   ) => {
-    const allOptions = data.filter((item) => item.label !== "Select All").map((item) => item.label);
+    const allOptions = data
+      .filter((item) => item.label !== "Select All")
+      .map((item) => item.label);
+    
     const isAllSelected = allOptions.every((opt) => selectedValues.includes(opt));
     const isIndeterminate = selectedValues.length > 0 && !isAllSelected;
-
+  
     return data.map((item, index) => {
       const isLast = index === data.length - 1;
-      const checked = item.label === "Select All" ? isAllSelected : selectedValues.includes(item.label);
-      const indeterminate = item.label === "Select All" && isIndeterminate;
-
+      const isSelectAll = item.label === "Select All";
+      
+      let checked = selectedValues.includes(item.label);
+      let indeterminate = false;
+  
+      if (isSelectAll) {
+        checked = isAllSelected || isIndeterminate;
+        indeterminate = isIndeterminate;
+      }
+  
       return (
         <div key={index}>
           {isCheckbox ? (
@@ -191,7 +201,7 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
               <Checkbox
                 value={item.label}
                 checked={checked}
-                indeterminate={indeterminate}
+                indeterminate={isSelectAll ? indeterminate : false}
                 label={item.label}
                 onChange={(args) => onChange(args.value as string)}
               />

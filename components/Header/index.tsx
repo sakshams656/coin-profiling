@@ -39,7 +39,8 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([]);
-  const [clickedArticles, setClickedArticles] = useState<NewsArticle[]>([]);
+  const [recentArticles, setRecentArticles] = useState<NewsArticle[]>([]);
+  const [trendingArticles, setTrendingArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -63,16 +64,12 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   };
 
   const toggleShareMenu = () => {
-    setIsShareMenuOpen((prev) => {
-      console.log("Toggling share menu to:", !prev);
-      return !prev;
-    });
+    setIsShareMenuOpen((prev) => !prev);
   };
 
   const handleStarClick = () => {
     setIsStarFilled((prev) => {
       const newState = !prev;
-      console.log(`Star state changing from ${prev} to ${newState}`);
       const toastType = newState ? ToastType.success : ToastType.success;
       const toastData = {
         title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
@@ -87,6 +84,30 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   };
 
   useEffect(() => {
+    const fetchTrendingNews = async () => {
+      try {
+        setLoading(true);
+        const data = await getCryptoNews(""); 
+        setTrendingArticles(data);
+        setFilteredArticles(data);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch trending news");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchTrendingNews();
+
+    const storedRecentArticles = JSON.parse(
+      localStorage.getItem("recentNews") || "[]"
+    );
+    setRecentArticles(storedRecentArticles);
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         shareMenuRef.current &&
@@ -94,7 +115,6 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
         shareButtonRef.current &&
         !shareButtonRef.current.contains(event.target as Node)
       ) {
-        console.log("Clicked outside, closing menu");
         setIsShareMenuOpen(false);
       }
     };
@@ -126,18 +146,13 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     const debounceTimer = setTimeout(() => {
       if (search.trim()) {
         fetchNews();
+      } else {
+        setFilteredArticles(trendingArticles);
       }
     }, 500);
 
     return () => clearTimeout(debounceTimer);
-  }, [search]);
-
-  useEffect(() => {
-    const storedClickedArticles = JSON.parse(
-      localStorage.getItem("clickedNews") || "[]"
-    );
-    setClickedArticles(storedClickedArticles);
-  }, []);
+  }, [search, trendingArticles]);
 
   const articleOptions: OptionsType[] = filteredArticles.map((article, index) => ({
     value: index,
@@ -181,13 +196,38 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   }));
 
   const handleArticleClick = (article: NewsArticle) => {
-    const updatedClickedArticles = [
-      ...clickedArticles.filter((a) => a.url !== article.url),
+    const updatedRecentArticles = [
       article,
-    ];
-    setClickedArticles(updatedClickedArticles);
-    localStorage.setItem("clickedNews", JSON.stringify(updatedClickedArticles));
+      ...recentArticles.filter((a) => a.url !== article.url),
+    ].slice(0, 10); // only last 10 recent articles
+    
+    setRecentArticles(updatedRecentArticles);
+    localStorage.setItem("recentNews", JSON.stringify(updatedRecentArticles));
     window.open(article.url, "_blank");
+  };
+
+  const getContentHeading = () => {
+    if (error) return "Error";
+    if (search.trim()) return "Search Results:";
+    if (recentArticles.length > 0 && filteredArticles === trendingArticles) 
+      return "Recent Search:";
+    return "Trending News:";
+  };
+
+  const getDisplayArticles = () => {
+    if (error) return [{ label: <div>{error}</div>, value: "error" }];
+    if (search.trim()) return articleOptions;
+    if (recentArticles.length > 0 && !search.trim()) {
+      return recentArticles.map((article, index) => ({
+        ...articleOptions.find(opt => 
+          filteredArticles[Number(opt.value)]?.url === article.url
+        ) || {
+          value: index,
+          label: <div>{article.title}</div>
+        }
+      }));
+    }
+    return articleOptions;
   };
 
   return (
@@ -208,7 +248,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
           type="primary"
         />
       </div>
-      <div css={css(styles.headerButton)}>
+      <div css={styles.headerButton}>
         {["news", "blogs"].includes(selectedTab) && (
           <InputDropDown
             customStyles={css({
@@ -224,42 +264,13 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
               },
             })}
             minimumInputDirection="right"
-            contentHeading={
-              filteredArticles.length > 0
-                ? search.trim()
-                  ? "Search Results:"
-                  : clickedArticles.length > 0
-                  ? "Recent News:"
-                  : "Trending News:"
-                : ""
-            }
+            contentHeading={getContentHeading()}
             toggleInputSearch
             placeholder="Search News"
-            options={
-              error
-                ? [
-                    {
-                      label: <div>{error}</div>,
-                      value: "error",
-                    },
-                  ]
-                : filteredArticles.length > 0
-                ? articleOptions
-                : [
-                    {
-                      label: (
-                        <NofilterNews
-                          setSearch={setSearch}
-                          css={{ height: utils.remConverter(400) }}
-                        />
-                      ),
-                      value: "NoFilterNews",
-                    },
-                  ]
-            }
+            options={getDisplayArticles()}
             onChange={(value) => {
               if (typeof value === "number") {
-                const selectedArticle = filteredArticles[value];
+                const selectedArticle = filteredArticles[value] || recentArticles[value];
                 handleArticleClick(selectedArticle);
               }
             }}
