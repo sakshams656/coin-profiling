@@ -1,4 +1,4 @@
-/** @jsxImportSource @emotion/react */
+
 import React from "react";
 import {  Button } from "zebpay-ui";
 import { Heading, Main, subHeading } from "./style";
@@ -23,10 +23,7 @@ const NoBlogsFound: React.FC<NoBlogsFoundProps> = ({ onReset }) => {
       <Image
         src={AssetsImg.ic_no_blogs_found}
         alt="No Blogs Found"
-        css={{
-          maxWidth: "200px",
-          marginBottom: "1rem",
-        }}
+        
       />
       <div
         css={Heading}

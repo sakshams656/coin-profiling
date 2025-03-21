@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { utils, colors, Divider, Tooltip } from "zebpay-ui";
 import AssetsImg from "@public/images";
 import Image from "next/image";
-import { dummyCoinData } from "../../../Data/DummyCoinData";
+import { dummyCoinData ,real_data} from "../../../Data/DummyCoinData";
 import styles from "./styles"
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
@@ -12,6 +12,20 @@ const Statistics: React.FC = () => {
   const [animationDone, setAnimationDone] = useState(false);
   const coinData = dummyCoinData;
   const [loading, setLoading] = useState(true);
+  const [data,setData]=useState(dummyCoinData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await real_data();
+        setData(data);
+
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,7 +50,7 @@ const Statistics: React.FC = () => {
       <div css={styles.upperSection}>
           <div css={[styles.statsCard, styles.largeCard]}>
             <ShimmerWrapper height={24} width={300} isLoading={loading}>
-              <div css={styles.statsTitle}>Performance (LTP - {coinData.performance.ltp})</div>
+              <div css={styles.statsTitle}>Performance (LTP - {data.performance.ltp})</div>
             </ShimmerWrapper>
             <ShimmerWrapper height={67} width={600} isLoading={loading}>
             <div>
@@ -56,10 +70,10 @@ const Statistics: React.FC = () => {
               </div>
               <div css={styles.statsSubRow}>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Red }}>
-                  {coinData.performance.low24h}
+                  {data.performance.low24h}
                 </div>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Green }}>
-                  {coinData.performance.high24h}
+                  {data.performance.high24h}
                 </div>
               </div>
             </div>
@@ -120,7 +134,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
               </div>
-              <div css={styles.statsValue}>{coinData.marketStats.marketCap}</div>
+              <div css={styles.statsValue}>{data.marketStats.marketCap}</div>
             </div>
           </ShimmerWrapper>
 
@@ -146,7 +160,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{coinData.marketStats.fullyDilutedCap}</div>
+            <div css={styles.statsValue}>{data.marketStats.fullyDilutedCap}</div>
           </div>
           </ShimmerWrapper>
 
@@ -172,7 +186,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{coinData.marketStats.volume24h}</div>
+            <div css={styles.statsValue}>{data.marketStats.volume24h}</div>
           </div>
           </ShimmerWrapper>
         </div>
@@ -205,7 +219,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{coinData.marketStats.maxSupply}</div>
+            <div css={styles.statsValue}>{data.marketStats.maxSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -231,7 +245,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{coinData.marketStats.totalSupply}</div>
+            <div css={styles.statsValue}>{data.marketStats.totalSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -257,7 +271,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{coinData.marketStats.circulatingSupply}</div>
+            <div css={styles.statsValue}>{data.marketStats.circulatingSupply}</div>
           </div>
         </ShimmerWrapper>
         </div>

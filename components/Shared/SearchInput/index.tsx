@@ -141,7 +141,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           disabled={!isOpened}
         />
       </div>
-      <button
+      {/* <button
         css={[
           styles.searchInputCloseIcon,
           noAnimation && styles.searchInputCloseLowerIcon,
@@ -156,7 +156,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           src={AssetsImg.ic_cross.src}
           alt="Close icon"
         />
-      </button>
+      </button> */}
     </div>
   );
 };

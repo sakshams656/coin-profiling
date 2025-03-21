@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import Image from "next/image";
 import * as styles from "./styles"; 
-import { dummyCoinData } from "../../Data/DummyCoinData";
+import { dummyCoinData ,real_data} from "../../Data/DummyCoinData";
 import { Button, colors, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
@@ -22,6 +22,24 @@ const Overview = () => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
+  const [data,setData]=useState(dummyCoinData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await real_data();
+        // console.log(response);
+        setData(data);
+
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
+
+  
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,6 +47,8 @@ const Overview = () => {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  
 
   const handleAmountChange = (target: InputTargetProps) => {
     setAmountInvested(target.value);
@@ -49,18 +69,18 @@ const Overview = () => {
           <div css={styles.coinInfo}>
             <Image src={AssetsImg.ic_btc_coin} alt="coin" width={56} height={56} />
             <div>
-              <h3>{dummyCoinData.name}</h3>
+              <h3>{data.name}</h3>
               <div css={styles.priceInfo}>
-                <span>{dummyCoinData.price}</span>
-                <span css={styles.positiveChange}>{dummyCoinData.change}</span>
-                <span css={styles.tag}>{dummyCoinData.rank}</span>
+                <span>{data.price}</span>
+                <span css={styles.positiveChange}>{data.change}</span>
+                <span css={styles.tag}>{data.rank}</span>
               </div>
             </div>
           </div>
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-          {dummyCoinData.stats.map((stat, index) => (
+          {data.stats.map((stat, index) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />

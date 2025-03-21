@@ -107,7 +107,7 @@ export const searchInputNoAnimation = (theme?: "light" | "dark") =>
   });
 
 export const searchInputNoAnimationSmallPadding = css({
-  padding: `${toRem8} ${toRem29} ${toRem8} ${toRem29}`
+  padding: `${toRem8} ${toRem18} ${toRem8} ${toRem29}`
 });
 
 export const searchInputUnfolded = css({

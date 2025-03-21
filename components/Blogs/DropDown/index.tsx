@@ -1,11 +1,10 @@
-/** @jsxImportSource @emotion/react */
-"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { css } from "@emotion/react";
 import Image from "next/image";
 import AssetsImg from "@public/images";
-import { dropdownContainer, optionStyle } from "./style";
+import { dropdownContainer, icon, optionStyle } from "./style";
+import { Icon } from "zebpay-ui";
 
 interface DropdownOption {
   label: React.ReactNode;
@@ -63,16 +62,14 @@ const Dropdown: React.FC<DropdownProps> = ({ onSortChange }) => {
   return (
     <div
       ref={buttonRef}
-      style={{ position: "relative", display: "inline-block" }}
+      style={{ position: "relative" }}
     >
       <div onClick={handleDropdownToggle}>
-        <i
-          className={
+        <Icon
+          name={
             selectedOption ? "icon icon-sorter-filled" : "icon icon-sorter"
           }
-          css={css`
-            color: #c0c0ee;
-          `}
+          style={icon}
         />
       </div>
       {isDropdownOpen && (

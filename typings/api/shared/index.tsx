@@ -12,3 +12,6 @@ export interface IZCustomSelectOption {
     ONE_YEAR = "Last 1 Year",
     CUSTOM_RANGE = "Custom"
   }
+
+
+  
