@@ -9,7 +9,7 @@ export const coinInfoContainer = css({
   backgroundColor: colors.Zeb_Solid_Dark_Blue,
   borderRadius: utils.remConverter(8),
   marginTop: utils.remConverter(16),
-  padding: utils.remConverter(24),
+  padding: utils.remConverter(16),
   boxShadow: `0 ${utils.remConverter(4)} ${utils.remConverter(8)} 0 rgba(0, 0, 0, 0.1)`,
   position: "relative",
   maxHeight: utils.remConverter(436),
@@ -22,7 +22,6 @@ export const title = css({
   padding: `${utils.remConverter(8)} ${utils.remConverter(16)}`,
   paddingLeft: utils.remConverter(0),
   borderRadius: utils.remConverter(4),
-  marginBottom: utils.remConverter(8),
   display: "inline-block",
 });
 

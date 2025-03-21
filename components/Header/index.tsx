@@ -214,11 +214,25 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     return "Trending News:";
   };
 
+  const noFilterOption: OptionsType[] = [{
+    label: (
+      <NofilterNews
+        setSearch={setSearch}
+        css={{ height: utils.remConverter(400) }}
+      />
+    ),
+    value: "NoFilterNews",
+  }];
+
   const getDisplayArticles = () => {
     if (error) return [{ label: <div>{error}</div>, value: "error" }];
-    if (search.trim()) return articleOptions;
-    if (recentArticles.length > 0 && !search.trim()) {
-      return recentArticles.map((article, index) => ({
+    
+    if (search.trim()) {
+      return filteredArticles.length > 0 ? articleOptions : noFilterOption;
+    }
+    
+    if (!search.trim() && recentArticles.length > 0) {
+      const recentOptions = recentArticles.map((article, index) => ({
         ...articleOptions.find(opt => 
           filteredArticles[Number(opt.value)]?.url === article.url
         ) || {
@@ -226,8 +240,10 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
           label: <div>{article.title}</div>
         }
       }));
+      return recentOptions.length > 0 ? recentOptions : noFilterOption;
     }
-    return articleOptions;
+    
+    return trendingArticles.length > 0 ? articleOptions : noFilterOption;
   };
 
   return (
@@ -249,7 +265,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
         />
       </div>
       <div css={styles.headerButton}>
-        {["news", "blogs"].includes(selectedTab) && (
+        {["news"].includes(selectedTab) && (
           <InputDropDown
             customStyles={css({
               input: { backgroundColor: colors.Zeb_Solid_Dark_Blue },
@@ -271,7 +287,9 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
             onChange={(value) => {
               if (typeof value === "number") {
                 const selectedArticle = filteredArticles[value] || recentArticles[value];
-                handleArticleClick(selectedArticle);
+                if (selectedArticle) {
+                  handleArticleClick(selectedArticle);
+                }
               }
             }}
             maxRows={4}

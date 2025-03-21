@@ -15,7 +15,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: utils.remConverter(16),
-    padding: utils.remConverter(24),
+    padding: utils.remConverter(16),
     background: colors.Zeb_Solid_Dark_Blue,
     borderRadius: utils.remConverter(8),
     width: "100%",
@@ -30,7 +30,8 @@ const styles = {
     fontSize: utils.remConverter(18),
     fontWeight: 700,
     color: colors.Zeb_Solid_White,
-    marginBottom: utils.remConverter(16),
+    padding: `${utils.remConverter(8)} ${utils.remConverter(16)}`,
+    paddingLeft: utils.remConverter(0)
   }),
 
   /*  Upper Section */

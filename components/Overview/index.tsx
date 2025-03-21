@@ -166,7 +166,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
           <div css={styles.coinInfo}>
-            <Image src={coinLogo} alt="coin" width={56} height={56} onError={() => console.error("Image failed to load:", coinLogo)} />
+            <Image src={coinLogo} alt="coin" width={56} height={56} priority onError={() => console.error("Image failed to load:", coinLogo)} />
             <div css={styles.coinsInfoBox}>
               <span css={styles.coinName}>{coinData?.name}</span>
               <div css={styles.priceInfo}>
