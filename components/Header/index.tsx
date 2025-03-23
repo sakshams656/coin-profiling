@@ -68,19 +68,20 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   };
 
   const handleStarClick = () => {
-    setIsStarFilled((prev) => {
-      const newState = !prev;
-      const toastType = newState ? ToastType.success : ToastType.success;
-      const toastData = {
-        title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
-        description: newState
-          ? `${coinSymbol} has been added to your favourites.`
-          : `${coinSymbol} has been removed from your favourites.`,
-        type: toastType,
-      };
-      generateToast(toastData);
-      return newState;
-    });
+    const newState = !isStarFilled;
+    
+    setIsStarFilled(newState);
+
+    const toastType = ToastType.success;
+    const toastData = {
+      title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
+      description: newState
+        ? `${coinSymbol} has been added to your favourites.`
+        : `${coinSymbol} has been removed from your favourites.`,
+      type: toastType,
+      duration: 3000,
+    };
+    generateToast(toastData); 
   };
 
   useEffect(() => {
@@ -154,7 +155,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     return () => clearTimeout(debounceTimer);
   }, [search, trendingArticles]);
 
-  const articleOptions: OptionsType[] = filteredArticles.map((article, index) => ({
+  const createArticleLabel = (article: NewsArticle, index: number) => ({
     value: index,
     label: (
       <div
@@ -193,7 +194,11 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
         </div>
       </div>
     ),
-  }));
+  });
+
+  const articleOptions: OptionsType[] = filteredArticles.map((article, index) =>
+    createArticleLabel(article, index)
+  );
 
   const handleArticleClick = (article: NewsArticle) => {
     const updatedRecentArticles = [
@@ -232,14 +237,9 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     }
     
     if (!search.trim() && recentArticles.length > 0) {
-      const recentOptions = recentArticles.map((article, index) => ({
-        ...articleOptions.find(opt => 
-          filteredArticles[Number(opt.value)]?.url === article.url
-        ) || {
-          value: index,
-          label: <div>{article.title}</div>
-        }
-      }));
+      const recentOptions = recentArticles.map((article, index) =>
+        createArticleLabel(article, index)
+      );
       return recentOptions.length > 0 ? recentOptions : noFilterOption;
     }
     
@@ -264,6 +264,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
           type="primary"
         />
       </div>
+
       <div css={styles.headerButton}>
         {["news"].includes(selectedTab) && (
           <InputDropDown
