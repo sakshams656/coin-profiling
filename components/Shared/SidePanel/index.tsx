@@ -243,6 +243,11 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
     setIsPanelOpen(false);
   };
 
+  const handleClose = () => {
+    dispatch({ type: "RESET" }); 
+    setIsPanelOpen(false);
+  };
+
   const getSelectedNames = (data: { label: string }[], selected: string[]) => {
     const allNames = data
       .filter((item) => item.label !== "Select All")
@@ -259,8 +264,8 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
 
       <SidePanel
         title="Filter News"
-        onClose={() => setIsPanelOpen(false)}
-        onBack={() => setIsPanelOpen(false)}
+        onClose={handleClose} 
+        onBack={handleClose} 
         open={isPanelOpen}
         style={styles.sidePanelStyle}
       >
