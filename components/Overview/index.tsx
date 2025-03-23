@@ -1,12 +1,12 @@
 import Image from "next/image";
-import * as styles from "./styles"; 
-import { dummyCoinData } from "../../Data/DummyCoinData"; 
+import * as styles from "./styles";
+import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
-import CoinInfo from "./CoinInformation/CoinInfo"; 
-import PerformanceGraph from "./Graph/PerformanceGraph"; 
-import CryptoCategories from "./Categories/CryptoCategories"; 
+import CoinInfo from "./CoinInformation/CoinInfo";
+import PerformanceGraph from "./Graph/PerformanceGraph";
+import CryptoCategories from "./Categories/CryptoCategories";
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
@@ -19,7 +19,7 @@ interface InputTargetProps {
 }
 
 interface OverviewProps {
-  coinSymbol: string; 
+  coinSymbol: string;
 }
 
 const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
@@ -48,7 +48,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         }
 
         const formatDate = (isoDateString: string | null) => {
-          if (!isoDateString) return null; 
+          if (!isoDateString) return null;
           const date = new Date(isoDateString);
           const months = [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -70,6 +70,9 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           change: coinInfo.quote.USD.percent_change_24h !== undefined
             ? `${coinInfo.quote.USD.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.USD.percent_change_24h).toFixed(2)}%`
             : "↑ 0.00%",
+          isPositive: coinInfo.quote.USD.percent_change_24h !== undefined
+            ? coinInfo.quote.USD.percent_change_24h > 0
+            : true, 
           rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
@@ -112,7 +115,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         setCoinData({
           ...dummyCoinData,
           logo: AssetsImg.ic_btc_coin,
-          launchDate: null, 
+          launchDate: null,
           description: "Unable to load description",
           symbol: "Unknown",
         });
@@ -178,8 +181,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                     name: '1pzk433',
                     styles: 'width:100px'
                   }}
-                  type="success"
-                  css={{borderRadius: utils.remConverter(4)}}
+                  type={coinData?.isPositive ? "success" : "error"} // Dynamic type based on change
+                  css={{ borderRadius: utils.remConverter(4) }}
                 >
                   {coinData?.change}
                 </Tags>
@@ -223,7 +226,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             marketStats={coinData?.marketStats || dummyCoinData.marketStats}
           />
           <CoinInfo
-            launchDate={coinData?.launchDate} 
+            launchDate={coinData?.launchDate}
             description={coinData?.description || "No description available"}
             symbol={coinData?.symbol || "Unknown"}
           />
@@ -300,7 +303,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                     <div>
                       <p css={styles.IBlabel}>Current Value</p>
                       <p css={styles.IBvalue}>₹0.00</p>
-                  </div>
+                    </div>
                   </div>
                   <Tags type={"default"}>- 0.00%</Tags>
                 </div>

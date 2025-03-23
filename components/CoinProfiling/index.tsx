@@ -32,7 +32,7 @@ const CoinProfiling: React.FC<CoinProfilingProps> = ({ coinSymbol }) => {
     <div css={main}>
       <div css={headerWrapper}>
         <Header selectedTab={selectedTab} setSelectedTab={setSelectedTab} coinSymbol={coinSymbol} /> 
-        <Divider color="#181837" spacing={0} />
+        <Divider color="#181837" spacing={2} />
       </div>
       {renderTabContent()}
     </div>
