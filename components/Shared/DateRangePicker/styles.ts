@@ -110,8 +110,13 @@ export const monthArrowRight = css({
 });
 
 export const dateInput = css({
-  cursor: "default",
-  width: "100%"
+  // cursor: "default",
+  width: "100%",
+  display:"flex",
+  flexDirection:"row",
+  justifyContent:"center",
+  alignItems:"center",
+  // justifyContent:"space-between"
 });
 
 export const errorMessage = css({

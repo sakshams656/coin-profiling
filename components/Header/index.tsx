@@ -53,7 +53,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     (article, index) => ({
       value: index,
       label: (
-        <div 
+        <div
           // style={{paddingRight:"10px"}}
           css={Card}
           key={index}
@@ -77,7 +77,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               )}
             </div>
             <div css={articleFooter}>
-              <span style={{ display:"flex" }}>
+              <span style={{ display: "flex" }}>
                 <Icon
                   name="icon icon-calendar"
                   style={{ marginRight: "0.5rem" }}
@@ -92,7 +92,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               </span>
               <Image src={AssetsImg.ic_seperator} alt="Separator" />
               <Image src={AssetsImg.ic_views} alt="Views" />
-              <span > {article.totalViews} </span>
+              <span> {article.totalViews} </span>
             </div>
           </div>
         </div>
@@ -145,16 +145,19 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     window.open(article.url, "_blank");
   };
 
-  const NofilterBlogsWrapper=()=>{
-    return(
-      <div  style={{cursor:"default"}} onClick={(e)=>{
-        e.stopPropagation();
-        // setIsDropDownOpen(true);
-      }}>
-        <NofilterBlogs setSearch={setSearch}/>
+  const NofilterBlogsWrapper = () => {
+    return (
+      <div
+        style={{ cursor: "default" }}
+        onClick={(e) => {
+          e.stopPropagation();
+          // setIsDropDownOpen(true);
+        }}
+      >
+        <NofilterBlogs setSearch={setSearch} />
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div css={header}>
@@ -178,7 +181,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
         {["news", "blogs"].includes(selectedTab) && (
           <InputDropDown
             customStyles={css({
-              input: { backgroundColor: colors.Zeb_Solid_Dark_Blue ,},
+              input: { backgroundColor: colors.Zeb_Solid_Dark_Blue },
               "div>div": {
                 backgroundColor: colors.Zeb_Solid_Dark_Blue,
               },
@@ -211,7 +214,6 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                   ]
             }
             onChange={(value) => {
-              
               if (filteredArticles.length === 0 || value === "NoFilterBlogs") {
                 return;
               }
@@ -235,7 +237,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                 scrollbarColor: "black transparent",
               },
               // "& > div > div": {
-              //   paddingRight: "19px", 
+              //   paddingRight: "19px",
               // },
 
               // "&>div::-webkit-scrollbar":{
@@ -257,7 +259,6 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               }),
             }}
             customInputHeight={675}
-            
           />
         )}
         {selectedTab === "overview" && (
