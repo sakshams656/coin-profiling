@@ -23,12 +23,12 @@ const Overview = () => {
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
   const [data,setData]=useState(dummyCoinData);
+  const symbol="btc";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await real_data();
-        // console.log(response);
+        const data = await real_data(symbol);
         setData(data);
 
       } catch (error) {

@@ -7,7 +7,7 @@ import {DataApiResponse,InfoApiResponse,ChartResponse} from "@typings/api/shared
 // const API_KEY = process.env.CMC_API_KEY; 
 const API_KEY="001b370a-47bd-492e-8582-91e1e25128ae"
 
-export const data = async (): Promise<DataApiResponse> => {
+export const data = async (coin_symbol:string="btc"): Promise<DataApiResponse> => {
   try {
     const response = await axios({
       url: COINMARKETCAP_INFO,
@@ -17,7 +17,7 @@ export const data = async (): Promise<DataApiResponse> => {
         "Accept": "application/json"
       },
       params: {
-        symbol:"btc",
+        symbol:coin_symbol,
       }
     });
 
@@ -29,7 +29,7 @@ export const data = async (): Promise<DataApiResponse> => {
 };
 
 
-export const info = async (): Promise<InfoApiResponse> => {
+export const info = async (coin_symbol:string): Promise<InfoApiResponse> => {
     try {
       const response = await axios({
         url: COINMARKETCAP_LATEST,
@@ -39,7 +39,7 @@ export const info = async (): Promise<InfoApiResponse> => {
           "Accept": "application/json"
         },
         params: {
-          symbol:"btc"
+          symbol:coin_symbol
 
         }
       });
@@ -51,7 +51,7 @@ export const info = async (): Promise<InfoApiResponse> => {
     }
   };
 
-  export const chart=async(duration:string="1"):Promise<ChartResponse>=>{
+  export const chart=async(duration:string="1",fromCurrency:string="btc",toCurrency:string="inr"):Promise<ChartResponse>=>{
     try {
       const response = await axios({
         url: GRAPH,
@@ -62,8 +62,8 @@ export const info = async (): Promise<InfoApiResponse> => {
         },
         params: {
           t:"0",
-          frc:"btc",
-          tc:"inr",
+          frc:fromCurrency,
+          tc:toCurrency,
           d:duration
         }
       });

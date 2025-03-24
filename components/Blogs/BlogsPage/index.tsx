@@ -114,19 +114,18 @@ const NewsPage: React.FC = () => {
   const [overflowCount, setOverflowCount] = useState(0);
   const filtersContainerRef = useRef<HTMLDivElement>(null);
 
+  const getSuffix=(day:number)=>{
+    const suffixes = ["th", "st", "nd", "rd"];
+  const position = day % 100;
+  return suffixes[(position - 20) % 10] || suffixes[position] || suffixes[0];
+  }
+
   const formatDateWithSuffix = (dateStr: string) => {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return "Invalid Date";
 
     const day = date.getDate();
-    const suffix =
-      day === 1 || day === 21 || day === 31
-        ? "st"
-        : day === 2 || day === 22
-          ? "nd"
-          : day === 3 || day === 23
-            ? "rd"
-            : "th";
+    const suffix = getSuffix(day);
 
     return `${day}${suffix} ${date.toLocaleDateString("en-GB", {
       month: "short",

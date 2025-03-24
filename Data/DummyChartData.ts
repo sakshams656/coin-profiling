@@ -1,9 +1,9 @@
 import { chart } from "@actions/overviewApi";
 
 
-export const fetchData = async (duration:string="1") => {
+export const fetchData = async (duration:string="1",fromCurrency:string="btc",toCurrency:string="inr") => {
   try {
-    const chartData = await chart(duration);
+    const chartData = await chart(duration,fromCurrency,toCurrency);
     
 
     const realData24h = chartData.data.map((item: { t: number, y: number }) => {

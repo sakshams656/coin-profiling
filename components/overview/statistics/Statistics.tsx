@@ -13,11 +13,12 @@ const Statistics: React.FC = () => {
   const coinData = dummyCoinData;
   const [loading, setLoading] = useState(true);
   const [data,setData]=useState(dummyCoinData);
+  const coin_symbol="btc";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await real_data();
+        const data = await real_data(coin_symbol);
         setData(data);
 
       } catch (error) {

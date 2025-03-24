@@ -2,10 +2,11 @@ import AssetsImg from "@public/images";
 
 import {info,chart} from "../actions/overviewApi"
 
-export const real_data=async()=>{
+
+export const real_data=async(coin_symbol:string)=>{
   try{
-    const response =await info();
-    const data=response.data["BTC"][0];
+    const response =await info(coin_symbol);
+    const data=response.data[coin_symbol.toUpperCase()][0];
     const performance_data=await chart();
 
     const prices=performance_data.data.map((item:{y:number})=>item.y);

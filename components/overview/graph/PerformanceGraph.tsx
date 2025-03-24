@@ -16,12 +16,15 @@ const PerformanceGraph: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [percentageChange24h, setPercentChange24h] = useState<string | null>(null);
   const [chartData, setChartData] = useState<Array<{ time: string; value: number }>>([]);
+  const fronCurrency="btc";
+  const toCurrency="inr";
+  const coin_symbol="btc";
 
   useEffect(() => {
     const fetchDataAsync = async () => {
       try {
-        const response = await info();
-        const change = response.data["BTC"][0].quote.USD.percent_change_24h;
+        const response = await info(coin_symbol);
+        const change = response.data[coin_symbol.toUpperCase()][0].quote.USD.percent_change_24h;
         const formattedChange = `${change > 0 ? "↑" : "↓"} ${Math.abs(change).toFixed(2)}%`;
         setPercentChange24h(formattedChange);
       } catch (error) {
@@ -47,7 +50,7 @@ const PerformanceGraph: React.FC = () => {
             duration = "30";
             break;
         }
-        const data = await fetchData(duration);
+        const data = await fetchData(duration,fronCurrency,toCurrency);
         const uniqueData = data.reduce((acc: { time: string; value: number }[], current) => {
           if (!acc.find((item) => item.time === current.time)) acc.push(current);
           return acc;

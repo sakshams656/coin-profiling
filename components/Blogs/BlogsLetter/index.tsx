@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input, Button, Shimmer } from "zebpay-ui";
 import AssetsImg from "@public/images";
+import useDebounce from "@components/Shared/useDebounce";
 
 import {
 
@@ -19,16 +20,6 @@ import {
 } from "./style";
 import Image from "next/image";
 
-const useDebounce=(value:string,delay:number)=>{
-  const [debouncedValue,setDebouncedValue]=useState(value);
-
-  useEffect(()=>{
-    const timer=setTimeout(()=>setDebouncedValue(value),delay);
-    return ()=>clearTimeout(timer);
-  },[value,delay]);
-
-  return debouncedValue
-}
 
 const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [email, setEmail] = useState("");
@@ -38,7 +29,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isInputFocus, setIsInputFocus] = useState(false);
 
-  const debounceEmail=useDebounce(email,2000);
+  const debounceEmail=useDebounce(email,500);
 
   const validateEmail = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
