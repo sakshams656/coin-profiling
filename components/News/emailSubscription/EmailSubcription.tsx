@@ -2,14 +2,18 @@ import { useState, useEffect } from "react";
 import { Button, Input } from "zebpay-ui";
 import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
-import { useDebounce } from "use-debounce";
+import { useDebounce } from "@hooks/useDebounce";
 
-const EmailSubscription = ({ onSubscribe }) => {
+interface EmailSubscriptionProps {
+  onSubscribe: () => void;
+}
+
+const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const [debouncedEmail] = useDebounce(email, 1000); 
+  const debouncedEmail = useDebounce(email, 5000); 
 
   // Email validation regex
   const validateEmail = (email: string) => {
@@ -19,7 +23,7 @@ const EmailSubscription = ({ onSubscribe }) => {
 
   useEffect(() => {
     if (debouncedEmail.trim() === "") {
-      setIsValidEmail(true); 
+      setIsValidEmail(true);
     } else {
       setIsValidEmail(validateEmail(debouncedEmail));
     }
@@ -27,7 +31,7 @@ const EmailSubscription = ({ onSubscribe }) => {
 
   const handleSubmit = () => {
     if (email.trim()) {
-      const isValid = validateEmail(email); // Immediate validation on submit
+      const isValid = validateEmail(email);
       setIsValidEmail(isValid);
 
       if (isValid) {
@@ -38,14 +42,13 @@ const EmailSubscription = ({ onSubscribe }) => {
         }, 1500);
       }
     } else {
-      setIsValidEmail(false); // Show error immediately if empty on submit
+      setIsValidEmail(false);
     }
   };
 
-  const handleInputChange = (target) => {
+  const handleInputChange = (target: { value: string }) => {
     const value = target.value;
     setEmail(value);
-
     setIsValidEmail(true);
   };
 
