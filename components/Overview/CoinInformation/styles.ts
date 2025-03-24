@@ -82,7 +82,7 @@ export const getTabStyle = (isActive: boolean) =>
         position: "absolute",
         left: utils.remConverter(-12),
         top: 0,
-        width: utils.remConverter(4),
+        width: utils.remConverter(2),
         height: "100%",
         backgroundColor: colors.Zeb_Solid_Bright_Blue,
         borderRadius: utils.remConverter(4),
