@@ -66,33 +66,26 @@ const CryptoCategories: React.FC = () => {
         setLoading(true);
 
         const zebstageData = (await fetchZebstageCategories()) as ZebstageResponse;
-        //console.log("Zebstage Data:", JSON.stringify(zebstageData, null, 2));
 
         const uniqueSymbols = Array.from(
           new Set(zebstageData.data.tradePairs.map((pair) => pair.tradeCurrency))
         );
         const symbols = uniqueSymbols.join(",");
-        //console.log("Symbols:", symbols);
 
         if (!symbols) {
           throw new Error("No valid symbols found in Zebstage data");
         }
 
         const coinData = await info({ symbol: symbols });
-        //console.log("Raw CoinMarketCap Data:", JSON.stringify(coinData, null, 2));
 
         const processedData: CryptoCoin[] = uniqueSymbols
           .map((symbol) => {
             const coin = coinData.data[symbol];
             if (!coin) {
-              //console.log(`No coin data for symbol: ${symbol}`);
               return null;
             }
 
             const quote = coin.quote?.USD;
-            if (!quote) {
-              //console.log(`No USD quote for symbol: ${symbol}`, coin);
-            }
 
             const tradePairs = zebstageData.data.tradePairs.filter(
               (pair) => pair.tradeCurrency === symbol
@@ -116,9 +109,8 @@ const CryptoCategories: React.FC = () => {
           .filter(Boolean) as CryptoCoin[];
 
         setCryptoData(processedData);
-        //console.log("Processed Data:", JSON.stringify(processedData, null, 2));
+
       } catch (error) {
-        //console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -131,7 +123,6 @@ const CryptoCategories: React.FC = () => {
     .filter((coin) => coin.categoryIds.some((id) => categoryMap[id] === activeCategory))
     .slice(0, 6);
 
-  //console.log("Filtered Coins:", JSON.stringify(filteredCoins, null, 2));
 
   return (
     <div css={styles.cryptoCategoriesContainer}>

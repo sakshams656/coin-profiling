@@ -17,10 +17,9 @@ export const data = async (p0: { symbol: string }): Promise<DataApiResponse> => 
         symbol: p0.symbol, 
       },
     });
-    // console.log("CoinMarketCap Info Response:", JSON.stringify(response.data, null, 2));
     return response.data as DataApiResponse;
   } catch (error) {
-    //console.error("Error fetching cryptocurrency info:", error);
+    console.error("Error fetching cryptocurrency info:", error);
     throw error;
   }
 };
@@ -38,10 +37,9 @@ export const info = async (p0: { symbol: string }): Promise<InfoApiResponse> => 
         symbol: p0.symbol, 
       },
     });
-    // console.log("CoinMarketCap Quotes Response:", JSON.stringify(response.data, null, 2));
     return response.data as InfoApiResponse;
   } catch (error) {
-    //console.error("Error fetching cryptocurrency quotes:", error);
+    console.error("Error fetching cryptocurrency quotes:", error);
     throw error;
   }
 };
@@ -57,7 +55,7 @@ export const fetchZebstageCategories = async (): Promise<any> => {
     });
     return response.data;
   } catch (error) {
-    //console.error("Error fetching Zebstage categories:", error);
+    console.error("Error fetching Zebstage categories:", error);
     throw error;
   }
 };
