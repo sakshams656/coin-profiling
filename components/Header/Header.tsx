@@ -12,6 +12,7 @@ import NofilterNews from "./NoNews/NoFilterNews";
 import Dropdown from "./Dropdown/Dropdown" ;
 import { generateToast } from "@components/Shared";
 import { ToastType } from "@components/Shared/GenerateToast";
+// import ArticleOptions from "./Search";
 
 interface HeaderProps {
   selectedTab: string;
@@ -35,7 +36,7 @@ interface NewsArticle {
 }
 
 const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
-  const [, setIsPopperOpen] = useState(false);
+  const [isPopperOpen, setIsPopperOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([]);

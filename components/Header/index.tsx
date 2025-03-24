@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useRef, useEffect } from "react";
-import { Button, Tabs, Popper, colors, InputDropDown } from "zebpay-ui";
+import { Button, Tabs, Popper, colors, InputDropDown, Icon } from "zebpay-ui";
 import { css } from "@emotion/react";
 import { header, headerButton, iconButton, tabs } from "./styles";
 import NOOB from "@constants/noob";
@@ -45,6 +45,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
   const [filteredArticles, setFilteredArticles] =
     useState<Article[]>(dummyArticles);
   const [clickedArticles, setClickedArticles] = useState<Article[]>([]);
+  // const [isDropDownOpen,setIsDropDownOpen]=useState(false);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -52,7 +53,8 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     (article, index) => ({
       value: index,
       label: (
-        <div
+        <div 
+          // style={{paddingRight:"10px"}}
           css={Card}
           key={index}
           onMouseEnter={() => setHoveredIndex(index)}
@@ -69,28 +71,28 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                 {article.title}
               </div>
               {hoveredIndex === index && (
-                <div>
+                <>
                   <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
-                </div>
+                </>
               )}
             </div>
             <div css={articleFooter}>
-                <span style={{ justifyContent: "center" }}>
-                  <i
-                    className="icon icon-calendar"
-                    style={{ marginRight: "0.5rem" }}
-                  />
-                  {new Date(article.publishedAt)
-                    .toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })
-                    .replace(",", "")}
-                </span>
-                <Image src={AssetsImg.ic_seperator} alt="Separator" />
-                <Image src={AssetsImg.ic_views} alt="Views" />
-                <span> {article.totalViews} </span>
+              <span style={{ display:"flex" }}>
+                <Icon
+                  name="icon icon-calendar"
+                  style={{ marginRight: "0.5rem" }}
+                />
+                {new Date(article.publishedAt)
+                  .toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                  .replace(",", "")}
+              </span>
+              <Image src={AssetsImg.ic_seperator} alt="Separator" />
+              <Image src={AssetsImg.ic_views} alt="Views" />
+              <span > {article.totalViews} </span>
             </div>
           </div>
         </div>
@@ -143,6 +145,17 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     window.open(article.url, "_blank");
   };
 
+  const NofilterBlogsWrapper=()=>{
+    return(
+      <div  style={{cursor:"default"}} onClick={(e)=>{
+        e.stopPropagation();
+        // setIsDropDownOpen(true);
+      }}>
+        <NofilterBlogs setSearch={setSearch}/>
+      </div>
+    )
+  }
+
   return (
     <div css={header}>
       <div css={tabs}>
@@ -165,12 +178,12 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
         {["news", "blogs"].includes(selectedTab) && (
           <InputDropDown
             customStyles={css({
-              input: { backgroundColor: colors.Zeb_Solid_Dark_Blue },
+              input: { backgroundColor: colors.Zeb_Solid_Dark_Blue ,},
               "div>div": {
                 backgroundColor: colors.Zeb_Solid_Dark_Blue,
               },
               button: {
-                backgroundColor: colors.Zeb_Solid_Dark_Blue
+                backgroundColor: colors.Zeb_Solid_Dark_Blue,
               },
               zIndex: 1,
               width: "280px",
@@ -192,15 +205,17 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                 ? articleOptions
                 : [
                     {
-                      label: <NofilterBlogs setSearch={setSearch} />,
+                      label: <NofilterBlogsWrapper />,
                       value: "NoFilterBlogs",
                     },
                   ]
             }
             onChange={(value) => {
+              
               if (filteredArticles.length === 0 || value === "NoFilterBlogs") {
-                return; 
+                return;
               }
+              // setIsDropDownOpen(true);
               const selectedArticle = filteredArticles[value];
               handleArticleClick(selectedArticle);
             }}
@@ -214,14 +229,35 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
             rowHeight={filteredArticles.length > 0 ? 75 : 346}
             customDropDownStyle={{
               width: "450px",
+              "& > div": {
+                height: "368px",
+                overflowY: "auto",
+                scrollbarColor: "black transparent",
+              },
+              // "& > div > div": {
+              //   paddingRight: "19px", 
+              // },
+
+              // "&>div::-webkit-scrollbar":{
+              //   width:"8px",
+              // },
+              // "&>div::-webkit-scrollbar-thumb":{
+              //   backgroundColor:"black",
+              //   borderRadius:"4px",
+              // },
+              // "&>div::-webkit-scrollbar-track":{
+              //   backgroundColor:"transparent",
+              // },
+
               ...(filteredArticles.length === 0 && {
                 "& div:hover": {
                   backgroundColor: "#181837",
-                  borderRadius:".5rem"
+                  borderRadius: ".5rem",
                 },
               }),
             }}
             customInputHeight={675}
+            
           />
         )}
         {selectedTab === "overview" && (

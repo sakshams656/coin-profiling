@@ -126,6 +126,10 @@ export const innerCard = css({
   alignItems: "flex-start",
   gap: utils.remConverter(16),
   flexShrink: 0,
+  overflowY:"auto",
+  "&::-webkit-scrollbar":{
+    display:"none"
+  },
   "@media (max-width: 768px)": {
     width: "25%",
     height: "100%",

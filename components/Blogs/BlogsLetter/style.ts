@@ -15,10 +15,10 @@ export const ButtonStyle = css({
   alignItems: "center",
   height: utils.remConverter(20),
 
-  "@media (max-width: 800px)": {
-    height: utils.remConverter(30),
-    backgroundColor: "#ffffff",
-  },
+  // "@media (max-width: 800px)": {
+  //   height: utils.remConverter(30),
+  //   backgroundColor: "#ffffff",
+  // },
 });
 
 export const Subscribed = css({
@@ -34,12 +34,12 @@ export const Subscribe  =
     alignItems: "center",
     marginTop:"auto",
 
-    "@media (max-width: 768px)": {
-      maxWidth: utils.remConverter(130),
-    },
-    "@media (max-width: 480px)": {
-      maxWidth: utils.remConverter(110),
-    },
+    // "@media (max-width: 768px)": {
+    //   maxWidth: utils.remConverter(130),
+    // },
+    // "@media (max-width: 480px)": {
+    //   maxWidth: utils.remConverter(110),
+    // },
   });
 
 export const newsletter = css({
@@ -51,15 +51,15 @@ export const newsletter = css({
   borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
 
-  "@media (max-width: 768px)": {
-    height: "auto",
-    padding: utils.remConverter(16),
-  },
-  "@media (max-width: 480px)": {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: utils.remConverter(8),
-  },
+  // "@media (max-width: 768px)": {
+  //   height: "auto",
+  //   padding: utils.remConverter(16),
+  // },
+  // "@media (max-width: 480px)": {
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   gap: utils.remConverter(8),
+  // },
 });
 
 export const newsChild = css({
@@ -71,15 +71,15 @@ export const newsChild = css({
   flex: "1 0 0",
   alignSelf: "stretch",
 
-  "@media (max-width: 768px)": {
-    height: "auto",
-    padding: utils.remConverter(16),
-  },
-  "@media (max-width: 480px)": {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: utils.remConverter(8),
-  },
+  // "@media (max-width: 768px)": {
+  //   height: "auto",
+  //   padding: utils.remConverter(16),
+  // },
+  // "@media (max-width: 480px)": {
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   gap: utils.remConverter(8),
+  // },
 });
 
 export const newsHeader = css({
@@ -123,25 +123,25 @@ export const quote = css({
 });
 
 export const Form = css({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  gap: utils.remConverter(8),
+  // display: "flex",
+  // flexDirection: "column",
+  // alignItems: "flex-start",
+  // gap: utils.remConverter(8),
   // marginBottom: utils.remConverter(28),
   // paddingTop: utils.remConverter(16),
-  width:"100%",
+  // width:"100%",
 
-  "@media (max-width: 768px)": {
-    height: "auto",
-    padding: utils.remConverter(16),
-    marginBottom: `${utils.remConverter(16)} !important`,
-  },
-  "@media (max-width: 480px)": {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: utils.remConverter(8),
-    marginBottom: `${utils.remConverter(16)} !important`,
-  },
+  // "@media (max-width: 768px)": {
+  //   height: "auto",
+  //   padding: utils.remConverter(16),
+  //   marginBottom: `${utils.remConverter(16)} !important`,
+  // },
+  // "@media (max-width: 480px)": {
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   gap: utils.remConverter(8),
+  //   marginBottom: `${utils.remConverter(16)} !important`,
+  // },
 });
 
 export const input=css({
