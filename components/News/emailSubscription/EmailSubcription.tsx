@@ -13,9 +13,8 @@ const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) =>
   const [loading, setLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const debouncedEmail = useDebounce(email, 5000); 
+  const debouncedEmail = useDebounce(email, 1000); 
 
-  // Email validation regex
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
