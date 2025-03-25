@@ -34,7 +34,8 @@ export const info = async (p0: { symbol: string }): Promise<InfoApiResponse> => 
         Accept: "application/json",
       },
       params: {
-        symbol: p0.symbol, 
+        symbol: p0.symbol,
+        convert: 'INR', 
       },
     });
     return response.data as InfoApiResponse;

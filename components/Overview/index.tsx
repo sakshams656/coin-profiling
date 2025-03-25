@@ -94,7 +94,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         const coinInfo = infoResponse.data?.[coinSymbol]?.[0];
         const coinMeta = dataResponse.data?.[coinSymbol]?.[0];
 
-        if (!coinInfo || !coinInfo.quote || !coinInfo.quote.USD || !coinMeta) {
+        if (!coinInfo || !coinInfo.quote || !coinInfo.quote.INR || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
         }
 
@@ -115,14 +115,14 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           name: coinMeta.name || "Unknown Coin",
           symbol: coinMeta.symbol || "Unknown",
           logo: coinMeta.logo || AssetsImg.ic_btc_coin,
-          price: coinInfo.quote.USD.price
-            ? `₹${coinInfo.quote.USD.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
+          price: coinInfo.quote.INR.price
+            ? `₹${coinInfo.quote.INR.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
             : "₹0.00",
-          change: coinInfo.quote.USD.percent_change_24h !== undefined
-            ? `${coinInfo.quote.USD.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.USD.percent_change_24h).toFixed(2)}%`
+          change: coinInfo.quote.INR.percent_change_24h !== undefined
+            ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_24h).toFixed(2)}%`
             : "↑ 0.00%",
-          isPositive: coinInfo.quote.USD.percent_change_24h !== undefined
-            ? coinInfo.quote.USD.percent_change_24h > 0
+          isPositive: coinInfo.quote.INR.percent_change_24h !== undefined
+            ? coinInfo.quote.INR.percent_change_24h > 0
             : true,
           rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
           stats: [
@@ -130,21 +130,21 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             {
               icon: AssetsImg.ic_lineschart,
               label: "Mkt Dominance",
-              value: coinInfo.quote.USD.market_cap_dominance
-                ? `${coinInfo.quote.USD.market_cap_dominance.toFixed(2)}%`
+              value: coinInfo.quote.INR.market_cap_dominance
+                ? `${coinInfo.quote.INR.market_cap_dominance.toFixed(2)}%`
                 : "0.00%",
             },
             { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
           ],
           marketStats: {
-            marketCap: coinInfo.quote.USD.market_cap
-              ? `$${coinInfo.quote.USD.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+            marketCap: coinInfo.quote.INR.market_cap
+              ? `₹ ${coinInfo.quote.INR.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
               : "N/A",
-            fullyDilutedCap: coinInfo.quote.USD.fully_diluted_market_cap
-              ? `$${coinInfo.quote.USD.fully_diluted_market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+            fullyDilutedCap: coinInfo.quote.INR.fully_diluted_market_cap
+              ? `₹ ${coinInfo.quote.INR.fully_diluted_market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
               : "N/A",
-            volume24h: coinInfo.quote.USD.volume_24h
-              ? `$${coinInfo.quote.USD.volume_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+            volume24h: coinInfo.quote.INR.volume_24h
+              ? `₹ ${coinInfo.quote.INR.volume_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
               : "N/A",
             maxSupply: coinInfo.max_supply
               ? coinInfo.max_supply.toLocaleString("en-US")
@@ -160,6 +160,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           launchDate: formatDate(coinMeta.date_launched),
           description: coinMeta.description || "No description available",
         });
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching coin data:", error);

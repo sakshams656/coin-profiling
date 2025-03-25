@@ -33,7 +33,7 @@ interface TradePair {
 
 interface ZebstageResponse {
   data: {
-    tradePairs: TradePair[]; 
+    tradePairs: TradePair[];
   };
 }
 
@@ -116,7 +116,7 @@ const CryptoCategories: React.FC = () => {
             return {
               name: coin.symbol || symbol,
               fullName: coin.name || tradePairs[0]?.currencyName || "Unknown",
-              price: `$${quote.USD.price.toFixed(2)}`,
+              price: `₹ ${quote.USD.price.toFixed(2)}`,
               change: quote.USD.percent_change_24h,
               isPositive: quote.USD.percent_change_24h > 0,
               icon: `https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`,
@@ -129,7 +129,7 @@ const CryptoCategories: React.FC = () => {
         setCryptoData(processedData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setCryptoData([]); 
+        setCryptoData([]);
       } finally {
         setLoading(false);
       }
@@ -176,7 +176,15 @@ const CryptoCategories: React.FC = () => {
       </ShimmerWrapper>
       <div css={styles.cryptoCardsContainer}>
         {loading ? (
-          <div>Loading...</div>
+          // Display 6 shimmer placeholders instead of "loading..."
+          Array.from({ length: 6 }).map((_, index) => (
+            <ShimmerWrapper
+              width={316}
+              height={146}
+              isLoading={loading}
+              mode="dark"           
+              />
+          ))
         ) : filteredCoins.length === 0 ? (
           <div>No coins available for {activeCategory}</div>
         ) : (
