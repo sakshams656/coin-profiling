@@ -1,0 +1,1 @@
+export const GRAPH_API="https://www.zebstage.com/api/v1/instant/rates?t=0&frc=btc&tc=inr&d=1"

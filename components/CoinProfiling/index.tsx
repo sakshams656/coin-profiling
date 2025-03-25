@@ -8,6 +8,8 @@ import { main, headerWrapper } from "./styles";
 
 import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
+import PricePredictor from "@components/PricePredictor";
+
 
 interface CoinProfilingProps {
   coinSymbol: string;
@@ -21,7 +23,7 @@ const CoinProfiling: React.FC<CoinProfilingProps> = ({ coinSymbol }) => {
       case "overview":
         return <Overview coinSymbol={coinSymbol} />; 
       case "pricePredictor":
-        return <div>This is Tab 2</div>;
+        return <PricePredictor/>;
       case "news":
         return <NewsPage />;
       case "blogs":

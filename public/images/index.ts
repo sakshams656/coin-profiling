@@ -8,6 +8,8 @@ import ic_arrow_left from "./Icons/arrow_left.svg";
 import ic_arrow_right from "./Icons/arrow_right.svg";
 import ic_tick from "./Icons/tick.svg";
 import ic_tick_blue from "./Icons/tick_blue.svg";
+import ic_calculator from "./icons/calculator.svg";
+import ic_no_data from "./icons/NoData.svg"
 import ic_star from "./Icons/star.svg";
 import ic_bars from "./Icons/bars.svg";
 import ic_lineschart from "./Icons/lineschart.svg";
@@ -80,6 +82,7 @@ import i_blocker_background from "./illustrations/blocker-background.png";
 import ic_search from "./Icons/search.svg";
 import ic_search_grey from "./Icons/search_grey.svg";
 import ic_cross from "./Icons/cross.svg";
+import i_current_value from "./illustrations/current-value.png"
 import ic_investmentIcon from "./illustrations/investmentIcon.png";
 import ic_no_search from "./illustrations/no-search.png";
 import ic_tb_gradient from './illustrations/trading_banner_gradient.png'
@@ -168,6 +171,10 @@ const AssetsImg = {
   ic_cross_blue,
   ic_clock_white,
   ic_category_white,
+  ic_calculator,
+  i_current_value,
+
+
 
 };
 
