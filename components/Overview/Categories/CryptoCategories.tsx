@@ -19,7 +19,7 @@ interface Coin {
   id: number;
   name: string;
   symbol: string;
-  quote?: CoinQuote;
+  quote: CoinQuote;
 }
 
 interface TradePair {
@@ -33,7 +33,7 @@ interface TradePair {
 
 interface ZebstageResponse {
   data: {
-    tradePairs: TradePair[];
+    tradePairs: TradePair[]; 
   };
 }
 
@@ -41,23 +41,36 @@ interface CryptoCoin {
   name: string;
   fullName: string;
   price: string;
-  change: number | null;
-  isPositive: boolean | null;
+  change: number;
+  isPositive: boolean;
   icon: string;
   categoryIds: number[];
   coinIcon: string;
 }
 
 const categoryMap: { [key: number]: string } = {
-  4: "LAYER 1",
+  10: "UTILITY",
   5: "SMART CONTRACTS",
   9: "DEFI",
   8: "GAMING AND METAVERSE",
 };
 
+const defaultCoinQuote: CoinQuote = {
+  USD: {
+    price: 0,
+    percent_change_24h: 0,
+  },
+};
+
+const defaultZebstageData: ZebstageResponse = {
+  data: {
+    tradePairs: [],
+  },
+};
+
 const CryptoCategories: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("LAYER 1");
+  const [activeCategory, setActiveCategory] = useState("UTILITY");
   const [cryptoData, setCryptoData] = useState<CryptoCoin[]>([]);
 
   useEffect(() => {
@@ -65,7 +78,8 @@ const CryptoCategories: React.FC = () => {
       try {
         setLoading(true);
 
-        const zebstageData = (await fetchZebstageCategories()) as ZebstageResponse;
+        const zebstageResponse = (await fetchZebstageCategories()) as ZebstageResponse;
+        const zebstageData = zebstageResponse?.data?.tradePairs ? zebstageResponse : defaultZebstageData;
 
         const uniqueSymbols = Array.from(
           new Set(zebstageData.data.tradePairs.map((pair) => pair.tradeCurrency))
@@ -73,7 +87,10 @@ const CryptoCategories: React.FC = () => {
         const symbols = uniqueSymbols.join(",");
 
         if (!symbols) {
-          throw new Error("No valid symbols found in Zebstage data");
+          console.warn("No valid symbols found in Zebstage data, using empty list");
+          setCryptoData([]);
+          setLoading(false);
+          return;
         }
 
         const coinData = await info({ symbol: symbols });
@@ -85,11 +102,12 @@ const CryptoCategories: React.FC = () => {
               return null;
             }
 
-            const quote = coin.quote?.USD;
+            const quote = coin.quote || defaultCoinQuote;
 
             const tradePairs = zebstageData.data.tradePairs.filter(
               (pair) => pair.tradeCurrency === symbol
             );
+
             const categories = tradePairs
               .flatMap((pair) => pair.categories || [])
               .filter((id, index, self) => self.indexOf(id) === index);
@@ -98,19 +116,20 @@ const CryptoCategories: React.FC = () => {
             return {
               name: coin.symbol || symbol,
               fullName: coin.name || tradePairs[0]?.currencyName || "Unknown",
-              price: quote ? `$${quote.price.toFixed(2)}` : "N/A",
-              change: quote ? quote.percent_change_24h : null,
-              isPositive: quote ? quote.percent_change_24h > 0 : null,
+              price: `$${quote.USD.price.toFixed(2)}`,
+              change: quote.USD.percent_change_24h,
+              isPositive: quote.USD.percent_change_24h > 0,
               icon: `https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`,
-              categoryIds: categories.length ? categories : [4], 
+              categoryIds: categories.length ? categories : [4],
               coinIcon,
             };
           })
           .filter(Boolean) as CryptoCoin[];
 
         setCryptoData(processedData);
-
       } catch (error) {
+        console.error("Error fetching data:", error);
+        setCryptoData([]); 
       } finally {
         setLoading(false);
       }
@@ -122,7 +141,6 @@ const CryptoCategories: React.FC = () => {
   const filteredCoins = cryptoData
     .filter((coin) => coin.categoryIds.some((id) => categoryMap[id] === activeCategory))
     .slice(0, 6);
-
 
   return (
     <div css={styles.cryptoCategoriesContainer}>
@@ -147,7 +165,7 @@ const CryptoCategories: React.FC = () => {
             onChange={(tab) => setActiveCategory(tab)}
             selectedTab={activeCategory}
             tabsList={[
-              { tab: "LAYER 1", title: <>LAYER 1</> },
+              { tab: "UTILITY", title: <>UTILITY</> },
               { tab: "SMART CONTRACTS", title: "SMART CONTRACTS" },
               { tab: "DEFI", title: "DEFI" },
               { tab: "GAMING AND METAVERSE", title: "GAMING AND METAVERSE" },
@@ -187,24 +205,13 @@ const CryptoCategories: React.FC = () => {
               >
                 <div css={{ display: "flex", flexDirection: "column" }}>
                   <span css={styles.cryptoPrice}>{crypto.price}</span>
-                  {crypto.change !== null && crypto.isPositive !== null ? (
-                    <span
-                      css={[
-                        styles.cryptoChange,
-                        crypto.isPositive ? "positive" : "negative",
-                      ]}
-                    >
-                      <Tags
-                        size="medium"
-                        style={{ name: "1pzk433", styles: "width:100px" }}
-                        type="success"
-                      >
-                        {crypto.isPositive ? "↑" : "↓"} {Math.abs(crypto.change)}%
-                      </Tags>
-                    </span>
-                  ) : (
-                    <span css={styles.cryptoChange}>N/A</span>
-                  )}
+                  <Tags
+                    size="medium"
+                    type={crypto.isPositive ? "success" : "error"}
+                    css={styles.cryptoChange}
+                  >
+                    {crypto.isPositive ? "↑" : "↓"} {Math.abs(crypto.change).toFixed(2)}%
+                  </Tags>
                 </div>
                 <button css={styles.viewMoreButton}>
                   <Image

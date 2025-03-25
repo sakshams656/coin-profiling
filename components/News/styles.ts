@@ -463,6 +463,7 @@ export const headerFrame = (isScrolled: boolean) =>
     alignItems: "flex-start",
     borderRadius: utils.remConverter(8),
     background: colors.Zeb_Solid_Dark_Blue,
+    maxWidth: utils.remConverter(312),
     "&::-webkit-scrollbar": {
       width: 0, 
     },
@@ -518,10 +519,15 @@ export const appButton = css({
   borderRadius: utils.remConverter(4),
   padding: `${utils.remConverter(6.4)} ${utils.remConverter(28)}`,
   width: "100%",
+  maxWidth: utils.remConverter(121),
+  maxHeight: utils.remConverter(32),
   border: `${utils.remConverter(1)} solid #A6A6A6`,
   cursor: "pointer",
   "@media (max-width: 75rem)": {
     padding: `${utils.remConverter(4.8)} ${utils.remConverter(16)}`,
+  },
+  "@media (max-width: 71.875rem)": {
+    padding: `${utils.remConverter(3.2)} ${utils.remConverter(12)}`,
   },
   "@media (max-width: 62.5rem)": {
     padding: `${utils.remConverter(1.6)} ${utils.remConverter(8)}`,

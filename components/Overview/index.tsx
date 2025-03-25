@@ -18,6 +18,32 @@ interface InputTargetProps {
   name?: string;
 }
 
+interface CoinData {
+  name: string;
+  symbol: string;
+  logo: string;
+  price: string;
+  change: string;
+  isPositive: boolean;
+  rank: string;
+  stats: Array<{
+    icon: string;
+    label: string;
+    value: string;
+  }>;
+  marketStats: {
+    marketCap: string;
+    fullyDilutedCap: string;
+    volume24h: string;
+    maxSupply: string;
+    totalSupply: string;
+    circulatingSupply: string;
+  };
+  trading: any; 
+  launchDate: string | null;
+  description: string;
+}
+
 interface OverviewProps {
   coinSymbol: string;
 }
@@ -27,7 +53,32 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
-  const [coinData, setCoinData] = useState<any>(null);
+
+  const [coinData, setCoinData] = useState<CoinData>({
+    name: "Unknown Coin",
+    symbol: "Unknown",
+    logo: AssetsImg.ic_btc_coin,
+    price: "₹0.00",
+    change: "↑ 0.00%",
+    isPositive: true,
+    rank: "# 00",
+    stats: [
+      { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
+      { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "0.00%" },
+      { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+    ],
+    marketStats: {
+      marketCap: "N/A",
+      fullyDilutedCap: "N/A",
+      volume24h: "N/A",
+      maxSupply: "N/A",
+      totalSupply: "N/A",
+      circulatingSupply: "N/A",
+    },
+    trading: dummyCoinData.trading,
+    launchDate: null,
+    description: "No description available",
+  });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -72,7 +123,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             : "↑ 0.00%",
           isPositive: coinInfo.quote.USD.percent_change_24h !== undefined
             ? coinInfo.quote.USD.percent_change_24h > 0
-            : true, 
+            : true,
           rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
@@ -113,11 +164,29 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
       } catch (error) {
         console.error("Error fetching coin data:", error);
         setCoinData({
-          ...dummyCoinData,
+          name: "Unknown Coin",
+          symbol: "Unknown",
           logo: AssetsImg.ic_btc_coin,
+          price: "₹0.00",
+          change: "↑ 0.00%",
+          isPositive: true,
+          rank: "# 00",
+          stats: [
+            { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
+            { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "0.00%" },
+            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+          ],
+          marketStats: {
+            marketCap: "N/A",
+            fullyDilutedCap: "N/A",
+            volume24h: "N/A",
+            maxSupply: "N/A",
+            totalSupply: "N/A",
+            circulatingSupply: "N/A",
+          },
+          trading: dummyCoinData.trading,
           launchDate: null,
           description: "Unable to load description",
-          symbol: "Unknown",
         });
         setLoading(false);
       }
@@ -162,7 +231,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     setTimePeriod(tab);
   };
 
-  const coinLogo = coinData?.logo || AssetsImg.ic_btc_coin;
+  const coinLogo = coinData.logo;
 
   return (
     <div css={styles.container} ref={containerRef}>
@@ -171,9 +240,9 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           <div css={styles.coinInfo}>
             <Image src={coinLogo} alt="coin" width={56} height={56} priority onError={() => console.error("Image failed to load:", coinLogo)} />
             <div css={styles.coinsInfoBox}>
-              <span css={styles.coinName}>{coinData?.name}</span>
+              <span css={styles.coinName}>{coinData.name}</span>
               <div css={styles.priceInfo}>
-                <span css={styles.coinPrice}>{coinData?.price || "₹0.00"}</span>
+                <span css={styles.coinPrice}>{coinData.price}</span>
                 <Tags
                   isStroke
                   size="medium"
@@ -181,10 +250,10 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                     name: '1pzk433',
                     styles: 'width:100px'
                   }}
-                  type={coinData?.isPositive ? "success" : "error"} // Dynamic type based on change
+                  type={coinData.isPositive ? "success" : "error"}
                   css={{ borderRadius: utils.remConverter(4) }}
                 >
-                  {coinData?.change}
+                  {coinData.change}
                 </Tags>
                 <Tags
                   isStroke
@@ -196,7 +265,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                   type="default"
                   css={{borderRadius: utils.remConverter(4)}}
                 >
-                  {coinData?.rank || "#00"}
+                  {coinData.rank}
                 </Tags>
               </div>
             </div>
@@ -204,7 +273,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-          {coinData?.stats?.map((stat: any, index: number) => (
+          {coinData.stats.map((stat, index) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />
@@ -223,12 +292,12 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           <PerformanceGraph />
           <Statistics
             coinLogo={coinLogo}
-            marketStats={coinData?.marketStats || dummyCoinData.marketStats}
+            marketStats={coinData.marketStats}
           />
           <CoinInfo
-            launchDate={coinData?.launchDate}
-            description={coinData?.description || "No description available"}
-            symbol={coinData?.symbol || "Unknown"}
+            launchDate={coinData.launchDate}
+            description={coinData.description}
+            symbol={coinData.symbol}
           />
           <CryptoCategories />
         </div>
