@@ -7,13 +7,20 @@ import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
 
 interface CoinInfoProps {
-  launchDate: string;
+  launchDate: string | null;
   description: string;
   symbol: string;
 }
 
 const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) => {
-  const [activeTab, setActiveTab] = useState(`About ${symbol}`);
+  const tabs = {
+    about: `About ${symbol}`,
+    howWorks: `How ${symbol} works`,
+    howToBuy: `How to buy ${symbol}`,
+    whyToBuy: `Why to buy ${symbol}`,
+  };
+
+  const [activeTab, setActiveTab] = useState(tabs.about); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,25 +30,20 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
     return () => clearTimeout(timer);
   }, []);
 
-  // Define tab names dynamically using the symbol
-  const tabs = {
-    about: `About ${symbol}`,
-    howWorks: `How ${symbol} works`,
-    howToBuy: `How to buy ${symbol}`,
-    whyToBuy: `Why to buy ${symbol}`,
-  };
+  useEffect(() => {
+    setActiveTab(tabs.about);
+  }, [symbol]); 
 
-  // Map dynamic tab names to static tabContent keys
   const getContentKey = (tab: string) => {
-    if (tab === tabs.about) return "About BTC"; // Assuming description replaces this
-    return tab.replace(symbol, "BTC"); // Map back to BTC-based keys
+    if (tab === tabs.about) return "About BTC";
+    return tab.replace(symbol, "BTC");
   };
 
   return (
     <div css={styles.coinInfoContainer}>
       <ShimmerWrapper width={150} height={24} isLoading={loading}>
         <span css={styles.title}>Coin Information</span>
-        <span css={styles.launchInfo}>{launchDate}</span>
+        {launchDate && <span css={styles.launchInfo}>{launchDate}</span>}
       </ShimmerWrapper>
 
       <div css={styles.dataContainer}>
@@ -87,7 +89,7 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
             isLoading={loading}
             style={css({ marginLeft: "1rem", marginTop: "1rem" })}
           >
-            <div css={styles.contentHeader}>{activeTab.replace(symbol, "").trim()}</div>
+            <div css={styles.contentHeader}>{activeTab}</div>
           </ShimmerWrapper>
 
           <div css={styles.contentBody}>

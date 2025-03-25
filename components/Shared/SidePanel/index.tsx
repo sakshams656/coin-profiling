@@ -1,4 +1,4 @@
-import { Button, Checkbox, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
+import { Button, Divider, Radio, SearchInput, SidePanel } from "zebpay-ui";
 import { Accordion } from "zebpay-ui";
 import Image from "next/image";
 import AssetsImg from "@public/images";
@@ -7,16 +7,17 @@ import { useReducer, useEffect, useState } from "react";
 import * as styles from "./styles";
 import { DateRangeOptions } from "@typings/api/shared";
 import { dateFormat } from "@utils/date"; 
+import Checkbox from "../Checkbox";
 
 const PUBLISHED_BY_DATA = [
-  { label: "Select All", indeterminate: true },
+  { label: "Select All" },
   { label: "Forbes" },
   { label: "Coindesk" },
   { label: "CoinTelegraph" },
 ];
 
 const DURATION_DATA = [
-  { label: "Select All", indeterminate: true },
+  { label: "Select All" },
   { label: "01 - 05 Mins" },
   { label: "05 - 10 Mins" },
   { label: "10 - 20 Mins" },
@@ -123,9 +124,6 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
     dispatch({ type: "RESET" });
   }, [resetTrigger]);
 
-  useEffect(() => {
-  }, [state.filters]);
-
   const toggleAccordion = (key: "publishedBy" | "duration" | "dateRange") => {
     dispatch({ type: "TOGGLE_ACCORDION", key });
   };
@@ -135,12 +133,10 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
   );
 
   const handlePublisherChange = (label: string) => {
+    const allPublishers = PUBLISHED_BY_DATA.filter((item) => item.label !== "Select All").map((item) => item.label);
     if (label === "Select All") {
-      const allPublishers = PUBLISHED_BY_DATA.filter((item) => item.label !== "Select All").map((item) => item.label);
-      dispatch({
-        type: "SET_PUBLISHERS",
-        publishers: state.filters.publishers.length === allPublishers.length ? [] : allPublishers,
-      });
+      const newPublishers = state.filters.publishers.length === allPublishers.length ? [] : allPublishers;
+      dispatch({ type: "SET_PUBLISHERS", publishers: newPublishers });
     } else {
       const newPublishers = state.filters.publishers.includes(label)
         ? state.filters.publishers.filter((item) => item !== label)
@@ -150,12 +146,10 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
   };
 
   const handleDurationChange = (label: string) => {
+    const allDurations = DURATION_DATA.filter((item) => item.label !== "Select All").map((item) => item.label);
     if (label === "Select All") {
-      const allDurations = DURATION_DATA.filter((item) => item.label !== "Select All").map((item) => item.label);
-      dispatch({
-        type: "SET_DURATIONS",
-        durations: state.filters.durations.length === allDurations.length ? [] : allDurations,
-      });
+      const newDurations = state.filters.durations.length === allDurations.length ? [] : allDurations;
+      dispatch({ type: "SET_DURATIONS", durations: newDurations });
     } else {
       const newDurations = state.filters.durations.includes(label)
         ? state.filters.durations.filter((item) => item !== label)
@@ -176,36 +170,46 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
   };
 
   const renderCheckboxes = (
-    data: { label: string; indeterminate?: boolean }[],
+    data: { label: string }[],
     isCheckbox: boolean,
     selectedValues: string[],
     onChange: (label: string) => void
   ) => {
+    const allOptions = data
+      .filter((item) => item.label !== "Select All")
+      .map((item) => item.label);
+    
+    const isAllSelected = allOptions.every((opt) => selectedValues.includes(opt));
+    const isIndeterminate = selectedValues.length > 0 && !isAllSelected;
+  
     return data.map((item, index) => {
       const isLast = index === data.length - 1;
-      const checked = selectedValues.includes(item.label);
-      const indeterminate = item.indeterminate
-        ? selectedValues.length > 0 && selectedValues.length < data.length - 1
-        : false;
-
+      const isSelectAll = item.label === "Select All";
+      
+      let checked = selectedValues.includes(item.label);
+      let indeterminate = false;
+  
+      if (isSelectAll) {
+        checked = isAllSelected || isIndeterminate;
+        indeterminate = isIndeterminate;
+      }
+  
       return (
         <div key={index}>
           {isCheckbox ? (
             <div css={{ padding: "0.75rem", paddingLeft: "0rem" }}>
               <Checkbox
+                value={item.label}
                 checked={checked}
-                indeterminate={indeterminate}
+                indeterminate={isSelectAll ? indeterminate : false}
                 label={item.label}
-                mode="dark"
-                onChange={() => onChange(item.label)}
-                value={1}
+                onChange={(args) => onChange(args.value as string)}
               />
             </div>
           ) : (
             <div css={{ padding: "0.75rem", paddingLeft: "0rem" }}>
               <Radio
                 label={item.label}
-                mode="dark"
                 name="date-range"
                 onChange={() => onChange(item.label)}
                 selected={checked}
@@ -239,6 +243,11 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
     setIsPanelOpen(false);
   };
 
+  const handleClose = () => {
+    dispatch({ type: "RESET" }); 
+    setIsPanelOpen(false);
+  };
+
   const getSelectedNames = (data: { label: string }[], selected: string[]) => {
     const allNames = data
       .filter((item) => item.label !== "Select All")
@@ -255,8 +264,8 @@ const FilterSidePanel: React.FC<FilterSidePanelProps> = ({ onApplyFilters, onRes
 
       <SidePanel
         title="Filter News"
-        onClose={() => setIsPanelOpen(false)}
-        onBack={() => setIsPanelOpen(false)}
+        onClose={handleClose} 
+        onBack={handleClose} 
         open={isPanelOpen}
         style={styles.sidePanelStyle}
       >

@@ -28,7 +28,6 @@
     "redux": "^5.0.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^3.1.0",
-    "use-debounce": "^10.0.4",
     "zebpay-ui": "^0.0.92"
   },
   "devDependencies": {

@@ -2,16 +2,19 @@ import { useState, useEffect } from "react";
 import { Button, Input } from "zebpay-ui";
 import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
-import { useDebounce } from "use-debounce";
+import { useDebounce } from "@hooks/useDebounce";
 
-const EmailSubscription = ({ onSubscribe }) => {
+interface EmailSubscriptionProps {
+  onSubscribe: () => void;
+}
+
+const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const [debouncedEmail] = useDebounce(email, 5000); // 5000ms = 5 seconds
+  const debouncedEmail = useDebounce(email, 1000); 
 
-  // Email validation regex
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -19,15 +22,15 @@ const EmailSubscription = ({ onSubscribe }) => {
 
   useEffect(() => {
     if (debouncedEmail.trim() === "") {
-      setIsValidEmail(true); // No error if empty
+      setIsValidEmail(true);
     } else {
-      setIsValidEmail(validateEmail(debouncedEmail)); // Validate after 5 seconds
+      setIsValidEmail(validateEmail(debouncedEmail));
     }
   }, [debouncedEmail]);
 
   const handleSubmit = () => {
     if (email.trim()) {
-      const isValid = validateEmail(email); // Immediate validation on submit
+      const isValid = validateEmail(email);
       setIsValidEmail(isValid);
 
       if (isValid) {
@@ -38,14 +41,13 @@ const EmailSubscription = ({ onSubscribe }) => {
         }, 1500);
       }
     } else {
-      setIsValidEmail(false); // Show error immediately if empty on submit
+      setIsValidEmail(false);
     }
   };
 
-  const handleInputChange = (target) => {
+  const handleInputChange = (target: { value: string }) => {
     const value = target.value;
     setEmail(value);
-    // Reset isValidEmail to true on every change to clear error while typing
     setIsValidEmail(true);
   };
 
@@ -77,7 +79,6 @@ const EmailSubscription = ({ onSubscribe }) => {
         type="primary"
         loading={loading}
         disabled={loading || (!email.trim() ? false : !isValidEmail)}
-        style={styles.subButton}
       >
         Subscribe
       </Button>

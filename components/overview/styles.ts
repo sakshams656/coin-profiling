@@ -4,7 +4,7 @@ import { colors, utils } from "zebpay-ui";
 export const container = css({
   fontFamily: "Lato",
   width: "100%",
-  padding: utils.remConverter(40),
+  padding: utils.remConverter(36),
   paddingTop: utils.remConverter(24),
   paddingBottom: utils.remConverter(0),
   //marginTop: utils.remConverter(60),
@@ -55,24 +55,6 @@ export const priceInfo = css({
   display: "flex",
   alignItems: "center",
   gap: utils.remConverter(8),
-});
-
-export const positiveChange = css({
-  backgroundColor: "rgba(46, 204, 113, 0.2)",
-  color: "#2ECC71",
-  padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
-  borderRadius: utils.remConverter(8),
-  border: `${utils.remConverter(1)} solid #2ECC71`,
-  fontSize: utils.remConverter(14),
-});
-
-export const tag = css({
-  border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_White}`,
-  padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
-  borderRadius: utils.remConverter(8),
-  backgroundColor: colors.Zeb_BG_Light_Blue,
-  fontSize: utils.remConverter(14),
-  color: colors.Zeb_Solid_White,
 });
 
 export const statsContainer = css({
@@ -127,7 +109,7 @@ export const rightContainer = css({
   color: colors.Zeb_Solid_White,
   position: "sticky",
   top: 0,
-  minWidth: utils.remConverter(280),
+  minWidth: utils.remConverter(310),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),
   display: "flex",
@@ -169,7 +151,7 @@ export const investmentBox = css({
   flexDirection: "column",
   background: colors.Zeb_Solid_Dark_Blue,
   borderRadius: utils.remConverter(8),
-  padding: utils.remConverter(16),
+  padding: utils.remConverter(12),
   width: "100%",
   maxWidth: utils.remConverter(300),
   border: `${utils.remConverter(1)} solid ${colors.Zeb_BG_Blue}`,
@@ -190,12 +172,10 @@ export const IBvalue = css({
 });
 
 export const percentageBox = css({
-  background: "#C0C0EE33",
-  padding: `${utils.remConverter(4)} ${utils.remConverter(4)}`,
-  borderRadius: utils.remConverter(4),
-  fontSize: utils.remConverter(14),
-  color: colors.Zeb_Solid_White,
-  alignSelf: "flex-end",
+  display: "flex", 
+  alignItems: "center", 
+  justifyContent: "space-between", 
+  gap: `${utils.remConverter(8)}`
 });
 
 export const statisticsContainer = css({
@@ -225,6 +205,7 @@ export const investedAmountText = css({
   color: colors.Zeb_Solid_Light_Blue,
   fontSize: utils.remConverter(12),
   fontWeight: 400,
+  marginTop: utils.remConverter(8)
 });
 
 export const investedAmountValue = css({
@@ -259,3 +240,19 @@ export const returnsButton = css({
   marginLeft: utils.remConverter(-1),
   borderRadius: `${0} ${0} ${utils.remConverter(0.5)} ${utils.remConverter(0.5)}`,
 });
+
+export const coinName = css({
+  fontSize: utils.remConverter(16),
+  fontWeight: 600,
+})
+
+export const coinPrice = css({
+  fontSize: utils.remConverter(20),
+  fontWeight: 700
+})
+
+export const coinsInfoBox = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: utils.remConverter(8)
+})

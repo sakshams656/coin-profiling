@@ -61,7 +61,7 @@ export const cryptoChange = css({
 
 export const viewMoreButton = css({
   backgroundColor: colors.Zeb_Solid_Dark_Blue,
-  border: `1px solid ${colors.Zeb_Solid_Bright_Blue}`,
+  border: `${utils.remConverter(1)} solid ${colors.Zeb_Solid_Bright_Blue}`,
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_Bright_Blue,
   padding: `${utils.remConverter(8)} ${utils.remConverter(8)}`,

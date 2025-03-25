@@ -1,12 +1,12 @@
 import Image from "next/image";
-import * as styles from "./styles"; 
-import { dummyCoinData } from "../../Data/DummyCoinData"; 
-import { Button, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
+import * as styles from "./styles";
+import { dummyCoinData } from "../../Data/DummyCoinData";
+import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
-import CoinInfo from "./CoinInformation/CoinInfo"; 
-import PerformanceGraph from "./Graph/PerformanceGraph"; 
-import CryptoCategories from "./Categories/CryptoCategories"; 
+import CoinInfo from "./CoinInformation/CoinInfo";
+import PerformanceGraph from "./Graph/PerformanceGraph";
+import CryptoCategories from "./Categories/CryptoCategories";
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
@@ -18,40 +18,88 @@ interface InputTargetProps {
   name?: string;
 }
 
-interface OverviewProps {
-  coinId: string; 
+interface CoinData {
+  name: string;
+  symbol: string;
+  logo: string;
+  price: string;
+  change: string;
+  isPositive: boolean;
+  rank: string;
+  stats: Array<{
+    icon: string;
+    label: string;
+    value: string;
+  }>;
+  marketStats: {
+    marketCap: string;
+    fullyDilutedCap: string;
+    volume24h: string;
+    maxSupply: string;
+    totalSupply: string;
+    circulatingSupply: string;
+  };
+  trading: any; 
+  launchDate: string | null;
+  description: string;
 }
 
-const Overview: React.FC<OverviewProps> = ({ coinId }) => {
+interface OverviewProps {
+  coinSymbol: string;
+}
+
+const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [loading, setLoading] = useState(true);
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
-  const [coinData, setCoinData] = useState<any>(null);
+
+  const [coinData, setCoinData] = useState<CoinData>({
+    name: "Unknown Coin",
+    symbol: "Unknown",
+    logo: AssetsImg.ic_btc_coin,
+    price: "₹0.00",
+    change: "↑ 0.00%",
+    isPositive: true,
+    rank: "# 00",
+    stats: [
+      { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
+      { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "0.00%" },
+      { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+    ],
+    marketStats: {
+      marketCap: "N/A",
+      fullyDilutedCap: "N/A",
+      volume24h: "N/A",
+      maxSupply: "N/A",
+      totalSupply: "N/A",
+      circulatingSupply: "N/A",
+    },
+    trading: dummyCoinData.trading,
+    launchDate: null,
+    description: "No description available",
+  });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!coinId) return;
+      if (!coinSymbol) return;
 
       try {
         const [infoResponse, dataResponse] = await Promise.all([
-          fetchCoinInfo({ id: coinId }),
-          fetchCoinData({ id: coinId }),
+          fetchCoinInfo({ symbol: coinSymbol }),
+          fetchCoinData({ symbol: coinSymbol }),
         ]);
 
-        console.log("CoinMarketCap Quotes Response:", JSON.stringify(infoResponse.data, null, 2));
-        console.log("CoinMarketCap Info Response:", JSON.stringify(dataResponse.data, null, 2));
+        const coinInfo = infoResponse.data?.[coinSymbol]?.[0];
+        const coinMeta = dataResponse.data?.[coinSymbol]?.[0];
 
-        const coinInfo = infoResponse.data?.[coinId];
-        const coinMeta = dataResponse.data?.[coinId];
-
-        if (!coinInfo || !coinInfo.quote || !coinInfo.quote.USD || !coinMeta) {
+        if (!coinInfo || !coinInfo.quote || !coinInfo.quote.INR || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
         }
 
-        const formatDate = (isoDateString: string) => {
-          if (!isoDateString) return "N/A";
+        const formatDate = (isoDateString: string | null) => {
+          if (!isoDateString) return null;
           const date = new Date(isoDateString);
           const months = [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -67,34 +115,36 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
           name: coinMeta.name || "Unknown Coin",
           symbol: coinMeta.symbol || "Unknown",
           logo: coinMeta.logo || AssetsImg.ic_btc_coin,
-          price: coinInfo.quote.USD.price
-            ? `₹${coinInfo.quote.USD.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
+          price: coinInfo.quote.INR.price
+            ? `₹${coinInfo.quote.INR.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
             : "₹0.00",
-          change: coinInfo.quote.USD.percent_change_24h !== undefined
-            ? `${coinInfo.quote.USD.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.USD.percent_change_24h).toFixed(2)}%`
+          change: coinInfo.quote.INR.percent_change_24h !== undefined
+            ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_24h).toFixed(2)}%`
             : "↑ 0.00%",
+          isPositive: coinInfo.quote.INR.percent_change_24h !== undefined
+            ? coinInfo.quote.INR.percent_change_24h > 0
+            : true,
           rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
             {
               icon: AssetsImg.ic_lineschart,
               label: "Mkt Dominance",
-              value: coinInfo.quote.USD.market_cap_dominance
-                ? `${coinInfo.quote.USD.market_cap_dominance.toFixed(2)}%`
+              value: coinInfo.quote.INR.market_cap_dominance
+                ? `${coinInfo.quote.INR.market_cap_dominance.toFixed(2)}%`
                 : "0.00%",
             },
             { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
           ],
-
           marketStats: {
-            marketCap: coinInfo.quote.USD.market_cap
-              ? `$${coinInfo.quote.USD.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+            marketCap: coinInfo.quote.INR.market_cap
+              ? `₹ ${coinInfo.quote.INR.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
               : "N/A",
-            fullyDilutedCap: coinInfo.quote.USD.fully_diluted_market_cap
-              ? `$${coinInfo.quote.USD.fully_diluted_market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+            fullyDilutedCap: coinInfo.quote.INR.fully_diluted_market_cap
+              ? `₹ ${coinInfo.quote.INR.fully_diluted_market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
               : "N/A",
-            volume24h: coinInfo.quote.USD.volume_24h
-              ? `$${coinInfo.quote.USD.volume_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+            volume24h: coinInfo.quote.INR.volume_24h
+              ? `₹ ${coinInfo.quote.INR.volume_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
               : "N/A",
             maxSupply: coinInfo.max_supply
               ? coinInfo.max_supply.toLocaleString("en-US")
@@ -110,22 +160,41 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
           launchDate: formatDate(coinMeta.date_launched),
           description: coinMeta.description || "No description available",
         });
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching coin data:", error);
         setCoinData({
-          ...dummyCoinData,
-          logo: AssetsImg.ic_btc_coin,
-          launchDate: "N/A",
-          description: "Unable to load description",
+          name: "Unknown Coin",
           symbol: "Unknown",
+          logo: AssetsImg.ic_btc_coin,
+          price: "₹0.00",
+          change: "↑ 0.00%",
+          isPositive: true,
+          rank: "# 00",
+          stats: [
+            { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
+            { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "0.00%" },
+            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+          ],
+          marketStats: {
+            marketCap: "N/A",
+            fullyDilutedCap: "N/A",
+            volume24h: "N/A",
+            maxSupply: "N/A",
+            totalSupply: "N/A",
+            circulatingSupply: "N/A",
+          },
+          trading: dummyCoinData.trading,
+          launchDate: null,
+          description: "Unable to load description",
         });
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [coinId]);
+  }, [coinSymbol]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -163,27 +232,49 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
     setTimePeriod(tab);
   };
 
-  const coinLogo = coinData?.logo || AssetsImg.ic_btc_coin;
+  const coinLogo = coinData.logo;
 
   return (
     <div css={styles.container} ref={containerRef}>
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
           <div css={styles.coinInfo}>
-            <Image src={coinLogo} alt="coin" width={56} height={56} onError={() => console.error("Image failed to load:", coinLogo)} />
-            <div>
-              <h3>{coinData?.name || "Loading..."}</h3>
+            <Image src={coinLogo} alt="coin" width={56} height={56} priority onError={() => console.error("Image failed to load:", coinLogo)} />
+            <div css={styles.coinsInfoBox}>
+              <span css={styles.coinName}>{coinData.name}</span>
               <div css={styles.priceInfo}>
-                <span>{coinData?.price || "₹0.00"}</span>
-                <span css={styles.positiveChange}>{coinData?.change || "↑ 0.00%"}</span>
-                <span css={styles.tag}>{coinData?.rank || "# 00"}</span>
+                <span css={styles.coinPrice}>{coinData.price}</span>
+                <Tags
+                  isStroke
+                  size="medium"
+                  style={{
+                    name: '1pzk433',
+                    styles: 'width:100px'
+                  }}
+                  type={coinData.isPositive ? "success" : "error"}
+                  css={{ borderRadius: utils.remConverter(4) }}
+                >
+                  {coinData.change}
+                </Tags>
+                <Tags
+                  isStroke
+                  size="medium"
+                  style={{
+                    name: '1pzk433',
+                    styles: 'width:100px'
+                  }}
+                  type="default"
+                  css={{borderRadius: utils.remConverter(4)}}
+                >
+                  {coinData.rank}
+                </Tags>
               </div>
             </div>
           </div>
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-          {coinData?.stats?.map((stat: any, index: number) => (
+          {coinData.stats.map((stat, index) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />
@@ -202,12 +293,12 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
           <PerformanceGraph />
           <Statistics
             coinLogo={coinLogo}
-            marketStats={coinData?.marketStats || dummyCoinData.marketStats}
+            marketStats={coinData.marketStats}
           />
           <CoinInfo
-            launchDate={coinData?.launchDate || "N/A"}
-            description={coinData?.description || "No description available"}
-            symbol={coinData?.symbol || "Unknown"}
+            launchDate={coinData.launchDate}
+            description={coinData.description}
+            symbol={coinData.symbol}
           />
           <CryptoCategories />
         </div>
@@ -277,12 +368,14 @@ const Overview: React.FC<OverviewProps> = ({ coinId }) => {
             <ShimmerWrapper height={106} width={280} isLoading={loading} style={styles.labelMarginBottom}>
               <div css={styles.investmentBox}>
                 <div css={styles.investmentBoxContent}>
-                  <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
-                  <div>
-                    <p css={styles.IBlabel}>Current Value</p>
-                    <p css={styles.IBvalue}>₹0.00</p>
+                  <div css={styles.percentageBox}>
+                    <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
+                    <div>
+                      <p css={styles.IBlabel}>Current Value</p>
+                      <p css={styles.IBvalue}>₹0.00</p>
+                    </div>
                   </div>
-                  <div css={styles.percentageBox}>- 0.00%</div>
+                  <Tags type={"default"}>- 0.00%</Tags>
                 </div>
                 <Divider spacing={2} />
                 <p css={styles.investedAmountText}>

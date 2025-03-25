@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, ColorType } from "lightweight-charts";
-import { colors, Tabs } from "zebpay-ui";
+import { colors, Tabs, Tags, utils } from "zebpay-ui";
 import * as styles from "./styles";
 import { dummyData1M, dummyData1W, dummyData1Y, dummyData24h } from "../../../Data/DummyChartData";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
@@ -87,7 +87,17 @@ const PerformanceGraph: React.FC = () => {
       <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({marginBottom: "1rem"})}>
         <div css={styles.header}>
           <span css={styles.title}>Performance</span>
-          <span css={styles.performanceTag}>↑ 0.31% | 24H</span>
+          <Tags
+            size="medium"
+            style={{
+              name: '1pzk433',
+              styles: 'width:100px'
+            }}
+            type="success"
+            css={{borderRadius: utils.remConverter(4)}}
+          >
+            ↑ 0.31% | 24H
+          </Tags>
         </div>
       </ShimmerWrapper>
 
