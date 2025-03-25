@@ -31,5 +31,5 @@ export const optionStyle = (isSelected) =>
   });
 
   export const icon=css({
-    color:"#C0C0EE"
+    color:"#C0C0EE",
   })

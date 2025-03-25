@@ -69,6 +69,7 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
 
   return (
     <div css={newsletter}>
+
       <div css={newsChild}>
         {/* <div> */}
           <div css={newsHeader}>

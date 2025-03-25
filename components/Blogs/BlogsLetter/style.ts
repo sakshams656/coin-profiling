@@ -51,15 +51,7 @@ export const newsletter = css({
   borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
 
-  // "@media (max-width: 768px)": {
-  //   height: "auto",
-  //   padding: utils.remConverter(16),
-  // },
-  // "@media (max-width: 480px)": {
-  //   flexDirection: "column",
-  //   alignItems: "center",
-  //   gap: utils.remConverter(8),
-  // },
+
 });
 
 export const newsChild = css({
@@ -71,15 +63,7 @@ export const newsChild = css({
   flex: "1 0 0",
   alignSelf: "stretch",
 
-  // "@media (max-width: 768px)": {
-  //   height: "auto",
-  //   padding: utils.remConverter(16),
-  // },
-  // "@media (max-width: 480px)": {
-  //   flexDirection: "column",
-  //   alignItems: "center",
-  //   gap: utils.remConverter(8),
-  // },
+
 });
 
 export const newsHeader = css({
@@ -94,7 +78,6 @@ export const heading = css({
   color: colors.Zeb_Solid_White,
   // justifyContent:"space-between",
   fontFeatureSettings: `"clig" off, "liga" off`,
-  fontFamily: "Lato",
   fontSize: utils.remConverter(16),
   fontStyle: "normal",
   fontWeight: 700,
@@ -114,7 +97,6 @@ export const quote = css({
   alignSelf: "stretch",
   color: colors.Zeb_Solid_Light_Blue,
   fontFeatureSettings: `"clig" off, "liga" off`,
-  fontFamily: "Lato",
   fontSize: utils.remConverter(14),
   fontStyle: "normal",
   fontWeight: 400,

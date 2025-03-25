@@ -422,7 +422,7 @@ const NewsPage: React.FC = () => {
             </div>
           )}
         </div>
-        <div css={section} ref={sectionRef}>
+        <div css={section(isScrolled)} ref={sectionRef}>
           {error ? (
             <div>{error}</div>
           ) : (

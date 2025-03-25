@@ -43,6 +43,7 @@ export const added = css({
 export const filterAndUpdownFrame = css({
   display: "flex",
   alignItems: "center",
+  justifyContent:"space-between",
   gap: utils.remConverter(20),
 
   "@media (max-width: 768px)": {
