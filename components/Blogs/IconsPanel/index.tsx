@@ -1,7 +1,4 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
-import React, { useState, useRef, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
 import {
   SidePanel,
   Button,
@@ -9,20 +6,24 @@ import {
   Divider,
   Checkbox,
   Radio,
-  utils,
-  colors,
   Icon,
 } from "zebpay-ui";
 
 import {
-  Added,
-  ButtonGroup,
-  InsidePanel,
-  StyledSidePanel,
-  Title,
+  added,
+  buttonGroup,
+  insidePanel,
+  title,
   filterAndUpdownFrame,
+  iconBox,
   icon,
-  AccordionStyle,
+  accordionTitle,
+  accordion_option,
+  accordion_option_inside,
+  box,
+  customDate,
+  calendar_icon,
+  custom_span,
 } from "./style";
 import { css } from "@emotion/react";
 import Dropdown from "../DropDown";
@@ -43,6 +44,120 @@ interface IconsPanelProps {
   selectedDateRange: string;
 }
 
+interface State {
+  isPanelOpen: boolean;
+  tempCategories: string[];
+  tempDurations: string[];
+  tempDateRange: string;
+  isCategoryOpen: boolean;
+  isDurationOpen: boolean;
+  isDateRangeOpen: boolean;
+  isCustomDate: boolean;
+  customDateRange: DateRange | null;
+}
+
+type Action =
+  | { type: "TOGGLE_PANEL"; payload: boolean }
+  | { type: "SET_TEMP_CATEGORIES"; payload: string[] }
+  | { type: "SET_TEMP_DURATIONS"; payload: string[] }
+  | { type: "SET_TEMP_DATE_RANGE"; payload: string }
+  | { type: "TOGGLE_ACCORDION"; payload: "category" | "duration" | "dateRange" }
+  | { type: "TOGGLE_CUSTOM_DATE"; payload: boolean }
+  | { type: "SET_CUSTOM_DATE_RANGE"; payload: DateRange | null }
+  | { type: "HANDLE_CATEGORY_SELECT"; payload: string }
+  | { type: "HANDLE_DURATION_SELECT"; payload: string }
+  | { type: "HANDLE_DATE_RANGE_SELECT"; payload: string }
+  | { type: "RESET_FILTERS" }
+  | { type: "SELECT_ALL_CATEGORIES"; payload: boolean }
+  | { type: "SELECT_ALL_DURATIONS"; payload: boolean };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "TOGGLE_PANEL":
+      return { ...state, isPanelOpen: action.payload };
+    case "SET_TEMP_CATEGORIES":
+      return { ...state, tempCategories: action.payload };
+    case "SET_TEMP_DURATIONS":
+      return { ...state, tempDurations: action.payload };
+    case "SET_TEMP_DATE_RANGE":
+      return { ...state, tempDateRange: action.payload };
+    case "TOGGLE_ACCORDION":
+      return {
+        ...state,
+        isCategoryOpen:
+          action.payload === "category" ? !state.isCategoryOpen : false,
+        isDurationOpen:
+          action.payload === "duration" ? !state.isDurationOpen : false,
+        isDateRangeOpen:
+          action.payload === "dateRange" ? !state.isDateRangeOpen : false,
+      };
+    case "TOGGLE_CUSTOM_DATE":
+      return { ...state, isCustomDate: action.payload };
+    case "SET_CUSTOM_DATE_RANGE":
+      return { ...state, customDateRange: action.payload };
+    case "HANDLE_CATEGORY_SELECT":
+      return {
+        ...state,
+        tempCategories: state.tempCategories.includes(action.payload)
+          ? state.tempCategories.filter((cat) => cat !== action.payload)
+          : [...state.tempCategories, action.payload],
+      };
+    case "HANDLE_DURATION_SELECT":
+      return {
+        ...state,
+        tempDurations: state.tempDurations.includes(action.payload)
+          ? state.tempDurations.filter((dur) => dur !== action.payload)
+          : [...state.tempDurations, action.payload],
+      };
+    case "HANDLE_DATE_RANGE_SELECT":
+      if (action.payload === "custom") {
+        return {
+          ...state,
+          isCustomDate: true,
+          tempDateRange: "",
+          customDateRange: null,
+        };
+      } else {
+        return {
+          ...state,
+          isCustomDate: false,
+          tempDateRange: action.payload,
+        };
+      }
+    case "RESET_FILTERS":
+      return {
+        ...state,
+        tempCategories: [],
+        tempDurations: [],
+        tempDateRange: "",
+        customDateRange: null,
+        isCustomDate: false,
+      };
+    case "SELECT_ALL_CATEGORIES":
+      return {
+        ...state,
+        tempCategories: action.payload
+          ? [
+              "Announcement",
+              "Coin Prediction",
+              "Crypto",
+              "Market Analysis",
+              "Others",
+            ]
+          : [], 
+      };
+    case "SELECT_ALL_DURATIONS":
+      return {
+        ...state,
+        tempDurations: action.payload
+          ? ["01 - 05 Mins", "05 - 10 Mins", "10 - 20 Mins", "20+ Mins"]
+          : [],
+      };
+    default:
+      return state;
+  }
+};
+
 const IconsPanel: React.FC<IconsPanelProps> = ({
   onCategoryChange,
   onDurationChange,
@@ -53,108 +168,52 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
   selectedDurations,
   selectedDateRange,
 }) => {
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const initialState: State = {
+    isPanelOpen: false,
+    tempCategories: selectedCategories,
+    tempDurations: selectedDurations,
+    tempDateRange: selectedDateRange,
+    isCategoryOpen: false,
+    isDurationOpen: false,
+    isDateRangeOpen: false,
+    isCustomDate: false,
+    customDateRange: null,
+  };
 
-  const [tempCategories, setTempCategories] =
-    useState<string[]>(selectedCategories);
-  const [tempDurations, setTempDurations] =
-    useState<string[]>(selectedDurations);
-  const [tempDateRange, setTempDateRange] = useState<string>(selectedDateRange);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    setTempCategories(selectedCategories);
+    dispatch({ type: "SET_TEMP_CATEGORIES", payload: selectedCategories });
   }, [selectedCategories]);
 
   useEffect(() => {
-    setTempDurations(selectedDurations);
+    dispatch({ type: "SET_TEMP_DURATIONS", payload: selectedDurations });
   }, [selectedDurations]);
 
   useEffect(() => {
-    setTempDateRange(selectedDateRange);
+    dispatch({ type: "SET_TEMP_DATE_RANGE", payload: selectedDateRange });
   }, [selectedDateRange]);
 
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [isDurationOpen, setIsDurationOpen] = useState(false);
-  const [isDateRangeOpen, setIsDateRangeOpen] = useState(false);
-
-  const [isCustomDate, setIsCustomDate] = useState(false);
-  const [customDateRange, setCustomDateRange] = useState<DateRange | null>(
-    null
-  );
-
-  const sidePanelRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      sidePanelRef.current &&
-      !sidePanelRef.current.contains(event.target as Node)
-    ) {
-      setIsPanelOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleCategorySelect = (value: string) => {
-    setTempCategories((prev) =>
-      prev.includes(value)
-        ? prev.filter((cat) => cat !== value)
-        : [...prev, value]
-    );
-  };
-
-  const handleDurationSelect = (value: string) => {
-    setTempDurations((prev) =>
-      prev.includes(value)
-        ? prev.filter((dur) => dur !== value)
-        : [...prev, value]
-    );
-  };
-
-  const handleDateRangeSelect = (value: string) => {
-    if (value === "custom") {
-      setIsCustomDate(true);
-      setTempDateRange("");
-      setCustomDateRange(null);
-    } else {
-      setIsCustomDate(false);
-      setTempDateRange(value);
-    }
-  };
-
-  const handleDateRangePickerChange = (range: DateRange) => {
-    setCustomDateRange(range);
-  };
-
   const handleApplyFilters = () => {
-    if (isCustomDate && customDateRange) {
-      const formattedStartDate = new Date(customDateRange.startDate)
+    if (state.isCustomDate && state.customDateRange) {
+      const formattedStartDate = new Date(state.customDateRange.startDate)
         .toISOString()
         .split("T")[0];
-      const formattedEndDate = new Date(customDateRange.endDate)
+      const formattedEndDate = new Date(state.customDateRange.endDate)
         .toISOString()
         .split("T")[0];
       onDateRangeChange(`${formattedStartDate} - ${formattedEndDate}`);
     } else {
-      onDateRangeChange(tempDateRange);
+      onDateRangeChange(state.tempDateRange);
     }
-    onCategoryChange(tempCategories);
-    onDurationChange(tempDurations);
+    onCategoryChange(state.tempCategories);
+    onDurationChange(state.tempDurations);
 
-    setIsPanelOpen(false);
+    dispatch({ type: "TOGGLE_PANEL", payload: false });
   };
 
   const handleResetFilters = () => {
-    setTempCategories([]);
-    setTempDurations([]);
-    setTempDateRange("");
-    setCustomDateRange(null);
-    setIsCustomDate(false);
+    dispatch({ type: "RESET_FILTERS" });
 
     onCategoryChange([]);
     onDurationChange([]);
@@ -164,22 +223,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
       onReset();
     }
 
-    setIsPanelOpen(false);
-  };
-
-  const handleSelectAll = (isChecked: boolean) => {
-    const allCategories = [
-      "Announcement",
-      "Coin Prediction",
-      "Crypto",
-      "Market Analysis",
-      "Others",
-    ];
-    if (isChecked) {
-      setTempCategories(allCategories);
-    } else {
-      setTempCategories([]);
-    }
+    dispatch({ type: "TOGGLE_PANEL", payload: false });
   };
 
   const categoryOptions = [
@@ -190,21 +234,12 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
     { label: "Others", value: "Others" },
   ];
 
-  const handleAccordionToggle = (section: string) => {
-    if (section === "category") {
-      setIsCategoryOpen((prev) => !prev);
-      setIsDurationOpen(false);
-      setIsDateRangeOpen(false);
-    } else if (section === "duration") {
-      setIsDurationOpen((prev) => !prev);
-      setIsCategoryOpen(false);
-      setIsDateRangeOpen(false);
-    } else if (section === "dateRange") {
-      setIsDateRangeOpen((prev) => !prev);
-      setIsCategoryOpen(false);
-      setIsDurationOpen(false);
-    }
-  };
+  const durationOptions = [
+    "01 - 05 Mins",
+    "05 - 10 Mins",
+    "10 - 20 Mins",
+    "20+ Mins",
+  ];
 
   const dateRangeLabels: Record<string, string> = {
     "Last 7 Days": "Last 7 Days",
@@ -223,95 +258,74 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           : day % 10 === 3 && day !== 13
             ? "rd"
             : "th";
-    const month = date.toLocaleString("en-US", { month: "short" }); // "Mar"
-    const year = date.getFullYear().toString().slice(-2); // "22"
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear().toString().slice(-2);
     return `${day}${suffix} ${month} ${year}`;
   };
 
   const selectedDateRangeLabel =
-    isCustomDate && customDateRange
-      ? `${formatDate(new Date(customDateRange.startDate))} - ${formatDate(new Date(customDateRange.endDate))}`
-      : dateRangeLabels[tempDateRange] || "Select Date";
-
-  const handleSortChange = (value: string) => {
-    onSortChange(value);
-  };
+    state.isCustomDate && state.customDateRange
+      ? `${formatDate(new Date(state.customDateRange.startDate))} - ${formatDate(new Date(state.customDateRange.endDate))}`
+      : dateRangeLabels[state.tempDateRange] || " - ";
 
   return (
     <div css={filterAndUpdownFrame}>
       <div
-        css={icon}
-        onClick={() => setIsPanelOpen(true)}
+        css={iconBox}
+        onClick={() => dispatch({ type: "TOGGLE_PANEL", payload: true })}
         style={{ cursor: "pointer" }}
       >
-        <i
-          className="icon icon-filter"
-          css={css`
-            color:#C0C0EE
-          `}
-        />
+        <Icon name="icon icon-filter" style={icon} />
       </div>
-      <div css={icon} style={{ cursor: "pointer" }}>
-        <Dropdown onSortChange={handleSortChange} />
+      <div css={iconBox} style={{ cursor: "pointer" }}>
+        <Dropdown onSortChange={onSortChange} />
       </div>
-      <StyledSidePanel
-        onBack={() => setIsPanelOpen(false)}
-        onClose={() => setIsPanelOpen(false)}
+      <SidePanel
+        onBack={() => dispatch({ type: "TOGGLE_PANEL", payload: false })}
+        onClose={() => dispatch({ type: "TOGGLE_PANEL", payload: false })}
         title="Filter Blogs"
-        open={isPanelOpen}
-        ref={sidePanelRef}
+        open={state.isPanelOpen}
       >
-        <div css={InsidePanel}>
-          <Accordion 
-            isOpen={isCategoryOpen}
-            onToggle={() => handleAccordionToggle("category")}
+        <div css={insidePanel}>
+          <Accordion
+            isOpen={state.isCategoryOpen}
+            onToggle={() =>
+              dispatch({ type: "TOGGLE_ACCORDION", payload: "category" })
+            }
             title={
-              <div css={Title(isCategoryOpen)}>
+              <div css={title(state.isCategoryOpen)}>
                 <Image
-                  src={AssetsImg.ic_reports}
-                  css={css`
-                    margin-right: 0.5rem;
-                  `}
+                  src={state.isCategoryOpen? AssetsImg.ic_document_white : AssetsImg.ic_document}
+                  alt="doc"
+                  height={20}
+                  width={20}
+                  css={accordionTitle}
                 />
                 Category
-                {selectedCategories.length > 0 && (
-                  <span css={Added}>({selectedCategories.join(", ")})</span>
+                {state.tempCategories.length > 0 && (
+                  <span css={added}>({state.tempCategories.join(", ")})</span>
                 )}
               </div>
             }
-            style={{
-              marginBottom: "0.6rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
+            style={accordion_option}
           >
-            <div
-              css={css`
-                margin-top: 12px;
-                font-family: "Lato", "Noto_Serif", sans-serif;
-              `}
-            >
-              <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  margin-bottom: 12px;
-                `}
-              >
+            <div>
+              <div css={accordion_option_inside}>
                 <Checkbox
-                  indeterminate
-                  name="test-checkbox"
-                  checked={tempCategories.length === categoryOptions.length}
-                  onChange={(e) => handleSelectAll(e.checked)}
-                  style={{ marginRight: "1rem" }}
+                  indeterminate={
+                    state.tempCategories.length != categoryOptions.length
+                  }
+                  checked={state.tempCategories.length > 0}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SELECT_ALL_CATEGORIES",
+                      payload: e.checked,
+                    })
+                  }
+                  style={box}
                   value={1}
                 />
-                <label
-                  htmlFor="selectAll"
-                  css={css`
-                    font-size: 14px;
-                  `}
-                >
+                <label htmlFor="selectAll" style={{ fontSize: "14px" }}>
                   Select All
                 </label>
               </div>
@@ -320,19 +334,17 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
 
               {categoryOptions.map((option, index) => (
                 <React.Fragment key={option.value}>
-                  <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      margin: 12px 0;
-                    `}
-                  >
+                  <div css={accordion_option_inside}>
                     <Checkbox
-                      name="category-checkbox"
-                      checked={tempCategories.includes(option.value)}
-                      onChange={() => handleCategorySelect(option.value)}
+                      checked={state.tempCategories.includes(option.value)}
+                      onChange={() =>
+                        dispatch({
+                          type: "HANDLE_CATEGORY_SELECT",
+                          payload: option.value,
+                        })
+                      }
                       value={option.value}
-                      style={{ marginRight: "1rem" }}
+                      style={box}
                     />
                     <label
                       htmlFor={`category-${option.value}`}
@@ -353,33 +365,50 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           </Accordion>
 
           <Accordion
-            isOpen={isDurationOpen}
-            onToggle={() => handleAccordionToggle("duration")}
+            isOpen={state.isDurationOpen}
+            onToggle={() =>
+              dispatch({ type: "TOGGLE_ACCORDION", payload: "duration" })
+            }
             title={
-              <div css={Title(isDurationOpen)}>
+              <div css={title(state.isDurationOpen)}>
                 <Image
-                  src={AssetsImg.ic_duration}
-                  css={css`
-                    margin-right: 0.5rem;
-                  `}
+                  src={state.isDurationOpen? AssetsImg.ic_clock : AssetsImg.ic_clock_blue}
+                  alt="doc"
+                  height={20}
+                  width={20}
+                  css={accordionTitle}
                 />
                 Duration
-                {selectedDurations.length > 0 && (
-                  <span css={Added}>({selectedDurations.join(", ")})</span>
+                {state.tempDurations.length > 0 && (
+                  <span css={added}>({state.tempDurations.join(", ")})</span>
                 )}
               </div>
             }
-            style={{
-              marginBottom: "0.6rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
+            style={accordion_option}
           >
-            <div
-              css={css`
-                margin-top: 12px;
-              `}
-            >
+            <div css={accordion_option_inside}>
+              <Checkbox
+                indeterminate={
+                  state.tempDurations.length !== durationOptions.length
+                }
+                checked={state.tempDurations.length > 0}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SELECT_ALL_DURATIONS",
+                    payload: e.checked,
+                  })
+                }
+                style={box}
+                value={1}
+              />
+              <label htmlFor="selectAll" style={{ fontSize: "14px" }}>
+                Select All
+              </label>
+            </div>
+
+            <Divider spacing={2} />
+
+            <div>
               {[
                 { label: "01 - 05 Mins", value: "01 - 05 Mins" },
                 { label: "05 - 10 Mins", value: "05 - 10 Mins" },
@@ -387,19 +416,17 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                 { label: "20+ Mins", value: "20+ Mins" },
               ].map((option, index) => (
                 <React.Fragment key={option.value}>
-                  <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      margin: 12px 0;
-                    `}
-                  >
+                  <div css={accordion_option_inside}>
                     <Checkbox
-                      name="duration-checkbox"
-                      checked={tempDurations.includes(option.value)}
-                      onChange={() => handleDurationSelect(option.value)}
+                      checked={state.tempDurations.includes(option.value)}
+                      onChange={() =>
+                        dispatch({
+                          type: "HANDLE_DURATION_SELECT",
+                          payload: option.value,
+                        })
+                      }
                       value={option.value}
-                      style={{ marginRight: "1rem" }}
+                      style={box}
                     />
                     <label
                       htmlFor={`duration-${option.value}`}
@@ -418,41 +445,32 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           </Accordion>
 
           <Accordion
-            isOpen={isDateRangeOpen}
-            onToggle={() => handleAccordionToggle("dateRange")}
-            style={{
-              marginBottom: "0.6rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
+            isOpen={state.isDateRangeOpen}
+            onToggle={() =>
+              dispatch({ type: "TOGGLE_ACCORDION", payload: "dateRange" })
+            }
+            style={accordion_option}
             title={
-              <div css={Title(isDateRangeOpen)}>
-                <i
-                  className="icon icon-calendar"
-                  css={css`
-                    margin-right: 0.5rem;
-                    font-size: 20px;
-                  `}
+              <div css={title(state.isDateRangeOpen)}>
+                <Image
+                  src={state.isDateRangeOpen? AssetsImg.ic_calendar_white : AssetsImg.ic_calendar}
+                  alt="doc"
+                  height={20}
+                  width={20}
+                  css={accordionTitle}
                 />
-                <div
-                  css={css`
-                    display: flex;
-                    align-items: center;
-                  `}
-                >
+                <div>
                   Date Range
-                  {(tempDateRange || isCustomDate) && (
-                    <span css={Added}>({selectedDateRangeLabel})</span>
-                  )}
+                  {(state.tempDateRange || state.isCustomDate) ? (
+                    <span css={added}>({selectedDateRangeLabel})</span>
+                  ):
+                  <span css={added}>(Last 1 Year)</span>
+                  }
                 </div>
               </div>
             }
           >
-            <div
-              css={css`
-                margin-top: 12px;
-              `}
-            >
+            <div>
               {[
                 { label: "Last 7 Days", value: "Last 7 Days" },
                 { label: "Last Month", value: "Last Month" },
@@ -461,22 +479,21 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                 { label: "Custom", value: "custom" },
               ].map((option, index) => (
                 <React.Fragment key={option.value}>
-                  <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      margin: 12px 0;
-                    `}
-                  >
+                  <div css={accordion_option_inside}>
                     <Radio
                       name="date-range-checkbox"
-                      checked={
-                        tempDateRange === option.value ||
-                        (isCustomDate && option.value === "custom")
+                      selected={
+                        state.tempDateRange === option.value ||
+                        (state.isCustomDate && option.value === "custom")
                       }
-                      onChange={() => handleDateRangeSelect(option.value)}
+                      onChange={() =>
+                        dispatch({
+                          type: "HANDLE_DATE_RANGE_SELECT",
+                          payload: option.value,
+                        })
+                      }
                       value={option.value}
-                      style={{ marginRight: "1rem" }}
+                      style={box}
                     />
                     <label
                       htmlFor={`date-range-${option.value}`}
@@ -484,7 +501,11 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
                         font-size: 14px;
                       `}
                     >
-                      {option.label}
+                      {
+                      option.label==="Custom"?
+                      <span>{option.label} <span css={custom_span}>Upto 1 Year</span> </span>:
+                      option.label
+                      } 
                     </label>
                   </div>
 
@@ -495,26 +516,19 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
           </Accordion>
         </div>
 
-        {isCustomDate && (
-          <div
-            css={css`
-              margin-top: ${utils.remConverter(-8)};
-              padding: ${utils.remConverter(16)};
-              background-color: ${colors.Zeb_Solid_BG_Blue};
-              border-radius: ${utils.remConverter(4)};
-              // display: ${filters.dateRange === "Custom" ? "block" : "none"};
-            `}
-          >
+        {state.isCustomDate && (
+          <div css={customDate}>
             <DateRangePicker
-              onChange={handleDateRangePickerChange}
+              onChange={(range) =>
+                dispatch({ type: "SET_CUSTOM_DATE_RANGE", payload: range })
+              }
               minDate={new Date("2000-01-01")}
               maxDate={new Date()}
-              // style={{"padding":"100px"}}
             />
           </div>
         )}
 
-        <div css={ButtonGroup}>
+        <div css={buttonGroup}>
           <Button onClick={handleResetFilters} size="medium" type="secondary">
             Reset
           </Button>
@@ -522,7 +536,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
             Apply
           </Button>
         </div>
-      </StyledSidePanel>
+      </SidePanel>
     </div>
   );
 };

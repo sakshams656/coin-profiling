@@ -323,11 +323,13 @@ const ZCustomSelect: React.FC<IZCustomSelectData> = ({
                         if (
                           !value.includes(".") &&
                           value.length <= searchOptions.limit
-                        ) {
+                        ) 
+                        {
                           setSearch(value);
                           handleSearch(value);
                         }
-                      } else {
+                      } 
+                      else {
                         setSearch(value);
                         handleSearch(value);
                       }

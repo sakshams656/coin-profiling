@@ -5,6 +5,7 @@ import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
+import { data } from "../../../actions/overviewApi";
 
 interface CoinInfoProps {
   launchDate: string | null;
@@ -22,6 +23,42 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
 
   const [activeTab, setActiveTab] = useState(tabs.about); 
   const [loading, setLoading] = useState(true);
+  const [launchDate,setLaunchDate]=useState("");
+  const [description,setDescription]=useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await data();
+        const date_launched = response.data["BTC"][0].date_launched;
+        const description = response.data["BTC"][0].description;
+        setLaunchDate(formatDate(date_launched));
+        setDescription(description);
+        console.log(description);
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
+
+
+function formatDate(isoDateString:string) {
+
+  const date = new Date(isoDateString);
+  
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${day} ${month} ${year}`;
+
+}
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,7 +80,9 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
     <div css={styles.coinInfoContainer}>
       <ShimmerWrapper width={150} height={24} isLoading={loading}>
         <span css={styles.title}>Coin Information</span>
+
         {launchDate && <span css={styles.launchInfo}>{launchDate}</span>}
+
       </ShimmerWrapper>
 
       <div css={styles.dataContainer}>
@@ -94,11 +133,13 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
 
           <div css={styles.contentBody}>
             <ShimmerWrapper height={250} width={700} isLoading={loading}>
+
               {activeTab === tabs.about ? (
                 <p>{description}</p>
               ) : (
                 <p>{tabContent[getContentKey(activeTab)] || "Content not available"}</p>
               )}
+
             </ShimmerWrapper>
           </div>
         </div>

@@ -1,3 +1,25 @@
+import { chart } from "@actions/overviewApi";
+
+
+export const fetchData = async (duration:string="1") => {
+  try {
+    const chartData = await chart(duration);
+    
+
+    const realData24h = chartData.data.map((item: { t: number, y: number }) => {
+      return {
+        time: new Date(item.t).toISOString().split("T")[0],
+        value: item.y
+      };
+    });
+    
+    return realData24h;
+  } catch (error) {
+    console.error("Error processing chart data:", error);
+    throw error;
+  }
+};
+
 export const dummyData24h = [
     { time: "2023-10-31", value: 32.51 },
     { time: "2023-11-01", value: 31.11 },

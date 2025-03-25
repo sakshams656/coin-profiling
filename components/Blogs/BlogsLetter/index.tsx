@@ -1,27 +1,35 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
-import { useState } from "react";
-import { Icon, Input, Button, CircularLoader, Shimmer } from "zebpay-ui";
-import { css } from "@emotion/react";
+import { useEffect, useState } from "react";
+import { Input, Button, Shimmer } from "zebpay-ui";
 import AssetsImg from "@public/images";
 
 import {
-  ErrorText,
   ButtonStyle,
   Subscribed,
   newsletter,
   newsChild,
   newsHeader,
   heading,
-  MailIcon,
+  mailIcon,
   quote,
   Form,
   Subscribe,
+  input,
+  loading,
 } from "./style";
 import Image from "next/image";
 
-const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
+const useDebounce=(value:string,delay:number)=>{
+  const [debouncedValue,setDebouncedValue]=useState(value);
+
+  useEffect(()=>{
+    const timer=setTimeout(()=>setDebouncedValue(value),delay);
+    return ()=>clearTimeout(timer);
+  },[value,delay]);
+
+  return debouncedValue
+}
+
+const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [showError, setShowError] = useState(false);
@@ -29,18 +37,25 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isInputFocus, setIsInputFocus] = useState(false);
 
+  const debounceEmail=useDebounce(email,2000);
+
   const validateEmail = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   };
 
-  const handleEmailChange = (target: InputTargetProps) => {
+  const handleEmailChange = (target: {value:string}) => {
+
     const newEmail = target.value;
     setEmail(newEmail);
-    const isValid = validateEmail(newEmail);
-    setIsValidEmail(isValid);
-    setShowError(newEmail.includes("@") && !isValid);
+
   };
+
+  useEffect(()=>{
+      const isValid = validateEmail(debounceEmail);
+      setIsValidEmail(isValid);
+      setShowError(debounceEmail.includes("@") && !isValid);
+  },[debounceEmail])
 
   const handleSubmit = () => {
     if (isValidEmail && email && !isSubmitting) {
@@ -63,26 +78,26 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <div css={newsletter}>
       <div css={newsChild}>
-        <div>
+        {/* <div> */}
           <div css={newsHeader}>
 
-            <MailIcon>
+            <div css={mailIcon}>
               {isLoading ? (
-                <Shimmer height={70} width={70} />
+                <Shimmer height={70} width={80} />
               ) : (
                 <Image
                   src={
-                    isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.ic_mail
+                    isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.i_mail
                   }
                   alt={isSubscribed ? "Subscribed" : "Mail"}
                 />
               )}
-            </MailIcon>
+            </div>
             <div css={heading}>
               {isLoading ? (
                 <Shimmer
-                  height={28}
-                  width={220}
+                  height={26}
+                  width={250}
                 />
               ) : isSubscribed ? (
                 "Subscription Successful!"
@@ -94,7 +109,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
               {isLoading ? (
                 <Shimmer
                   height={45}
-                  width={260}
+                  width={280}
                 />
               ) : isSubscribed ? (
                 "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
@@ -106,18 +121,13 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
 
           {isLoading ? (
             <div
-              style={{
-                marginTop: "1.5rem",
-                gap: "0.3rem",
-                display: "flex",
-                flexDirection: "column",
-              }}
+              css={loading}
             >
-              <Shimmer height={20} width={220} />
-              <Shimmer height={37} width={260} />
+              <Shimmer height={20} width={250} />
+              <Shimmer height={35} width={280} />
 
-              <div style={{marginTop:"2.5rem"}}>
-              <Shimmer height={32} width={260} />
+              <div style={{marginTop:"2.0rem"}}>
+              <Shimmer height={30} width={280} />
               </div>
 
             </div>
@@ -126,21 +136,18 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
               <>
                 <div css={Form}>
                   <Input
-                    errorText={showError}
+                    errorText= {showError &&"Invalid Email ID"}
                     disabled={isSubmitting}
                     label="Enter Email Address"
                     value={email}
                     onChange={handleEmailChange}
                     placeholder="qwerty@gmail.com"
-                    style={{
-                      width: "100%",
-                    }}
+                    style={input}
                     onFocus={() => setIsInputFocus(true)}
                     onBlur={() => setIsInputFocus(false)}
                   />
-                  {showError && <span css={ErrorText}>Invalid email ID</span>}
                 </div>
-                <div css={Subscribe} isValid={isValidEmail}>
+                <div css={Subscribe} >
                   <Button
                     onClick={handleSubmit}
                     size="full-width"
@@ -156,7 +163,7 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
               </>
             )
           )}
-        </div>
+        {/* </div> */}
 
         {isSubscribed && (
           <div css={Subscribed}>
@@ -172,4 +179,4 @@ const NewsLetter = ({ isLoading }: { isLoading: boolean }) => {
   );
 };
 
-export default NewsLetter;
+export default BlogsLetter;
