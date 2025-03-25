@@ -1,9 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, ColorType } from "lightweight-charts";
-import { colors, Tabs } from "zebpay-ui";
-import { chartContainer, header, innerChartContainer, performanceGraphContainer, performanceTag, title } from "./styles";
+
+import { colors, Tabs , Tags, utils } from "zebpay-ui";
+import * as styles from "./styles";
 import { dummyData1M, dummyData1W, dummyData1Y, dummyData24h ,fetchData} from "../../../Data/DummyChartData";
+
+
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { info } from "@actions/overviewApi";
@@ -83,11 +86,13 @@ const PerformanceGraph: React.FC = () => {
       timeScale: {
         borderColor: colors.Zeb_Transparent_4,
       },
+
       priceScale: {
         visible: false,
         borderVisible: false, 
         
       },
+
     });
 
     const series = chart.addSeries(AreaSeries,{
@@ -124,16 +129,28 @@ const PerformanceGraph: React.FC = () => {
   }, [chartData, seriesInstance, chartInstance]);
 
   return (
-    <div css={performanceGraphContainer}>
-      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({ marginBottom: "1rem" })}>
-        <div css={header}>
-          <span css={title}>Performance</span>
-          <span css={performanceTag}>{percentageChange24h} | 24H</span>
+
+    <div css={styles.performanceGraphContainer}>
+      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({marginBottom: "1rem"})}>
+        <div css={styles.header}>
+          <span css={styles.title}>Performance</span>
+          <Tags
+            size="medium"
+            style={{
+              name: '1pzk433',
+              styles: 'width:100px'
+            }}
+            type="success"
+            css={{borderRadius: utils.remConverter(4)}}
+          >
+             {percentageChange24h} | 24H
+          </Tags>
+
         </div>
       </ShimmerWrapper>
       <ShimmerWrapper height={263} width={1000} isLoading={loading}>
-        <div css={innerChartContainer}>
-          <div css={chartContainer} ref={chartContainerRef} />
+        <div css={styles.innerChartContainer}>
+          <div css={styles.chartContainer} ref={chartContainerRef} />
           <Tabs
             onChange={(tab) => setTimePeriod(tab)}
             selectedTab={timePeriod}
