@@ -18,12 +18,12 @@ import {
 
 const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
   return (
-    <div css={tradingBanner}>
+    <div css={tradingBanner(isLoading)}>
       <div css={frame}>
         <div css={anotherFrame}>
           <div css={zebpayImageDiv}>
             {isLoading ? (
-              <Shimmer height={60} width={110} typeLightdDark />
+              <Shimmer height={70} width={70} typeLightdDark />
             ) : (
               <Image src={AssetsImg.ic_crypto} alt="Crypto" />
             )}

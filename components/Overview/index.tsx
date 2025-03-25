@@ -69,18 +69,18 @@ const Overview = () => {
           <div css={styles.coinInfo}>
             <Image src={AssetsImg.ic_btc_coin} alt="coin" width={56} height={56} />
             <div>
-              <h3>{data.name}</h3>
+              <h3>{data?.name}</h3>
               <div css={styles.priceInfo}>
-                <span>{data.price}</span>
-                <span css={styles.positiveChange}>{data.change}</span>
-                <span css={styles.tag}>{data.rank}</span>
+                <span>{data?.price}</span>
+                <span css={styles.positiveChange}>{data?.change}</span>
+                <span css={styles.tag}>{data?.rank}</span>
               </div>
             </div>
           </div>
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-          {data.stats.map((stat, index) => (
+          {data?.stats.map((stat, index) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />

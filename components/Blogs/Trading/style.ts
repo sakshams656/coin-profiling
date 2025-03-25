@@ -27,14 +27,13 @@ export const image = css({
 
 });
 
-export const tradingBanner = css({
-  position: "relative",
+export const tradingBanner =(isLoading:boolean)=> css({
   display: "flex",
   padding: utils.remConverter(12),
   flexDirection: "column",
   alignItems: "flex-start",
   borderRadius: utils.remConverter(8),
-  background: `${colors.Zeb_Gradient_Dark_Blue}, url(${AssetsImg.ic_tb_gradient.src})`, 
+  background: isLoading? colors.Zeb_Gradient_Dark_Blue: `${colors.Zeb_Gradient_Dark_Blue}, url(${AssetsImg.ic_tb_gradient.src})`, 
   backgroundBlendMode: "soft-light",
   backgroundSize: "cover",
   backgroundPosition: "center",

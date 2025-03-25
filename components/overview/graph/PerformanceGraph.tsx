@@ -2,8 +2,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, ColorType } from "lightweight-charts";
 import { colors, Tabs } from "zebpay-ui";
-import { chartContainer, header, innerChartContainer, performanceGraphContainer, performanceTag, title } from "./styles";
-import { dummyData1M, dummyData1W, dummyData1Y, dummyData24h ,fetchData} from "../../../Data/DummyChartData";
+import {
+  chartContainer,
+  header,
+  innerChartContainer,
+  performanceGraphContainer,
+  performanceTag,
+  title,
+} from "./styles";
+import {
+  dummyData1M,
+  dummyData1W,
+  dummyData1Y,
+  dummyData24h,
+  fetchData,
+} from "../../../Data/DummyChartData";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { info } from "@actions/overviewApi";
@@ -14,17 +27,23 @@ const PerformanceGraph: React.FC = () => {
   const [chartInstance, setChartInstance] = useState<any>(null);
   const [seriesInstance, setSeriesInstance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [percentageChange24h, setPercentChange24h] = useState<string | null>(null);
-  const [chartData, setChartData] = useState<Array<{ time: string; value: number }>>([]);
-  const fronCurrency="btc";
-  const toCurrency="inr";
-  const coin_symbol="btc";
+  const [percentageChange24h, setPercentChange24h] = useState<string | null>(
+    null
+  );
+  const [chartData, setChartData] = useState<
+    Array<{ time: string; value: number }>
+  >([]);
+  const fronCurrency = "btc";
+  const toCurrency = "inr";
+  const coin_symbol = "btc";
 
   useEffect(() => {
     const fetchDataAsync = async () => {
       try {
         const response = await info(coin_symbol);
-        const change = response.data[coin_symbol.toUpperCase()][0].quote.USD.percent_change_24h;
+        const change =
+          response.data[coin_symbol.toUpperCase()][0].quote.USD
+            .percent_change_24h;
         const formattedChange = `${change > 0 ? "↑" : "↓"} ${Math.abs(change).toFixed(2)}%`;
         setPercentChange24h(formattedChange);
       } catch (error) {
@@ -50,11 +69,27 @@ const PerformanceGraph: React.FC = () => {
             duration = "30";
             break;
         }
-        const data = await fetchData(duration,fronCurrency,toCurrency);
-        const uniqueData = data.reduce((acc: { time: string; value: number }[], current) => {
-          if (!acc.find((item) => item.time === current.time)) acc.push(current);
-          return acc;
-        }, []);
+        const data = await fetchData(duration, fronCurrency, toCurrency);
+
+        const uniqueData = data
+          .reduce((acc: { time: string; value: number }[], current) => {
+            const existingIndex = acc.findIndex(
+              (item) => item.time === current.time
+            );
+
+            if (existingIndex === -1) {
+              acc.push(current);
+            } else {
+              acc[existingIndex] = current;
+            }
+
+            return acc;
+          }, [])
+          .sort(
+            (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+          );
+          console.log(data);
+
         setChartData(uniqueData);
       } catch (error) {
         console.error("Error fetching chart data:", error);
@@ -70,7 +105,10 @@ const PerformanceGraph: React.FC = () => {
 
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: colors.Zeb_Solid_Dark_Blue },
+        background: {
+          type: ColorType.Solid,
+          color: colors.Zeb_Solid_Dark_Blue,
+        },
         textColor: colors.Zeb_Solid_White,
       },
       width: chartContainerRef.current.clientWidth,
@@ -79,25 +117,23 @@ const PerformanceGraph: React.FC = () => {
         vertLines: { color: colors.Zeb_Solid_Dark_Blue },
         horzLines: { color: colors.Zeb_Transparent_4 },
       },
-      crosshair:{
-        vertLine:false,
-        horzLine:false,
+      crosshair: {
+        vertLine: false,
+        horzLine: false,
       },
       timeScale: {
         borderColor: colors.Zeb_Transparent_4,
       },
       priceScale: {
         visible: false,
-        borderVisible: false, 
-        
+        borderVisible: false,
       },
     });
 
-    const series = chart.addSeries(AreaSeries,{
+    const series = chart.addSeries(AreaSeries, {
       lineColor: colors.Zeb_Solid_Green,
       topColor: "rgba(46, 204, 113, 0.4)",
       bottomColor: "rgba(46, 204, 113, 0.1)",
-      
     });
 
     setChartInstance(chart);
@@ -121,14 +157,19 @@ const PerformanceGraph: React.FC = () => {
   }, [loading]);
 
   useEffect(() => {
-    if (!seriesInstance || !chartInstance) return; 
+    if (!seriesInstance || !chartInstance) return;
     seriesInstance.setData(chartData);
     chartInstance.timeScale().fitContent();
   }, [chartData, seriesInstance, chartInstance]);
 
   return (
     <div css={performanceGraphContainer}>
-      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({ marginBottom: "1rem" })}>
+      <ShimmerWrapper
+        height={40}
+        width={200}
+        isLoading={loading}
+        style={css({ marginBottom: "1rem" })}
+      >
         <div css={header}>
           <span css={title}>Performance</span>
           <span css={performanceTag}>{percentageChange24h} | 24H</span>

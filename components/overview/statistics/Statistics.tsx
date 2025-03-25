@@ -71,10 +71,10 @@ const Statistics: React.FC = () => {
               </div>
               <div css={styles.statsSubRow}>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Red }}>
-                  {data.performance.low24h}
+                  {data?.performance?.low24h}
                 </div>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Green }}>
-                  {data.performance.high24h}
+                  {data?.performance?.high24h}
                 </div>
               </div>
             </div>
@@ -135,7 +135,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
               </div>
-              <div css={styles.statsValue}>{data.marketStats.marketCap}</div>
+              <div css={styles.statsValue}>{data?.marketStats?.marketCap}</div>
             </div>
           </ShimmerWrapper>
 
@@ -161,7 +161,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{data.marketStats.fullyDilutedCap}</div>
+            <div css={styles.statsValue}>{data?.marketStats?.fullyDilutedCap}</div>
           </div>
           </ShimmerWrapper>
 
@@ -187,7 +187,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{data.marketStats.volume24h}</div>
+            <div css={styles.statsValue}>{data?.marketStats?.volume24h}</div>
           </div>
           </ShimmerWrapper>
         </div>
@@ -220,7 +220,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{data.marketStats.maxSupply}</div>
+            <div css={styles.statsValue}>{data?.marketStats?.maxSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -246,7 +246,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{data.marketStats.totalSupply}</div>
+            <div css={styles.statsValue}>{data?.marketStats?.totalSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -272,7 +272,7 @@ const Statistics: React.FC = () => {
                 <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
               </Tooltip>
             </div>
-            <div css={styles.statsValue}>{data.marketStats.circulatingSupply}</div>
+            <div css={styles.statsValue}>{data?.marketStats?.circulatingSupply}</div>
           </div>
         </ShimmerWrapper>
         </div>
@@ -280,5 +280,6 @@ const Statistics: React.FC = () => {
     </div>
   );
 };
+
 
 export default Statistics;

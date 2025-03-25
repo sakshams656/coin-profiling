@@ -15,10 +15,6 @@ export const ButtonStyle = css({
   alignItems: "center",
   height: utils.remConverter(20),
 
-  // "@media (max-width: 800px)": {
-  //   height: utils.remConverter(30),
-  //   backgroundColor: "#ffffff",
-  // },
 });
 
 export const Subscribed = css({
@@ -33,13 +29,6 @@ export const Subscribe  =
     justifyContent: "center",
     alignItems: "center",
     marginTop:"auto",
-
-    // "@media (max-width: 768px)": {
-    //   maxWidth: utils.remConverter(130),
-    // },
-    // "@media (max-width: 480px)": {
-    //   maxWidth: utils.remConverter(110),
-    // },
   });
 
 export const newsletter = css({

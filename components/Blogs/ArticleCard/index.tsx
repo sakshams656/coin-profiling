@@ -78,14 +78,14 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               <div css={DateText}>{date}</div>
             </div>
 
-            {isImageLoaded &&<Image src={AssetsImg.ic_seperator} alt="Separator" width={16} height={16} />}
+            {/* {isImageLoaded &&<Image src={AssetsImg.ic_seperator} alt="Separator" width={16} height={16} />} */}
 
-            <div css={ReadingTime}>
+            {/* <div css={ReadingTime}>
               {isImageLoaded  &&  <div css={ReadingTimeIcon}>
                 <Image src={AssetsImg.ic_views} alt="Show" width={16} height={16} />
               </div>}
               <div css={ReadingTimeText}>{totalViews}</div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
