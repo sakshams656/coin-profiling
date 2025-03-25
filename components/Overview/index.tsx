@@ -1,9 +1,7 @@
 import Image from "next/image";
-
-import * as styles from "./styles";
-import { dummyCoinData } from "../../Data/DummyCoinData";
-import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
-
+import * as styles from "./styles"; 
+import { dummyCoinData ,real_data} from "../../Data/DummyCoinData";
+import { Button, colors, Divider, Input, InputDropDown, Tabs, utils } from "zebpay-ui";
 import Statistics from "./Statistics/Statistics";
 import AssetsImg from "@public/images";
 import CoinInfo from "./CoinInformation/CoinInfo";
@@ -56,6 +54,23 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
   const [data,setData]=useState(dummyCoinData);
+  const symbol="btc";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await real_data(symbol);
+        setData(data);
+
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
+
+  
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -242,6 +257,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
 
   
 
+  
+
   const handleAmountChange = (target: InputTargetProps) => {
     setAmountInvested(target.value);
   };
@@ -261,46 +278,20 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
           <div css={styles.coinInfo}>
-
-            <Image src={coinLogo} alt="coin" width={56} height={56} priority onError={() => console.error("Image failed to load:", coinLogo)} />
-            <div css={styles.coinsInfoBox}>
-              <span css={styles.coinName}>{coinData.name}</span>
+            <Image src={AssetsImg.ic_btc_coin} alt="coin" width={56} height={56} />
+            <div>
+              <h3>{data?.name}</h3>
               <div css={styles.priceInfo}>
-                <span css={styles.coinPrice}>{coinData.price}</span>
-                <Tags
-                  isStroke
-                  size="medium"
-                  style={{
-                    name: '1pzk433',
-                    styles: 'width:100px'
-                  }}
-                  type={coinData.isPositive ? "success" : "error"}
-                  css={{ borderRadius: utils.remConverter(4) }}
-                >
-                  {coinData.change}
-                </Tags>
-                <Tags
-                  isStroke
-                  size="medium"
-                  style={{
-                    name: '1pzk433',
-                    styles: 'width:100px'
-                  }}
-                  type="default"
-                  css={{borderRadius: utils.remConverter(4)}}
-                >
-                  {coinData.rank}
-                </Tags>
-
+                <span>{data?.price}</span>
+                <span css={styles.positiveChange}>{data?.change}</span>
+                <span css={styles.tag}>{data?.rank}</span>
               </div>
             </div>
           </div>
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-
-          {coinData.stats.map((stat, index) => (
-
+          {data?.stats.map((stat, index) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />

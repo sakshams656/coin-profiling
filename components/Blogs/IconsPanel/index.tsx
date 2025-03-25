@@ -269,6 +269,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
       : dateRangeLabels[state.tempDateRange] || " - ";
 
   return (
+
     <div css={filterAndUpdownFrame}>
       <div
         css={iconBox}
@@ -538,6 +539,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
         </div>
       </SidePanel>
     </div>
+
   );
 };
 

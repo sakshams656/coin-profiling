@@ -1,5 +1,6 @@
 
 import { css } from "@emotion/react";
+import AssetsImg from "@public/images";
 import { typography, colors, utils } from "zebpay-ui";
 
 export const ButtonStyle = css({

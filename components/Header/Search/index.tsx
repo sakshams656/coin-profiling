@@ -50,8 +50,8 @@ const ArticleOptions = ({ filteredArticles, handleArticleClick }: ArticleOptions
           </div>
           <div css={articleFooter}>
             <div>
-              <span style={{ justifyContent: "center" }}>
-                <i className="icon icon-calendar" style={{ marginRight: "0.5rem" }} />
+              <span >
+                <i className="icon icon-calendar" style={{ margin: "0.5rem" }} />
                 {new Date(article.publishedAt)
                   .toLocaleDateString("en-GB", {
                     day: "2-digit",

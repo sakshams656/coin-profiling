@@ -7,6 +7,9 @@ import Tradingbanner from "../Trading";
 import NoBlogsFound from "../NoBlogsFound";
 import { Button, Shimmer } from "zebpay-ui";
 import Image from "next/image";
+import { getCryptoNews } from "../api/apiService";
+import { useDispatch, UseDispatch,useSelector } from "react-redux";
+import { setBlogs,setLoading } from "../Store/store";
 
 import {
   main,
@@ -26,7 +29,9 @@ import {
   closeIcon,
   headerBelow,
 } from "./style";
+
 import AssetsImg from "@public/images";
+
 
 interface Article {
   title: string;
@@ -34,8 +39,13 @@ interface Article {
   urlToImage: string;
   publishedAt: string;
   content: string;
-  category: string;
-  totalViews: string;
+}
+
+interface FilterItem {
+  type: "category" | "duration" | "date";
+  value: string;
+  icon: string | null;
+  onRemove: () => void;
 }
 
 interface FilterItem {
@@ -96,11 +106,20 @@ const isWithinDateRange = (date: string, range: string): boolean => {
   return true;
 };
 
-const NewsPage: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+const getDomain = (url: string) => {
+  try {
+    const { hostname } = new URL(url);
+    return hostname.startsWith("www.") ? hostname.slice(4) : hostname;
+  } catch {
+    return "Unknown";
+  }
+};
+
+const BlogsPage: React.FC = () => {
+  // const [articles, setArticles] = useState<Article[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState<string>("");
@@ -113,20 +132,22 @@ const NewsPage: React.FC = () => {
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
   const filtersContainerRef = useRef<HTMLDivElement>(null);
+  const dispatch=useDispatch();
+  const {articles,loading}=useSelector((state)=>state.blogs);
+
+
+  const getSuffix=(day:number)=>{
+    const suffixes = ["th", "st", "nd", "rd"];
+  const position = day % 100;
+  return suffixes[(position - 20) % 10] || suffixes[position] || suffixes[0];
+  }
 
   const formatDateWithSuffix = (dateStr: string) => {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return "Invalid Date";
 
     const day = date.getDate();
-    const suffix =
-      day === 1 || day === 21 || day === 31
-        ? "st"
-        : day === 2 || day === 22
-          ? "nd"
-          : day === 3 || day === 23
-            ? "rd"
-            : "th";
+    const suffix = getSuffix(day);
 
     return `${day}${suffix} ${date.toLocaleDateString("en-GB", {
       month: "short",
@@ -267,19 +288,12 @@ const NewsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setArticles(dummyArticles);
-        setFilteredArticles(dummyArticles);
-        setTimeout(() => setLoading(false), 1000);
-      } catch (err) {
-        console.error("Error fetching cryptocurrency news:", err);
-        setError("Failed to fetch news.");
-        setLoading(false);
-      }
-    };
-    fetchNews();
-  }, []);
+    if (articles.length === 0) {
+      dispatch(setLoading()); 
+      getCryptoNews().then((data) => dispatch(setBlogs(data)));
+    }
+  }, [dispatch, articles.length]);
+
 
   useEffect(() => {
     const sectionElement = sectionRef.current;
@@ -423,7 +437,7 @@ const NewsPage: React.FC = () => {
             </div>
           )}
         </div>
-        <div css={section} ref={sectionRef}>
+        <div css={section(isScrolled)} ref={sectionRef}>
           {error ? (
             <div>{error}</div>
           ) : (
@@ -441,7 +455,7 @@ const NewsPage: React.FC = () => {
                     description={<Shimmer height={38} width={300} />}
                   />
                 ))
-              ) : filteredArticles.length === 0 ? (
+              ) : loading ? (
                 <div css={NoBlogFound}>
                   <NoBlogsFound onReset={handleReset} />
                 </div>
@@ -464,8 +478,8 @@ const NewsPage: React.FC = () => {
                           )
                         : "Unknown Date"
                     }
-                    totalViews={article.totalViews}
-                    category={article.category}
+                    // totalViews={article.totalViews}
+                    category={getDomain(article.url)}
                     description={article.content}
                   />
                 ))
@@ -484,4 +498,4 @@ const NewsPage: React.FC = () => {
   );
 };
 
-export default NewsPage;
+export default BlogsPage;

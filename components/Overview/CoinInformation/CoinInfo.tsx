@@ -25,6 +25,42 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
   const [loading, setLoading] = useState(true);
   const [launchDate,setLaunchDate]=useState("");
   const [description,setDescription]=useState("");
+  const coin_symbol="btc";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await data(coin_symbol);
+        const date_launched = response.data[coin_symbol.toUpperCase()][0].date_launched;
+        const description = response.data[coin_symbol.toUpperCase()][0].description;
+        setLaunchDate(formatDate(date_launched));
+        setDescription(description);
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
+
+
+function formatDate(isoDateString:string) {
+
+  const date = new Date(isoDateString);
+  
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${day} ${month} ${year}`;
+
+}
+  const [launchDate,setLaunchDate]=useState("");
+  const [description,setDescription]=useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,6 +116,7 @@ function formatDate(isoDateString:string) {
     <div css={styles.coinInfoContainer}>
       <ShimmerWrapper width={150} height={24} isLoading={loading}>
         <span css={styles.title}>Coin Information</span>
+        <span css={styles.launchInfo}>{launchDate}</span>
 
         {launchDate && <span css={styles.launchInfo}>{launchDate}</span>}
 

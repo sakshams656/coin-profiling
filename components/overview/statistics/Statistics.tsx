@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { utils, colors, Divider, Tooltip } from "zebpay-ui";
 import AssetsImg from "@public/images";
 import Image from "next/image";
-
 import { dummyCoinData ,real_data} from "../../../Data/DummyCoinData";
 import styles from "./styles"
 
@@ -27,11 +26,12 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
   const coinData = dummyCoinData; 
   const [loading, setLoading] = useState(true);
   const [data,setData]=useState(dummyCoinData);
+  const coin_symbol="btc";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await real_data();
+        const data = await real_data(coin_symbol);
         setData(data);
 
       } catch (error) {
@@ -65,7 +65,7 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
 
           <div css={[styles.statsCard, styles.largeCard]}>
             <ShimmerWrapper height={24} width={300} isLoading={loading}>
-              <div css={styles.statsTitle}>Performance (LTP - {data.performance.ltp})</div>
+              <div css={styles.statsTitle}>Performance (LTP - {data?.performance?.ltp})</div>
             </ShimmerWrapper>
             <ShimmerWrapper height={67} width={600} isLoading={loading}>
 
@@ -87,10 +87,10 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
               </div>
               <div css={styles.statsSubRow}>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Red }}>
-                  {data.performance.low24h}
+                  {data?.performance?.low24h}
                 </div>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Green }}>
-                  {data.performance.high24h}
+                  {data?.performance?.high24h}
                 </div>
               </div>
             </div>
@@ -149,11 +149,7 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
                   <Image src={AssetsImg.ic_info} alt="info" width={12} height={12} />
                 </Tooltip>
               </div>
-
-              <div css={styles.statsValue}>{data.marketStats.marketCap}</div>
-
-
-
+              <div css={styles.statsValue}>{data?.marketStats?.marketCap}</div>
             </div>
           </ShimmerWrapper>
 
@@ -171,17 +167,17 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
                         </div>
                         <span>The total value of the asset traded in the last 24 hours.</span>
                       </div>
-                    </>
-                  }
-                  position="bottom-start"
-                  isStroke
-                >
-                  <Image src={AssetsImg.ic_info} alt="info" width={12} height={12} />
-                </Tooltip>
-              </div>
-
-
-            <div css={styles.statsValue}>{data.marketStats.fullyDilutedCap}</div>
+                      <span>The total value of the asset traded in the last 24 hours.</span>
+                    </div>
+                  </>
+                }
+                position="bottom-start"
+                isStroke
+              >
+                <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
+              </Tooltip>
+            </div>
+            <div css={styles.statsValue}>{data?.marketStats?.fullyDilutedCap}</div>
           </div>
 
           </ShimmerWrapper>
@@ -200,17 +196,17 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
                         </div>
                         <span>The total value of the asset traded in the last 24 hours.</span>
                       </div>
-                    </>
-                  }
-                  position="bottom-start"
-                  isStroke
-                >
-                  <Image src={AssetsImg.ic_info} alt="info" width={12} height={12} />
-                </Tooltip>
-              </div>
-
-
-            <div css={styles.statsValue}>{data.marketStats.volume24h}</div>
+                      <span>The total value of the asset traded in the last 24 hours.</span>
+                    </div>
+                  </>
+                }
+                position="bottom-start"
+                isStroke
+              >
+                <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
+              </Tooltip>
+            </div>
+            <div css={styles.statsValue}>{data?.marketStats?.volume24h}</div>
           </div>
 
           </ShimmerWrapper>
@@ -236,16 +232,17 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
                         </div>
                         <span>The total value of the asset traded in the last 24 hours.</span>
                       </div>
-                    </>
-                  }
-                  position="bottom-start"
-                  isStroke
-                >
-                  <Image src={AssetsImg.ic_info} alt="info" width={12} height={12} />
-                </Tooltip>
-              </div>
-
-            <div css={styles.statsValue}>{data.marketStats.maxSupply}</div>
+                      <span>The total value of the asset traded in the last 24 hours.</span>
+                    </div>
+                  </>
+                }
+                position="bottom-start"
+                isStroke
+              >
+                <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
+              </Tooltip>
+            </div>
+            <div css={styles.statsValue}>{data?.marketStats?.maxSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -266,17 +263,17 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
                         </div>
                         <span>The total value of the asset traded in the last 24 hours.</span>
                       </div>
-                    </>
-                  }
-                  position="bottom-start"
-                  isStroke
-                >
-                  <Image src={AssetsImg.ic_info} alt="info" width={12} height={12} />
-                </Tooltip>
-              </div>
-
-
-            <div css={styles.statsValue}>{data.marketStats.totalSupply}</div>
+                      <span>The total value of the asset traded in the last 24 hours.</span>
+                    </div>
+                  </>
+                }
+                position="bottom-start"
+                isStroke
+              >
+                <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
+              </Tooltip>
+            </div>
+            <div css={styles.statsValue}>{data?.marketStats?.totalSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -294,16 +291,17 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
                         </div>
                         <span>The total value of the asset traded in the last 24 hours.</span>
                       </div>
-                    </>
-                  }
-                  position="bottom-start"
-                  isStroke
-                >
-                  <Image src={AssetsImg.ic_info} alt="info" width={12} height={12} />
-                </Tooltip>
-              </div>
-
-            <div css={styles.statsValue}>{data.marketStats.circulatingSupply}</div>
+                      <span>The total value of the asset traded in the last 24 hours.</span>
+                    </div>
+                  </>
+                }
+                position="bottom-start"
+                isStroke
+              >
+                <Image src={AssetsImg.ic_info} alt="info" width={12} height={12}/>
+              </Tooltip>
+            </div>
+            <div css={styles.statsValue}>{data?.marketStats?.circulatingSupply}</div>
           </div>
         </ShimmerWrapper>
 
@@ -312,5 +310,6 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
     </div>
   );
 };
+
 
 export default Statistics;
