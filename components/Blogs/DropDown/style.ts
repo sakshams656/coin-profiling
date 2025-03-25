@@ -33,3 +33,21 @@ export const optionStyle = (isSelected) =>
   export const icon=css({
     color:"#C0C0EE",
   })
+export const optionStyle = (isSelected) =>
+  css({
+    backgroundColor: isSelected ? "#222245" : "#181837",
+    color: isSelected ? "white" : "#C0C0EE",
+    border: "none",
+    height: utils.remConverter(32),
+    padding: `${utils.remConverter(19.2)} ${utils.remConverter(8)}`,
+    borderRadius: utils.remConverter(8),
+    width: utils.remConverter(176),
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  });
+
+  export const icon=css({
+    color:"#C0C0EE"
+  })

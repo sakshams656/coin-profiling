@@ -49,6 +49,8 @@ export const inputGroup = css({
   display:"flex",
   flexDirection:"row",
   justifyContent:"space-between"
+  display:"flex",
+  flexDirection:"row",
 });
 
 export const focusedInputGroup = (isMobile?: boolean) =>
@@ -111,6 +113,8 @@ export const inputGroupText = (isMobile?: boolean) => {
   return css({
     padding: `${utils.remConverter(10)}`,
     display:"flex",
+    paddingLeft: utils.remConverter(28),
+    padding: `${utils.remConverter(10.5)}`,
     paddingLeft: utils.remConverter(28),
     background: isMobile
       ? colors.Zeb_Solid_Light_Blue_01

@@ -130,10 +130,19 @@ const PerformanceGraph: React.FC = () => {
       },
     });
 
-    const series = chart.addSeries(AreaSeries, {
+      priceScale: {
+        visible: false,
+        borderVisible: false, 
+        
+      },
+
+    });
+
+    const series = chart.addSeries(AreaSeries,{
       lineColor: colors.Zeb_Solid_Green,
       topColor: "rgba(46, 204, 113, 0.4)",
       bottomColor: "rgba(46, 204, 113, 0.1)",
+      
     });
 
     setChartInstance(chart);
@@ -176,8 +185,8 @@ const PerformanceGraph: React.FC = () => {
         </div>
       </ShimmerWrapper>
       <ShimmerWrapper height={263} width={1000} isLoading={loading}>
-        <div css={innerChartContainer}>
-          <div css={chartContainer} ref={chartContainerRef} />
+        <div css={styles.innerChartContainer}>
+          <div css={styles.chartContainer} ref={chartContainerRef} />
           <Tabs
             onChange={(tab) => setTimePeriod(tab)}
             selectedTab={timePeriod}

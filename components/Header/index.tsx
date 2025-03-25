@@ -1,25 +1,21 @@
-/** @jsxImportSource @emotion/react */
 import { useState, useRef, useEffect } from "react";
-import { Button, Tabs, Popper, colors, InputDropDown, Icon } from "zebpay-ui";
+import { Button, Tabs, colors, InputDropDown, utils, Icon } from "zebpay-ui";
 import { css } from "@emotion/react";
-import { header, headerButton, iconButton, tabs } from "./styles";
+import * as styles from "./styles";
+import * as searchStyles from "./SearchStyle";
 import NOOB from "@constants/noob";
 import Image from "next/image";
 import AssetsImg from "@public/images";
-import dummyArticles from "../Blogs/dummyData/dummyArticles";
-import NofilterBlogs from "./NoFilterBlogs";
-import {
-  articleFooter,
-  articleImage,
-  articleInfo,
-  articleTitle,
-  Card,
-  articleHeader,
-} from "./Search/style";
+import { getCryptoNews } from "@components/News/APIservice/apiService";
+import NofilterNews from "./NoNews/NoFilterNews";
+import Dropdown from "./Dropdown/Dropdown";
+import { generateToast } from "@components/Shared";
+import { ToastType } from "@components/Shared/GenerateToast";
 
 interface HeaderProps {
   selectedTab: string;
   setSelectedTab: (tab: string) => void;
+  coinSymbol: string; 
 }
 
 export type OptionsType = {
@@ -27,19 +23,19 @@ export type OptionsType = {
   value: string | number;
 };
 
-interface Article {
+interface NewsArticle {
   title: string;
   url: string;
   urlToImage: string;
   publishedAt: string;
   content: string;
-  category: string;
-  totalViews: string;
+  source: {
+    name: string;
+  };
 }
 
-const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
-  const [isPopperOpen, setIsPopperOpen] = useState(false);
-  const shareButtonRef = useRef<HTMLButtonElement>(null);
+const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
+  const [, setIsPopperOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState<Article[]>(dummyArticles);
   const [filteredArticles, setFilteredArticles] =
@@ -47,7 +43,17 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
   const [clickedArticles, setClickedArticles] = useState<Article[]>([]);
   // const [isDropDownOpen,setIsDropDownOpen]=useState(false);
 
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([]);
+  const [recentArticles, setRecentArticles] = useState<NewsArticle[]>([]);
+  const [trendingArticles, setTrendingArticles] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isStarFilled, setIsStarFilled] = useState(false);
+  const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+  const shareButtonRef = useRef<HTMLButtonElement>(null);
 
   const articleOptions: OptionsType[] = filteredArticles.map(
     (article, index) => ({
@@ -96,52 +102,22 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
             </div>
           </div>
         </div>
-      ),
-    })
+      </div>
+    ),
+  });
+
+  const articleOptions: OptionsType[] = filteredArticles.map((article, index) =>
+    createArticleLabel(article, index)
   );
 
-  useEffect(() => {
-    setArticles(dummyArticles);
-  }, []);
-
-  useEffect(() => {
-    const storedClickedArticles = JSON.parse(
-      localStorage.getItem("clickedArticles") || "[]"
-    );
-    setClickedArticles(storedClickedArticles);
-  }, []);
-
-  useEffect(() => {
-    if (search.trim() === "") {
-      if (clickedArticles.length > 0) {
-        setFilteredArticles(clickedArticles);
-      } else {
-        setFilteredArticles(
-          [...dummyArticles].sort(
-            (a, b) => Number(b.totalViews) - Number(a.totalViews)
-          )
-        );
-      }
-    } else {
-      const filtered = dummyArticles.filter((article) =>
-        article.content.toLowerCase().includes(search.toLowerCase())
-      );
-
-      setFilteredArticles(filtered);
-    }
-  }, [search, clickedArticles]);
-
-  const handleArticleClick = (article: Article) => {
-    const updatedClickedArticles = [
-      ...clickedArticles.filter((a) => a.title !== article.title),
+  const handleArticleClick = (article: NewsArticle) => {
+    const updatedRecentArticles = [
       article,
-    ];
-
-    setClickedArticles(updatedClickedArticles);
-    localStorage.setItem(
-      "clickedArticles",
-      JSON.stringify(updatedClickedArticles)
-    );
+      ...recentArticles.filter((a) => a.url !== article.url),
+    ].slice(0, 10); // only last 10 recent articles
+    
+    setRecentArticles(updatedRecentArticles);
+    localStorage.setItem("recentNews", JSON.stringify(updatedRecentArticles));
     window.open(article.url, "_blank");
   };
 
@@ -159,9 +135,44 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     );
   };
 
+  const getContentHeading = () => {
+    if (error) return "Error";
+    if (search.trim()) return "Search Results:";
+    if (recentArticles.length > 0 && filteredArticles === trendingArticles) 
+      return "Recent Search:";
+    return "Trending News:";
+  };
+
+  const noFilterOption: OptionsType[] = [{
+    label: (
+      <NofilterNews
+        setSearch={setSearch}
+        css={{ height: utils.remConverter(400) }}
+      />
+    ),
+    value: "NoFilterNews",
+  }];
+
+  const getDisplayArticles = () => {
+    if (error) return [{ label: <div>{error}</div>, value: "error" }];
+    
+    if (search.trim()) {
+      return filteredArticles.length > 0 ? articleOptions : noFilterOption;
+    }
+    
+    if (!search.trim() && recentArticles.length > 0) {
+      const recentOptions = recentArticles.map((article, index) =>
+        createArticleLabel(article, index)
+      );
+      return recentOptions.length > 0 ? recentOptions : noFilterOption;
+    }
+    
+    return trendingArticles.length > 0 ? articleOptions : noFilterOption;
+  };
+
   return (
-    <div css={header}>
-      <div css={tabs}>
+    <div css={styles.header}>
+      <div css={styles.tabs}>
         <Tabs
           dropdownPlaceHolder="Select a Tab"
           onChange={(tab: string) => setSelectedTab(tab)}
@@ -177,30 +188,24 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
           type="primary"
         />
       </div>
-      <div css={headerButton}>
-        {["news", "blogs"].includes(selectedTab) && (
+
+      <div css={styles.headerButton}>
+        {["news"].includes(selectedTab) && (
           <InputDropDown
             customStyles={css({
               input: { backgroundColor: colors.Zeb_Solid_Dark_Blue },
               "div>div": {
                 backgroundColor: colors.Zeb_Solid_Dark_Blue,
+                maxHeight: utils.remConverter(450),
+                overflowY: "auto",
               },
+              width: utils.remConverter(280),
               button: {
                 backgroundColor: colors.Zeb_Solid_Dark_Blue,
               },
-              zIndex: 1,
-              width: "280px",
             })}
             minimumInputDirection="right"
-            contentHeading={
-              filteredArticles.length > 0
-                ? search.trim() !== ""
-                  ? "Search Results:"
-                  : clickedArticles.length > 0
-                    ? "Recent Search:"
-                    : "Trending Blogs:"
-                : ""
-            }
+            contentHeading={getContentHeading()}
             toggleInputSearch
             placeholder="Search Blogs"
             options={
@@ -220,10 +225,16 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               // setIsDropDownOpen(true);
               const selectedArticle = filteredArticles[value];
               handleArticleClick(selectedArticle);
+              if (typeof value === "number") {
+                const selectedArticle = filteredArticles[value] || recentArticles[value];
+                if (selectedArticle) {
+                  handleArticleClick(selectedArticle);
+                }
+              }
             }}
             maxRows={4}
             search={{
-              placeholder: `Select ${selectedTab.charAt(0).toUpperCase() + selectedTab.slice(1).toLowerCase()}`,
+              placeholder: "Search News",
               value: search,
               onChange: (value) => setSearch(value),
               onClear: () => setSearch(""),
@@ -257,36 +268,34 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                   borderRadius: ".5rem",
                 },
               }),
-            }}
-            customInputHeight={675}
+            })}
           />
         )}
         {selectedTab === "overview" && (
           <>
-            <button css={iconButton} onClick={NOOB}>
+            <button css={styles.iconButton} onClick={handleStarClick}>
               <Image
-                src={AssetsImg.ic_header_star}
+                src={isStarFilled ? AssetsImg.ic_star_filled : AssetsImg.ic_header_star}
                 alt="Star Icon"
                 width={18}
                 height={18}
+                css={css`fill: ${isStarFilled ? colors.Zeb_Solid_White : "none"};`}
               />
             </button>
-            <button
-              css={iconButton}
-              ref={shareButtonRef}
-              onClick={() => setIsPopperOpen((prev) => !prev)}
-            >
-              <Image
-                src={AssetsImg.ic_share}
-                alt="Share Icon"
-                width={18}
-                height={18}
-              />
+            <button css={styles.iconButton} ref={shareButtonRef} onClick={toggleShareMenu}>
+              <Image src={AssetsImg.ic_share} alt="Share Icon" width={18} height={18} />
             </button>
           </>
         )}
-        <Button onClick={NOOB} size="medium" type="primary">
-          TRADE COIN_NAME
+
+        <Dropdown
+          isOpen={isShareMenuOpen}
+          onClose={() => setIsShareMenuOpen(false)}
+          shareMenuRef={shareMenuRef}
+        />
+
+        <Button onClick={NOOB} size="small" type="primary" width={150}>
+          {`TRADE ${coinSymbol}`}
         </Button>
       </div>
     </div>

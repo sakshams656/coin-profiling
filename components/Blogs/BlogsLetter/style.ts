@@ -40,7 +40,6 @@ export const newsletter = css({
   borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
 
-
 });
 
 export const newsChild = css({
@@ -51,7 +50,6 @@ export const newsChild = css({
   gap:utils.remConverter(20),
   flex: "1 0 0",
   alignSelf: "stretch",
-
 
 });
 

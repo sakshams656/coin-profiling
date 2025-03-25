@@ -4,7 +4,6 @@ import AssetsImg from "@public/images";
 import useDebounce from "@components/Shared/useDebounce";
 
 import {
-
   ButtonStyle,
   Subscribed,
   newsletter,

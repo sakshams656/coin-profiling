@@ -10,7 +10,7 @@ export const container = css({
     height: "100%",
     minHeight: "50vh",
     textAlign: "center",
-    padding: utils.remConverter(32),
+    padding: utils.remConverter(40),
     color: "#ffffff",
 })
 
@@ -20,7 +20,7 @@ export const noNewsTitle = css({
     fontSize: utils.remConverter(32),
     lineHeight: utils.remConverter(48),
     letterSpacing: utils.remConverter(0.8),
-    marginBottom: utils.remConverter(1),
+    marginBottom: utils.remConverter(16),
 })
 
 export const noNewsHeadline = css({
@@ -30,6 +30,10 @@ export const noNewsHeadline = css({
     lineHeight: utils.remConverter(30),
     letterSpacing: utils.remConverter(0.4),
     textAlign: "center",
-    marginBottom: utils.remConverter(3),
+    marginBottom: utils.remConverter(30),
     color: colors.Zeb_Solid_Light_Blue
+})
+
+export const ImageContainer = css({
+    marginBottom: utils.remConverter(24)
 })

@@ -1,43 +1,43 @@
 import { css } from "@emotion/react";
 import { utils } from "zebpay-ui";
 
-export const Card = css`
-  display: flex;
-  align-items: center;
-`;
+export const Card = css({
+  display: "flex",
+  alignItems: "center",
+});
 
-export const articleInfo = css`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
-`;
+export const articleInfo = css({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  marginLeft: utils.remConverter(10),
+});
 
-export const articleTitle = css`
-  align-content: center;
-  width: 20rem;
-  font-size: 1rem;
-  color: white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 600;
-`;
+export const articleTitle = css({
+  alignContent: "center",
+  width: utils.remConverter(320),
+  fontSize: "1rem",
+  color: "white",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  fontWeight: 600,
+});
 
-export const articleFooter = css`
-  display: flex;
-  font-size: 14px;
-  font-weight: 400;
-  color: #c0c0ee;
-  align-items: center;
-  gap: 7px;
-`;
+export const articleFooter = css({
+  display: "flex",
+  fontSize: utils.remConverter(14),
+  fontWeight: 400,
+  color: "#c0c0ee",
+  alignItems: "center",
+  gap: utils.remConverter(7),
+});
 
-export const articleImage = css`
-  width: 50px;
-  height: 50px;
-  border-radius: 6px;
-`;
+export const articleImage = css({
+  width: utils.remConverter(50),
+  height: utils.remConverter(50),
+  borderRadius: utils.remConverter(4),
+});
 
 export const articleHeader = css`
   display: flex;
@@ -45,3 +45,9 @@ export const articleHeader = css`
   justify-content: space-between;
   align-items:center;
 `;
+
+export const articleHeader = css({
+  display: "flex",
+  width: "100%",
+  justifyContent: "space-between",
+});

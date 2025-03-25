@@ -15,7 +15,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: utils.remConverter(16),
-    padding: utils.remConverter(24),
+    padding: utils.remConverter(16),
     background: colors.Zeb_Solid_Dark_Blue,
     borderRadius: utils.remConverter(8),
     width: "100%",
@@ -30,7 +30,8 @@ const styles = {
     fontSize: utils.remConverter(18),
     fontWeight: 700,
     color: colors.Zeb_Solid_White,
-    marginBottom: utils.remConverter(16),
+    padding: `${utils.remConverter(8)} ${utils.remConverter(16)}`,
+    paddingLeft: utils.remConverter(0)
   }),
 
   /*  Upper Section */
@@ -42,15 +43,6 @@ const styles = {
       flexDirection: "column",
     },
   }),
-
-  // largeCard: css({
-  //   flex: "0 0 66.8%",
-  // }),
-
-  // smallCard: css({
-  //   flex: "0 0 15%",
-  // }),
-
   largeCard: css({  width: "66.8%",}),smallCard: css({  width: "15%",}),
 
   /*  Lower Section */
@@ -93,9 +85,18 @@ const styles = {
   }),
 
   statsTitle: css({
+    color: colors.Zeb_Solid_Light_Blue,
+    fontSize: utils.remConverter(14),
+    fontWeight: 400,
+    display: "flex",
+    alignItems: "center",
+    gap: utils.remConverter(4),
+  }),
+
+  performanceTitle: css({
     color: colors.Zeb_Solid_White,
     fontSize: utils.remConverter(14),
-    fontWeight: 600,
+    fontWeight: 400,
     display: "flex",
     alignItems: "center",
     gap: utils.remConverter(4),
@@ -118,7 +119,7 @@ const styles = {
   statsValue: css({
     color: colors.Zeb_Solid_White,
     fontSize: utils.remConverter(16),
-    fontWeight: 700,
+    fontWeight: 400,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",

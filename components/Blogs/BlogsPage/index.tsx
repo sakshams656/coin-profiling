@@ -48,6 +48,13 @@ interface FilterItem {
   onRemove: () => void;
 }
 
+interface FilterItem {
+  type: "category" | "duration" | "date";
+  value: string;
+  icon: string | null;
+  onRemove: () => void;
+}
+
 const calculateReadingTime = (content: string) => {
   const wordsPerMinute = 200;
   const noOfWords = content.split(/\s/g).length;

@@ -62,7 +62,7 @@ const ArticleOptions = ({ filteredArticles, handleArticleClick }: ArticleOptions
               </span>
             </div>
             <div>
-              <Image src={AssetsImg.ic_seperator} alt="Separator" />
+              <Image src={AssetsImg.ic_seperator} alt="Separator" height={16} width={16}/>
             </div>
             <div>
               <Image src={AssetsImg.ic_views} alt="Views" />
