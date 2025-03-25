@@ -4,8 +4,8 @@ import {DataApiResponse,InfoApiResponse,ChartResponse} from "@typings/api/shared
 
 
 
-// const API_KEY = process.env.CMC_API_KEY; 
-const API_KEY="001b370a-47bd-492e-8582-91e1e25128ae"
+const API_KEY = process.env.NEXT_PUBLIC_CMC_API_KEY; 
+// const API_KEY="001b370a-47bd-492e-8582-91e1e25128ae"
 
 export const data = async (coin_symbol:string="btc"): Promise<DataApiResponse> => {
   try {
