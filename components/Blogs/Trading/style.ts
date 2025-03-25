@@ -12,12 +12,12 @@ export const buttonGroup = css({
 
 export const ButtonStyle = css({
   display: "flex",
-  // justifyContent: "center",
-  // alignItems: "center",
-  // background: "none",
-  // border: "none",
-  // cursor: "pointer",
-  // width:"100%"
+  justifyContent: "center",
+  alignItems: "center",
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  width:"100%"
   
 });
 
@@ -73,8 +73,6 @@ export const title = css({
   fontSize:utils.remConverter(16),
   lineHeight:utils.remConverter(28),
   fontWeight:"700",
-  // letterSpacing:"0.8"
-
 });
 
 export const subtitle = css({

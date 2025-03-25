@@ -32,16 +32,6 @@ import {
 
 import AssetsImg from "@public/images";
 
-// interface Article {
-//   title: string;
-//   url: string;
-//   urlToImage: string;
-//   publishedAt: string;
-//   content: string;
-//   category: string;
-//   totalViews: string;
-// }
-
 
 interface Article {
   title: string;
@@ -289,24 +279,6 @@ const BlogsPage: React.FC = () => {
       }
     });
   };
-
-  // useEffect(() => {
-  //   const fetchNews = async () => {
-  //     try {
-  //       const response=await getCryptoNews();
-
-  //       setArticles(response);
-  //       setFilteredArticles(dummyArticles);
-  //       // setTimeout(() => setLoading(false), 1000);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.error("Error fetching cryptocurrency news:", err);
-  //       setError("Failed to fetch news.");
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchNews();
-  // }, []);
 
   useEffect(() => {
     if (articles.length === 0) {
