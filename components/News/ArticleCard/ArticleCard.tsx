@@ -24,7 +24,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   readingTime,
   domain,
 }) => {
-  // Domain processing only when not loading
   const isDomainString = !loading && typeof domain === "string";
   const shortDomain = isDomainString && domain.startsWith("www.") ? domain.slice(4) : domain;
   const isZebpay = isDomainString && shortDomain.toLowerCase() === "zebpay";
@@ -35,7 +34,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         <div css={styles.cardImageStyle}>
           <ShimmerWrapper isLoading={loading} height={108} width={100}>
             {imageUrl && (
-              <img src={imageUrl} alt={title || "Article Image"} />
+              <Image src={imageUrl} alt="image" height={104} width={100}/>
             )}
           </ShimmerWrapper>
         </div>

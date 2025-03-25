@@ -343,7 +343,6 @@ export const main = css({
   gap: utils.remConverter(20),
   width: "100%",
   maxWidth: "100%",
-  // marginTop: utils.remConverter(60),
   padding: utils.remConverter(40),
   paddingTop: utils.remConverter(20),
   paddingBottom: utils.remConverter(20),
