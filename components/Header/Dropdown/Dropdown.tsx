@@ -42,8 +42,9 @@ const Dropdown = ({ isOpen, onClose, shareMenuRef }: ShareMenuProps) => {
           <Image src={AssetsImg.ic_cross} alt="cross" height={16} width={16} />
         </button>
       </div>
-
+      <div css={styles.menuContainer}>
       {shareOptions.map((option) => (
+        
         <button key={option.name} css={styles.shareMenuItem}>
           <Image
             src={option.icon}
@@ -53,7 +54,9 @@ const Dropdown = ({ isOpen, onClose, shareMenuRef }: ShareMenuProps) => {
           />
           {option.name}
         </button>
+        
       ))}
+      </div>
       <div>
         <Button
           style={{

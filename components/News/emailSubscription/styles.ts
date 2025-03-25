@@ -14,7 +14,7 @@ export const form = css({
 
 export const inputButtonGap = css({
   width: "100%",
-  marginBottom: utils.remConverter(16)
+  marginBottom: utils.remConverter(32)
 });
 
 export const inputContainer = css({
@@ -22,8 +22,4 @@ export const inputContainer = css({
   "@media (max-width: 48rem)": {
     width: "95%",
   },
-});
-
-export const subButton = css({
-    marginBottom: utils.remConverter(16)
 });

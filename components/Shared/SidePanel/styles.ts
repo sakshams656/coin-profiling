@@ -39,10 +39,10 @@ export const accordionWrapper = css({
 
 export const buttonWrapper = css({
   position: "absolute",
-  bottom: "20px",
-  right: "30px",
+  bottom: utils.remConverter(20),
+  right: utils.remConverter(30),
   display: "flex",
-  gap: "10px",
+  gap: utils.remConverter(10),
 });
 
 export const iconAccordian = css({
@@ -50,21 +50,20 @@ export const iconAccordian = css({
 });
 
 export const sidePanelStyle = css({
-  zIndex: 1,
 });
 
-export const accordionTitleStyle = (isOpen: boolean) => css`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  width: 100%;
-  color: ${isOpen ? colors.Zeb_Solid_White : colors.Zeb_Solid_Light_Blue};
-`;
+export const accordionTitleStyle = (isOpen: boolean) => css({
+  display: "flex",
+  alignItems: "center",
+  cursor: "pointer",
+  width: "100%",
+  color: isOpen ? colors.Zeb_Solid_White : colors.Zeb_Solid_Light_Blue,
+});
 
-export const customDateRangePickerStyle = (dateRange: string | null) => css`
-  margin-top: ${utils.remConverter(-8)};
-  padding: ${utils.remConverter(16)};
-  background-color: ${colors.Zeb_Solid_BG_Blue};
-  border-radius: ${utils.remConverter(4)};
-  display: ${dateRange === "Custom" ? "block" : "none"};
-`;
+export const customDateRangePickerStyle = (dateRange: string | null) => css({
+  marginTop: utils.remConverter(-8), 
+  padding: utils.remConverter(16),
+  backgroundColor: colors.Zeb_Solid_BG_Blue,
+  borderRadius: utils.remConverter(4),
+  display: dateRange === "Custom" ? "block" : "none", 
+});

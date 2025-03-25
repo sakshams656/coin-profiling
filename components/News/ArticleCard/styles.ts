@@ -7,6 +7,7 @@ export const cardContainerStyle = css({
   flexDirection: "column",
   alignItems: "flex-start",
   gap: utils.remConverter(4),
+  maxHeight: utils.remConverter(136),
   flex: "1 0 0",
   borderRadius: utils.remConverter(8),
   background: colors.Zeb_Solid_BG_Blue,
@@ -69,7 +70,7 @@ export const domainNameStyle = (isZebpay) =>
     alignItems: "center",
     gap: utils.remConverter(10),
     borderRadius: utils.remConverter(4),
-    ...typography["b5/12_semibold"],
+    fontSize: utils.remConverter(12),
     background: isZebpay
       ? "rgba(51, 143, 255, 0.20)"
       : colors.Zeb_BG_Light_Blue,
@@ -94,6 +95,8 @@ export const titleStyle = css({
   textOverflow: "ellipsis",
   maxWidth: "100%",
   lineHeight: 1.5,
+  minHeight: utils.remConverter(46),
+  maxHeight: utils.remConverter(46)
 });
 
 export const infoFooterStyle = css({
