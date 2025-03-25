@@ -51,7 +51,7 @@ const Statistics: React.FC = () => {
       <div css={styles.upperSection}>
           <div css={[styles.statsCard, styles.largeCard]}>
             <ShimmerWrapper height={24} width={300} isLoading={loading}>
-              <div css={styles.statsTitle}>Performance (LTP - {data.performance.ltp})</div>
+              <div css={styles.statsTitle}>Performance (LTP - {data?.performance?.ltp})</div>
             </ShimmerWrapper>
             <ShimmerWrapper height={67} width={600} isLoading={loading}>
             <div>
