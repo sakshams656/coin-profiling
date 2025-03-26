@@ -12,14 +12,14 @@ const newSlice=createSlice({
         setLoading:(state)=>{
             state.loading=true;
         },
-        setBlogs:(state,action)=>{
+        setNews:(state,action)=>{
             state.loading=false;
             state.articles=action.payload;
         },
     },
 });
 
-export const {setBlogs,setLoading}=newSlice.actions;
+export const {setNews,setLoading}=newSlice.actions;
 
 export const store=configureStore({
     reducer:{news:newSlice.reducer},

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as styles from "./styles";
 import { getCryptoNews } from "./APIservice/apiService";
-import { setBlogs, setLoading } from "./APIservice/store"
+import { setNews, setLoading } from "./APIservice/store"
 import ArticleCard from "./ArticleCard/ArticleCard";
 import FilterSidePanel from "../Shared/SidePanel";
 import ShimmerWrapper from "../Shared/ShimmerWrapper/ShimmerWrapper";
@@ -230,7 +230,7 @@ const NewsPage: React.FC = () => {
       dispatch(setLoading()); 
       try {
         const fetchedArticles = await getCryptoNews();
-        dispatch(setBlogs(fetchedArticles)); 
+        dispatch(setNews(fetchedArticles)); 
         setFilteredArticles(fetchedArticles); 
       } catch (err) {
         console.error("Error fetching cryptocurrency news:", err);
