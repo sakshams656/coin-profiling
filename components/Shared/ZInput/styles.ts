@@ -49,8 +49,6 @@ export const inputGroup = css({
   display:"flex",
   flexDirection:"row",
   justifyContent:"space-between"
-  display:"flex",
-  flexDirection:"row",
 });
 
 export const focusedInputGroup = (isMobile?: boolean) =>

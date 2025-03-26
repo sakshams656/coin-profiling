@@ -23,18 +23,6 @@ export const title = (isDateRangeOpen) =>
     alignItems: "center",
     justifyContent: "center",
   });
-export const title = (isDateRangeOpen) =>
-  css({
-    fontSize: utils.remConverter(12),
-    lineHeight: utils.remConverter(18),
-    letterSpacing: utils.remConverter(0.4),
-    fontWeight:"600",
-    color: isDateRangeOpen ? "white" : colors.Zeb_Solid_Light_Blue,
-    fontFamily: `"Lato", "Noto-serif"`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  });
 
 export const buttonGroup = css({
   position: "absolute",

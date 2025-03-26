@@ -20,7 +20,7 @@ import {
 
 const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
   return (
-    <div css={tradingBanner(isLoading)}>
+    <div css={tradingBanner}>
       <div css={frame}>
         <div css={anotherFrame}>
           <div css={zebpayImageDiv}>

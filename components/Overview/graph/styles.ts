@@ -32,5 +32,6 @@ export const title = css({
 export const chartContainer = css({
   width: "100%",
   height: utils.remConverter(200),
-  overflow: "hidden"
+  overflow: "hidden",
+  marginBottom:utils.remConverter(8)
 });

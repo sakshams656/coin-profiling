@@ -35,7 +35,6 @@ export const image = css({
 
 export const tradingBanner = css({
   display: "flex",
-  // height: "50%",
   minHeight: utils.remConverter(192),
   padding: utils.remConverter(12),
   flexDirection: "column",

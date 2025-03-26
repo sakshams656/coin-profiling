@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Button, Tabs, colors, InputDropDown, utils, Icon } from "zebpay-ui";
+import { Button, Tabs, colors, InputDropDown, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 import * as styles from "./styles";
 import * as searchStyles from "./SearchStyle";
@@ -37,12 +37,6 @@ interface NewsArticle {
 const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const [, setIsPopperOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [articles, setArticles] = useState<Article[]>(dummyArticles);
-  const [filteredArticles, setFilteredArticles] =
-    useState<Article[]>(dummyArticles);
-  const [clickedArticles, setClickedArticles] = useState<Article[]>([]);
-  // const [isDropDownOpen,setIsDropDownOpen]=useState(false);
-
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([]);
   const [recentArticles, setRecentArticles] = useState<NewsArticle[]>([]);
@@ -55,51 +49,147 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const shareMenuRef = useRef<HTMLDivElement>(null);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
 
-  const articleOptions: OptionsType[] = filteredArticles.map(
-    (article, index) => ({
-      value: index,
-      label: (
-        <div
-          // style={{paddingRight:"10px"}}
-          css={Card}
-          key={index}
-          onMouseEnter={() => setHoveredIndex(index)}
-          onMouseLeave={() => setHoveredIndex(null)}
-        >
-          <img
-            src={article.urlToImage}
-            alt={article.title}
-            css={articleImage}
-          />
-          <div css={articleInfo}>
-            <div css={articleHeader}>
-              <div css={articleTitle} title={article.title}>
-                {article.title}
+  const calculateReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const words = content.split(/\s+/g).length;
+    return Math.ceil(words / wordsPerMinute);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).replace(",", "");
+  };
+
+  const toggleShareMenu = () => {
+    setIsShareMenuOpen((prev) => !prev);
+  };
+
+  const handleStarClick = () => {
+    const newState = !isStarFilled;
+    
+    setIsStarFilled(newState);
+
+    const toastType = ToastType.success;
+    const toastData = {
+      title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
+      description: newState
+        ? `${coinSymbol} has been added to your favourites.`
+        : `${coinSymbol} has been removed from your favourites.`,
+      type: toastType,
+      duration: 3000,
+    };
+    generateToast(toastData); 
+  };
+
+  useEffect(() => {
+    const fetchTrendingNews = async () => {
+      try {
+        setLoading(true);
+        const data = await getCryptoNews(""); 
+        setTrendingArticles(data);
+        setFilteredArticles(data);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch trending news");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchTrendingNews();
+
+    const storedRecentArticles = JSON.parse(
+      localStorage.getItem("recentNews") || "[]"
+    );
+    setRecentArticles(storedRecentArticles);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(event.target as Node) &&
+        shareButtonRef.current &&
+        !shareButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsShareMenuOpen(false);
+      }
+    };
+
+    if (isShareMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isShareMenuOpen]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        const data = await getCryptoNews(search);
+        setArticles(data);
+        setFilteredArticles(data);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch news articles");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      if (search.trim()) {
+        fetchNews();
+      } else {
+        setFilteredArticles(trendingArticles);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [search, trendingArticles]);
+
+  const createArticleLabel = (article: NewsArticle, index: number) => ({
+    value: index,
+    label: (
+      <div
+        css={searchStyles.Card}
+        key={index}
+        onMouseEnter={() => setHoveredIndex(index)}
+        onMouseLeave={() => setHoveredIndex(null)}
+      >
+        <img
+          src={article.urlToImage}
+          alt={article.title}
+          css={searchStyles.articleImage}
+        />
+        <div css={searchStyles.articleInfo}>
+          <div css={searchStyles.articleHeader}>
+            <div css={searchStyles.articleTitle} title={article.title}>
+              {article.title}
+            </div>
+            {hoveredIndex === index && (
+              <div>
+                <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
               </div>
-              {hoveredIndex === index && (
-                <>
-                  <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
-                </>
-              )}
-            </div>
-            <div css={articleFooter}>
-              <span style={{ display: "flex" }}>
-                <Icon
-                  name="icon icon-calendar"
-                  style={{ marginRight: "0.5rem" }}
-                />
-                {new Date(article.publishedAt)
-                  .toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
-                  .replace(",", "")}
-              </span>
-              <Image src={AssetsImg.ic_seperator} alt="Separator" />
-              <Image src={AssetsImg.ic_views} alt="Views" />
-              <span> {article.totalViews} </span>
-            </div>
+            )}
+          </div>
+          <div css={searchStyles.articleFooter}>
+            <span css={searchStyles.articleFooterSpan}>
+              <Image src={AssetsImg.ic_clock_blue} alt="clock" width={14} height={14} />
+              {calculateReadingTime(article.content)} min read
+            </span>
+            <Image src={AssetsImg.ic_seperator} alt="Separator" height={16} width={16} />
+            <span css={searchStyles.articleFooterSpan}>
+              <Image src={AssetsImg.ic_calendar} alt="calendar" width={14} height={14} />
+              {formatDate(article.publishedAt)}
+            </span>
           </div>
         </div>
       </div>
@@ -119,20 +209,6 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     setRecentArticles(updatedRecentArticles);
     localStorage.setItem("recentNews", JSON.stringify(updatedRecentArticles));
     window.open(article.url, "_blank");
-  };
-
-  const NofilterBlogsWrapper = () => {
-    return (
-      <div
-        style={{ cursor: "default" }}
-        onClick={(e) => {
-          e.stopPropagation();
-          // setIsDropDownOpen(true);
-        }}
-      >
-        <NofilterBlogs setSearch={setSearch} />
-      </div>
-    );
   };
 
   const getContentHeading = () => {
@@ -190,7 +266,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
       </div>
 
       <div css={styles.headerButton}>
-        {["news"].includes(selectedTab) && (
+        {["news","blogs"].includes(selectedTab) && (
           <InputDropDown
             customStyles={css({
               input: { backgroundColor: colors.Zeb_Solid_Dark_Blue },
@@ -207,24 +283,9 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
             minimumInputDirection="right"
             contentHeading={getContentHeading()}
             toggleInputSearch
-            placeholder="Search Blogs"
-            options={
-              filteredArticles.length > 0
-                ? articleOptions
-                : [
-                    {
-                      label: <NofilterBlogsWrapper />,
-                      value: "NoFilterBlogs",
-                    },
-                  ]
-            }
+            placeholder="Search News"
+            options={getDisplayArticles()}
             onChange={(value) => {
-              if (filteredArticles.length === 0 || value === "NoFilterBlogs") {
-                return;
-              }
-              // setIsDropDownOpen(true);
-              const selectedArticle = filteredArticles[value];
-              handleArticleClick(selectedArticle);
               if (typeof value === "number") {
                 const selectedArticle = filteredArticles[value] || recentArticles[value];
                 if (selectedArticle) {
@@ -240,32 +301,13 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
               onClear: () => setSearch(""),
             }}
             rowHeight={filteredArticles.length > 0 ? 75 : 346}
-            customDropDownStyle={{
-              width: "450px",
-              "& > div": {
-                height: "368px",
-                overflowY: "auto",
-                scrollbarColor: "black transparent",
-              },
-              // "& > div > div": {
-              //   paddingRight: "19px",
-              // },
-
-              // "&>div::-webkit-scrollbar":{
-              //   width:"8px",
-              // },
-              // "&>div::-webkit-scrollbar-thumb":{
-              //   backgroundColor:"black",
-              //   borderRadius:"4px",
-              // },
-              // "&>div::-webkit-scrollbar-track":{
-              //   backgroundColor:"transparent",
-              // },
-
+            customDropDownStyle={css({
+              width: utils.remConverter(450),
+              height: utils.remConverter(400),
               ...(filteredArticles.length === 0 && {
                 "& div:hover": {
                   backgroundColor: "#181837",
-                  borderRadius: ".5rem",
+                  borderRadius: "0.5rem",
                 },
               }),
             })}
