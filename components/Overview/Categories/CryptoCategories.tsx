@@ -176,7 +176,6 @@ const CryptoCategories: React.FC = () => {
       </ShimmerWrapper>
       <div css={styles.cryptoCardsContainer}>
         {loading ? (
-          // Display 6 shimmer placeholders instead of "loading..."
           Array.from({ length: 6 }).map((_, index) => (
             <ShimmerWrapper
               width={316}

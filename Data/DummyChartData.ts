@@ -1,7 +1,7 @@
 import { chart } from "@actions/overviewApi";
 
 
-export const fetchData = async (duration:string="1") => {
+export const fetchData = async (duration: string = "1", fronCurrency: string, toCurrency: string) => {
   try {
     const chartData = await chart(duration);
     

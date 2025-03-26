@@ -463,7 +463,7 @@ export const headerFrame = (isScrolled: boolean) =>
     alignItems: "flex-start",
     borderRadius: utils.remConverter(8),
     background: colors.Zeb_Solid_Dark_Blue,
-    maxWidth: utils.remConverter(312),
+    maxWidth: utils.remConverter(320),
     "&::-webkit-scrollbar": {
       width: 0, 
     },

@@ -19,7 +19,7 @@ export interface CoinInfo {
   total_supply: number;
   circulating_supply: number;
   quote: {
-    USD: QuoteUSD;
+    USD: QuoteData;
   };
 }
 

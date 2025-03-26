@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 const BASE_URL = 'https://newsapi.org/v2/everything';
-const API_KEY = '986fcccb87484077a1b2eeed51a6ae4c'; 
+const API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000;
 

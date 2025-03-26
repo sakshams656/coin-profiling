@@ -71,9 +71,6 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     fetchData(); 
   }, []); 
 
-  
-  
-
   const [coinData, setCoinData] = useState<CoinData>({
     name: "Unknown Coin",
     symbol: "Unknown",
