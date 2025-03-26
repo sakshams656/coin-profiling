@@ -8,6 +8,8 @@ import { main, headerWrapper } from "./styles";
 
 import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
+import { Provider } from "react-redux";
+import { store } from "@components/News/APIservice/store";
 
 interface CoinProfilingProps {
   coinSymbol: string;
@@ -23,7 +25,7 @@ const CoinProfiling: React.FC<CoinProfilingProps> = ({ coinSymbol }) => {
       case "pricePredictor":
         return <div>This is Tab 2</div>;
       case "news":
-        return <NewsPage />;
+        return <Provider store={store}> <NewsPage /> </Provider>;
       case "blogs":
         return <Blogs />;
       default:

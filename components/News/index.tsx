@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as styles from "./styles";
 import { getCryptoNews } from "./APIservice/apiService";
+import { setBlogs, setLoading } from "./APIservice/store"
 import ArticleCard from "./ArticleCard/ArticleCard";
 import FilterSidePanel from "../Shared/SidePanel";
 import ShimmerWrapper from "../Shared/ShimmerWrapper/ShimmerWrapper";
@@ -27,6 +29,13 @@ interface Filters {
 interface FilterItem {
   type: keyof Filters;
   value: string;
+}
+
+interface RootState {
+  news: {
+    articles: Article[];
+    loading: boolean;
+  };
 }
 
 const calculateReadingTime = (content: string) => {
@@ -103,10 +112,10 @@ const isInDateRange = (publishedAt: string, range: string | null) => {
 const isValidDate = (date: string): boolean => !isNaN(Date.parse(date));
 
 const NewsPage: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const dispatch = useDispatch();
+  const { articles, loading } = useSelector((state: RootState) => state.news);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNewContent, setShowNewContent] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -218,20 +227,23 @@ const NewsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchNews = async () => {
+      dispatch(setLoading()); 
       try {
         const fetchedArticles = await getCryptoNews();
-        setArticles(fetchedArticles);
-        setFilteredArticles(fetchedArticles);
-        setLoading(false);
+        dispatch(setBlogs(fetchedArticles)); 
+        setFilteredArticles(fetchedArticles); 
       } catch (err) {
         console.error("Error fetching cryptocurrency news:", err);
         setError("Failed to fetch news.");
-        setLoading(false);
       }
     };
 
-    fetchNews();
-  }, []);
+    if (articles.length === 0) {
+      fetchNews();
+    } else {
+      setFilteredArticles(articles); 
+    }
+  }, [dispatch, articles]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -288,8 +300,8 @@ const NewsPage: React.FC = () => {
   const handleResetFilters = () => {
     const resetFilters: Filters = { publishers: [], durations: [], dateRange: null };
     setActiveFilters(resetFilters);
-    setFilteredArticles(articles); // Reset filtered articles to original list
-    setResetTrigger((prev) => prev + 1); // Trigger reset in FilterSidePanel
+    setFilteredArticles(articles); 
+    setResetTrigger((prev) => prev + 1); 
   };
 
   const handleRemoveFilter = (type: keyof Filters, value: string) => {
@@ -549,7 +561,7 @@ const NewsPage: React.FC = () => {
                   <div css={styles.newsHeader}>
                     <ShimmerWrapper isLoading={loading} height={80} width={80} mode="dark">
                       <div css={styles.mailIcon}>
-                        <Image src={AssetsImg.ic_mail} alt="mail" />
+                        <Image src={AssetsImg.i_mail} alt="mail" />
                       </div>
                     </ShimmerWrapper>
                     <ShimmerWrapper isLoading={loading} height={28} width={220} mode="dark">
