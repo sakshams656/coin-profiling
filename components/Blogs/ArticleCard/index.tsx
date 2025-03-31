@@ -56,7 +56,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           )}
           <img
             src={imageUrl}
-            // alt={title}
             onLoad={() => setIsImageLoaded(true)}
             onError={() => setIsImageLoaded(false)} 
             style={{ display: isImageLoaded ? "block" : "none"}}

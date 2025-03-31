@@ -11,8 +11,6 @@ interface PerformanceGraphProps {
   percentageChange24h: string;
 }
 
-// const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats ,chartStats}) => {
-
 
 const PerformanceGraph: React.FC<PerformanceGraphProps> = ({ percentageChange24h }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);

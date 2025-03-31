@@ -19,7 +19,6 @@ import {
 } from "./style";
 import Image from "next/image";
 
-
 const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -28,25 +27,23 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isInputFocus, setIsInputFocus] = useState(false);
 
-  const debounceEmail=useDebounce(email,500);
+  const debounceEmail = useDebounce(email, 500);
 
   const validateEmail = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   };
 
-  const handleEmailChange = (target: {value:string}) => {
-
+  const handleEmailChange = (target: { value: string }) => {
     const newEmail = target.value;
     setEmail(newEmail);
-
   };
 
-  useEffect(()=>{
-      const isValid = validateEmail(debounceEmail);
-      setIsValidEmail(isValid);
-      setShowError(debounceEmail.includes("@") && !isValid);
-  },[debounceEmail])
+  useEffect(() => {
+    const isValid = validateEmail(debounceEmail);
+    setIsValidEmail(isValid);
+    setShowError(debounceEmail.includes("@") && !isValid);
+  }, [debounceEmail]);
 
   const handleSubmit = () => {
     if (isValidEmail && email && !isSubmitting) {
@@ -68,94 +65,79 @@ const BlogsLetter = ({ isLoading }: { isLoading: boolean }) => {
 
   return (
     <div css={newsletter}>
-
       <div css={newsChild}>
-        {/* <div> */}
-          <div css={newsHeader}>
+        <div css={newsHeader}>
+          <div css={mailIcon}>
+            {isLoading ? (
+              <Shimmer height={60} width={75} />
+            ) : (
+              <Image
+                src={isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.i_mail}
+                alt={isSubscribed ? "Subscribed" : "Mail"}
+              />
+            )}
+          </div>
+          <div css={heading}>
+            {isLoading ? (
+              <Shimmer height={20} width={250} style={{marginBottom:"0.3rem"}} />
+            ) : isSubscribed ? (
+              "Subscription Successful!"
+            ) : (
+              "ZebPay Blog Digest!"
+            )}
+          </div>
+          <div css={quote}>
+            {isLoading ? (
+              <Shimmer height={45} width={280} />
+            ) : isSubscribed ? (
+              "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
+            ) : (
+              "Stay ahead with our weekly crypto blogs & updates!"
+            )}
+          </div>
+        </div>
 
-            <div css={mailIcon}>
-              {isLoading ? (
-                <Shimmer height={70} width={80} />
-              ) : (
-                <Image
-                  src={
-                    isSubscribed ? AssetsImg.ic_subscribed : AssetsImg.i_mail
-                  }
-                  alt={isSubscribed ? "Subscribed" : "Mail"}
-                />
-              )}
-            </div>
-            <div css={heading}>
-              {isLoading ? (
-                <Shimmer
-                  height={26}
-                  width={250}
-                />
-              ) : isSubscribed ? (
-                "Subscription Successful!"
-              ) : (
-                "ZebPay Blog Digest!"
-              )}
-            </div>
-            <div css={quote}>
-              {isLoading ? (
-                <Shimmer
-                  height={45}
-                  width={280}
-                />
-              ) : isSubscribed ? (
-                "Thank you for subscribing! You’ll now receive the latest crypto news and updates straight to your inbox."
-              ) : (
-                "Stay ahead with our weekly crypto blogs & updates!"
-              )}
+        {isLoading ? (
+          <div css={loading}>
+            <Shimmer height={20} width={250} />
+            <Shimmer height={35} width={280} />
+
+            <div style={{ marginTop: "2.0rem" }}>
+              <Shimmer height={30} width={280} />
             </div>
           </div>
-
-          {isLoading ? (
-            <div
-              css={loading}
-            >
-              <Shimmer height={20} width={250} />
-              <Shimmer height={35} width={280} />
-
-              <div style={{marginTop:"2.0rem"}}>
-              <Shimmer height={30} width={280} />
+        ) : (
+          !isSubscribed && (
+            <>
+              <div css={Form}>
+                <Input
+                  errorText={showError && "Invalid Email ID"}
+                  disabled={isSubmitting}
+                  label="Enter Email Address"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="qwerty@gmail.com"
+                  style={input}
+                  onFocus={() => setIsInputFocus(true)}
+                  onBlur={() => setIsInputFocus(false)}
+                />
               </div>
-
-            </div>
-          ) : (
-            !isSubscribed && (
-              <>
-                <div css={Form}>
-                  <Input
-                    errorText= {showError &&"Invalid Email ID"}
-                    disabled={isSubmitting}
-                    label="Enter Email Address"
-                    value={email}
-                    onChange={handleEmailChange}
-                    placeholder="qwerty@gmail.com"
-                    style={input}
-                    onFocus={() => setIsInputFocus(true)}
-                    onBlur={() => setIsInputFocus(false)}
-                  />
-                </div>
-                <div css={Subscribe} >
-                  <Button
-                    onClick={handleSubmit}
-                    size="full-width"
-                    type="primary"
-                    disabled={
-                      ((!isValidEmail || isSubmitting) && isInputFocus) ||
-                      isSubmitting
-                    }
-                  >
-                    <div css={ButtonStyle}>Subscribe</div>
-                  </Button>
-                </div>
-              </>
-            )
-          )}
-        {/* </div> */}
+              <div css={Subscribe}>
+                <Button
+                  onClick={handleSubmit}
+                  size="full-width"
+                  type="primary"
+                  disabled={
+                    ((!isValidEmail || isSubmitting) && isInputFocus) ||
+                    isSubmitting
+                  }
+                >
+                  <div css={ButtonStyle}>Subscribe</div>
+                </Button>
+              </div>
+            </>
+          )
+        )}
 
         {isSubscribed && (
           <div css={Subscribed}>

@@ -278,9 +278,9 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
       >
         <Icon name="icon icon-filter" style={icon} />
       </div>
-      <div css={iconBox} style={{ cursor: "pointer" }}>
+      {/* <div css={iconBox} style={{ cursor: "pointer" }}>
         <Dropdown onSortChange={onSortChange} />
-      </div>
+      </div> */}
       <SidePanel
         onBack={() => dispatch({ type: "TOGGLE_PANEL", payload: false })}
         onClose={() => dispatch({ type: "TOGGLE_PANEL", payload: false })}

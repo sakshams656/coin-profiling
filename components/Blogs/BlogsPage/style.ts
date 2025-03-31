@@ -25,8 +25,7 @@ export const container = css({
   display: "flex",
   width: "75%",
   height: "100%",
-  paddingRight:utils.remConverter(5),
-  paddingBottom:utils.remConverter(16),
+  paddingBottom: utils.remConverter(16),
   flexDirection: "column",
   alignItems: "center",
   borderRadius: utils.remConverter(8),
@@ -40,8 +39,8 @@ export const container = css({
 export const headerFrame = (isScrolled, hasFilters) =>
   css({
     display: "flex",
-    paddingTop: utils.remConverter(16),
-    justifyContent:"space-between",
+    padding: `${utils.remConverter(16)} ${utils.remConverter(16)}  ${utils.remConverter(16)}  ${utils.remConverter(16)} `,
+    justifyContent: "space-between",
     flexDirection: "column",
     alignItems: "flex-start",
     gap: utils.remConverter(16),
@@ -50,18 +49,18 @@ export const headerFrame = (isScrolled, hasFilters) =>
     background: colors.Zeb_Solid_Dark_Blue,
     position: "sticky",
     top: 0,
-    borderRadius: utils.remConverter(8),
-    paddingBottom: utils.remConverter(9.6),
+
+    borderRadius: `${utils.remConverter(8)} ${utils.remConverter(8)} 0 0`,
     ...(isScrolled
       ? {
           boxShadow: `0px ${utils.remConverter(8)} ${utils.remConverter(8)} -${utils.remConverter(4)} #0C0C1D`,
         }
       : hasFilters
-      ? {
-          paddingBottom: utils.remConverter(9.6),
-          borderBottom: `${utils.remConverter(1)} solid #222245`,
-        }
-      : {}),
+        ? {
+            paddingBottom: utils.remConverter(9.6),
+            borderBottom: `${utils.remConverter(1)} solid #222245`,
+          }
+        : {}),
     "@media (max-width: 768px)": {
       gap: utils.remConverter(8),
     },
@@ -69,48 +68,41 @@ export const headerFrame = (isScrolled, hasFilters) =>
 
 export const header = css({
   display: "flex",
-  width:"100%",
+  width: "100%",
   justifyContent: "space-between",
-  padding: `0 ${utils.remConverter(16)}`,
-  alignItems: "center",
-  alignSelf: "stretch",
-  "@media (max-width: 768px)": {
-    flexDirection: "column",
-    gap: utils.remConverter(8),
-    padding: `0 ${utils.remConverter(8)}`,
-  },
 });
 
-export const section = (isScrolled:boolean)=>css({
-  display: "flex",
-  flexWrap: "wrap",
-  height: "100%",
-  width: "100%",
-  padding:`${utils.remConverter(16) } ${utils.remConverter(10) } 0 ${utils.remConverter(16) }`,
-  // paddingRight:utils.remConverter(10),
-  flexDirection: "column",
-  alignItems: "center",
-  borderRadius: utils.remConverter(4),
-  background: colors.Zeb_Solid_Dark_Blue,
-  overflowY: "auto",
-  overflowX: "hidden",
-  
-  "&::-webkit-scrollbar": {
-  width: utils.remConverter(4), 
-},
-"&::-webkit-scrollbar-track": {
-  background: "transparent",
-  margin:"4px",
-},
-"&::-webkit-scrollbar-thumb": {
-  background: isScrolled? colors.Zeb_Solid_Dark_Grey:"transparent",
-  borderRadius: utils.remConverter(18),
-},
-  "@media (max-width: 768px)": {
+export const outsideSection=css({
+  paddingRight:utils.remConverter(4),
+  overflowX:"hidden"
+})
+
+export const section = (isScrolled: boolean) =>
+  css({
+    display: "flex",
+    flexWrap: "wrap",
+    height: "100%",
     width: "100%",
-    height: "inherit",
-  },
-});
+    padding: ` 0 ${utils.remConverter(8)} 0 ${utils.remConverter(16)}  `,
+    flexDirection: "column",
+    alignItems: "center",
+    borderRadius: utils.remConverter(4),
+    background: colors.Zeb_Solid_Dark_Blue,
+    overflowY: "auto",
+    overflowX: "hidden",
+
+      "&::-webkit-scrollbar": {
+      width: utils.remConverter(4),
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "transparent",
+      margin:"4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: isScrolled? colors.Zeb_Solid_Dark_Grey:"transparent",
+      borderRadius: utils.remConverter(18),
+    },
+  });
 
 export const news = css({
   display: "flex",
@@ -129,9 +121,9 @@ export const innerCard = css({
   alignItems: "flex-start",
   gap: utils.remConverter(16),
   flexShrink: 0,
-  overflowY:"auto",
-  "&::-webkit-scrollbar":{
-    display:"none"
+  overflowY: "auto",
+  "&::-webkit-scrollbar": {
+    display: "none",
   },
   "@media (max-width: 768px)": {
     width: "25%",
@@ -189,7 +181,7 @@ export const button = css({
 
 export const headerBelow = css({
   display: "flex",
-  paddingLeft: utils.remConverter(16),
+  // paddingLeft: utils.remConverter(16),
   overflowX: "hidden",
   whiteSpace: "nowrap",
   overflowY: "hidden",
@@ -197,7 +189,7 @@ export const headerBelow = css({
   scrollbarWidth: "none",
   alignItems: "stretch",
   justifyContent: "space-between",
-  paddingRight: utils.remConverter(17.6),
+  // paddingRight: utils.remConverter(17.6),
 });
 
 export const categoryWrapper = css({
@@ -210,7 +202,7 @@ export const categoryWrapper = css({
 export const selectedCategoriesContainer = css({
   display: "flex",
   gap: utils.remConverter(12),
-  width:"100%",
+  width: "100%",
   overflow: "hidden",
 });
 
@@ -242,3 +234,14 @@ export const closeIcon = css({
   cursor: "pointer",
   flexGrow: 1,
 });
+
+export const iconBox = css({
+  padding: utils.remConverter(8),
+  borderRadius: utils.remConverter(8),
+  background: colors.Zeb_Solid_BG_Blue,
+});
+
+export const headerRight=css({
+  display:"flex",
+  gap:utils.remConverter(20)
+})

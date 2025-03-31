@@ -20,7 +20,7 @@ import {
 
 const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
   return (
-    <div css={tradingBanner}>
+    <div css={tradingBanner(isLoading)}>
       <div css={frame}>
         <div css={anotherFrame}>
           <div css={zebpayImageDiv}>
@@ -54,13 +54,13 @@ const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div css={ButtonStyle}>
+                <button css={ButtonStyle}>
                   <Image
                     src={AssetsImg.ic_app_store}
                     alt="Get it on App Store"
-                    // css={image}
+                    css={image}
                   />
-                </div>
+                </button>
               </a>
             )}
 
@@ -72,13 +72,13 @@ const Tradingbanner = ({ isLoading }: { isLoading: boolean }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div css={ButtonStyle}>
+                <button css={ButtonStyle}>
                   <Image
                     src={AssetsImg.ic_google_play}
                     alt="Get it on Google Play"
-                    // css={image}
+                    css={image}
                   />
-                </div>
+                </button>
               </a>
             )}
           </div>
