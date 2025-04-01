@@ -9,7 +9,6 @@ import {
   tooltipDateTimeStyle,
 } from "./style";
 
-
 const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -41,7 +40,6 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height: 247,
-
       layout: {
         textColor: "#C0C0EE",
         background: { type: "solid", color: "#181837" },
@@ -59,10 +57,8 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
       rightPriceScale: {
         autoScale: false,
         borderVisible: false,
-
         scaleMargins: {
           top: 0.6,
-          // bottom: 0.005,
         },
       },
     });
@@ -78,7 +74,6 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
     });
 
     let futureSeries: any = null;
-
     if (showFutureData) {
       futureSeries = chart.addSeries(AreaSeries, {
         lineColor: "#EA6161",
@@ -154,7 +149,9 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
       let closestDataPoint = null;
       let minTimeDiff = Infinity;
 
-      [...pastData, ...futureData].forEach((d) => {
+      // Find the closest data point from past and future data
+      const allData = [...pastData, ...futureData];
+      allData.forEach((d) => {
         const dataTimestamp = d.time * 1000;
         const timeDiff = Math.abs(dataTimestamp - hoveredTimestamp);
 
@@ -223,6 +220,7 @@ const TimeBasedChart: React.FC = ({ showFutureData }: { showFutureData }) => {
       chart.remove();
     };
   }, [showFutureData]);
+
   const historicalTagStyle = {
     styles: `position:absolute; left:${chartDimensions.width * 0.3}px; bottom:240px; z-index:1;`,
   };
