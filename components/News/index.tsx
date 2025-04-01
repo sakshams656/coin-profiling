@@ -610,12 +610,7 @@ const NewsPage: React.FC = () => {
                   </button>
                 </ShimmerWrapper>
               </div>
-            </div>):(<><Image
-                src={AssetsImg.ic_tb_gradient}
-                alt="Background Pattern"
-                layout="fill"
-                objectFit="cover"
-                quality={100} /><LoggedOutBanner /></>
+            </div>):(<><LoggedOutBanner loading={loading}/></>
                 )}  
           </div>
           

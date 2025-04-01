@@ -11,7 +11,7 @@ import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
-import { data as fetchCoinData, info as fetchCoinInfo } from "@actions/OverviewAPIs";
+import { data as fetchCoinData, info as fetchCoinInfo } from "../../actions/OverviewAPIs"; 
 import LoggedOutScreen from "./LoggedOut";
 
 interface InputTargetProps {
@@ -40,7 +40,7 @@ interface CoinData {
     totalSupply: string;
     circulatingSupply: string;
   };
-  trading: any; 
+  trading: any;
   launchDate: string | null;
   description: string;
 }
@@ -54,7 +54,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
-  const LoggedIn = true;
+  const LoggedIn = false;
 
   const [coinData, setCoinData] = useState<CoinData>({
     name: "Unknown Coin",
@@ -93,8 +93,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           fetchCoinData({ symbol: coinSymbol }),
         ]);
 
-        const coinInfo = infoResponse.data?.[coinSymbol]?.[0];
-        const coinMeta = dataResponse.data?.[coinSymbol]?.[0];
+        const coinInfo = infoResponse.data[coinSymbol]?.[0];
+        const coinMeta = dataResponse.data[coinSymbol]?.[0];
 
         if (!coinInfo || !coinInfo.quote || !coinInfo.quote.INR || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
@@ -221,8 +221,6 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
       }
     };
   }, []);
-
-  
 
   const handleAmountChange = (target: InputTargetProps) => {
     setAmountInvested(target.value);
@@ -394,15 +392,15 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           </div>
           <div css={styles.returnsButton}>
             <ShimmerWrapper height={34} width={280} isLoading={loading}>
-              {LoggedIn? (
+              {LoggedIn ? (
                 <Button onClick={NOOB} size="full-width" type="primary">
-                CALCULATE RETURNS
-              </Button>
-              ): (
+                  CALCULATE RETURNS
+                </Button>
+              ) : (
                 <div css={styles.loginSignupButtons}>
-                <Button size="medium" type="secondary" onClick={NOOB} style={{width: utils.remConverter(132)}}>LOGIN</Button>
-                <Button size="medium" type="primary" onClick={NOOB} style={{width: utils.remConverter(132)}}>SIGNUP</Button>
-              </div>
+                  <Button size="medium" type="secondary" onClick={NOOB} style={{width: utils.remConverter(132)}}>LOGIN</Button>
+                  <Button size="medium" type="primary" onClick={NOOB} style={{width: utils.remConverter(132)}}>SIGNUP</Button>
+                </div>
               )}
             </ShimmerWrapper>
           </div>

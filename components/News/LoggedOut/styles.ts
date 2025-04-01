@@ -4,7 +4,6 @@ import { colors, utils } from "zebpay-ui";
 export const container = css({
     background: colors.Zeb_Gradient_Dark_Blue,
     borderRadius: utils.remConverter(8),
-    //padding: utils.remConverter(12),
     display: "flex",
     flexDirection: "column",
     gap: utils.remConverter(20)
