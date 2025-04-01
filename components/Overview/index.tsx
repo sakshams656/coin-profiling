@@ -222,6 +222,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     };
   }, []);
 
+  
+
   const handleAmountChange = (target: InputTargetProps) => {
     setAmountInvested(target.value);
   };

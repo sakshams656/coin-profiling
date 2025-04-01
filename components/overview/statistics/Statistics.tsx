@@ -24,6 +24,20 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
   const [animationDone, setAnimationDone] = useState(false);
   const coinData = dummyCoinData; 
   const [loading, setLoading] = useState(true);
+  const [data,setData]=useState(dummyCoinData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await real_data();
+        setData(data);
+
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
 
   useEffect(() => {
     setTimeout(() => {
@@ -73,10 +87,10 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
               </div>
               <div css={styles.statsSubRow}>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Red }}>
-                  {coinData.performance.low24h}
+                  {data.performance.low24h}
                 </div>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Green }}>
-                  {coinData.performance.high24h}
+                  {data.performance.high24h}
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ import * as styles from "./styles";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 import { tabContent } from "../../../Data/CoinInfoData";
+import { data } from "../../../actions/overviewApi";
 
 interface CoinInfoProps {
   launchDate: string | null;
@@ -12,7 +13,7 @@ interface CoinInfoProps {
   symbol: string;
 }
 
-const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) => {
+const CoinInfo: React.FC<CoinInfoProps> = ({ symbol }) => {
   const tabs = {
     about: `About ${symbol}`,
     howWorks: `How ${symbol} works`,
@@ -22,6 +23,42 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) 
 
   const [activeTab, setActiveTab] = useState(tabs.about); 
   const [loading, setLoading] = useState(true);
+  const [launchDate,setLaunchDate]=useState("");
+  const [description,setDescription]=useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await data();
+        const date_launched = response.data["BTC"][0].date_launched;
+        const description = response.data["BTC"][0].description;
+        setLaunchDate(formatDate(date_launched));
+        setDescription(description);
+        console.log(description);
+      } catch (error) {
+        console.error("Error fetching crypto data:", error);
+      }
+    };
+    fetchData(); 
+  }, []); 
+
+
+function formatDate(isoDateString:string) {
+
+  const date = new Date(isoDateString);
+  
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${day} ${month} ${year}`;
+
+}
 
   useEffect(() => {
     const timer = setTimeout(() => {

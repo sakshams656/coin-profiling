@@ -549,7 +549,7 @@ const NewsPage: React.FC = () => {
                   <div css={styles.newsHeader}>
                     <ShimmerWrapper isLoading={loading} height={80} width={80} mode="dark">
                       <div css={styles.mailIcon}>
-                        <Image src={AssetsImg.ic_mail} alt="mail" />
+                        <Image src={AssetsImg.i_mail} alt="mail" />
                       </div>
                     </ShimmerWrapper>
                     <ShimmerWrapper isLoading={loading} height={28} width={220} mode="dark">
