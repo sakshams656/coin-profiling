@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { relative } from "path";
 import { typography, colors, utils } from "zebpay-ui";
 
 export const header = css({
@@ -480,6 +481,7 @@ export const headerFrame = (isScrolled: boolean) =>
   });
 
 export const tradingBanner = css({
+  position: "relative",
   display: "flex",
   width: "100%",
   padding: utils.remConverter(12),

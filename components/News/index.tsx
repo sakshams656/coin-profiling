@@ -9,6 +9,7 @@ import EmailSubscription from "./emailSubscription/EmailSubcription";
 import { Button, utils } from "zebpay-ui";
 import Image from "next/image";
 import AssetsImg from "@public/images";
+import LoggedOutBanner from "./LoggedOut";
 
 interface Article {
   title: string;
@@ -114,6 +115,7 @@ const NewsPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
+  const LoggedIn = false;
 
   const [activeFilters, setActiveFilters] = useState<Filters>({
     publishers: [],
@@ -571,10 +573,16 @@ const NewsPage: React.FC = () => {
             </div>
           </div>
           <div css={styles.tradingBanner}>
-            <div></div>
-            <div css={styles.frame}>
+            {LoggedIn ? (<div css={styles.frame}>
               <div css={styles.anotherFrame}>
                 <ShimmerWrapper isLoading={loading} height={70} width={70} typeLightdDark>
+                  <Image
+                    src={AssetsImg.ic_tb_gradient}
+                    alt="Background Pattern"
+                    layout="fill"
+                    objectFit="cover"
+                    quality={100}
+                  />
                   <div css={styles.zebpayImageDiv}>
                     <Image src={AssetsImg.ic_zebpayCoin} alt="zeb coin" />
                   </div>
@@ -602,8 +610,15 @@ const NewsPage: React.FC = () => {
                   </button>
                 </ShimmerWrapper>
               </div>
-            </div>
+            </div>):(<><Image
+                src={AssetsImg.ic_tb_gradient}
+                alt="Background Pattern"
+                layout="fill"
+                objectFit="cover"
+                quality={100} /><LoggedOutBanner /></>
+                )}  
           </div>
+          
         </div>
       </div>
     </div>
