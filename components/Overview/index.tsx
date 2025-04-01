@@ -12,6 +12,7 @@ import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
 import { data as fetchCoinData, info as fetchCoinInfo } from "@actions/OverviewAPIs";
+import LoggedOutScreen from "./LoggedOut";
 
 interface InputTargetProps {
   value: string | number;
@@ -53,6 +54,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
+  const LoggedIn = true;
 
   const [coinData, setCoinData] = useState<CoinData>({
     name: "Unknown Coin",
@@ -366,29 +368,40 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             </div>
 
             <ShimmerWrapper height={106} width={280} isLoading={loading} style={styles.labelMarginBottom}>
-              <div css={styles.investmentBox}>
-                <div css={styles.investmentBoxContent}>
-                  <div css={styles.percentageBox}>
-                    <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
-                    <div>
-                      <p css={styles.IBlabel}>Current Value</p>
-                      <p css={styles.IBvalue}>₹0.00</p>
+              {LoggedIn ? (
+                <div css={styles.investmentBox}>
+                  <div css={styles.investmentBoxContent}>
+                    <div css={styles.percentageBox}>
+                      <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
+                      <div>
+                        <p css={styles.IBlabel}>Current Value</p>
+                        <p css={styles.IBvalue}>₹0.00</p>
+                      </div>
                     </div>
+                    <Tags type={"default"}>- 0.00%</Tags>
                   </div>
-                  <Tags type={"default"}>- 0.00%</Tags>
+                  <Divider spacing={2} />
+                  <p css={styles.investedAmountText}>
+                    Invested Amount: <span css={styles.investedAmountValue}>₹0.00</span>
+                  </p>
                 </div>
-                <Divider spacing={2} />
-                <p css={styles.investedAmountText}>
-                  Invested Amount: <span css={styles.investedAmountValue}>₹0.00</span>
-                </p>
-              </div>
+              ) : (
+                <LoggedOutScreen />
+              )}
             </ShimmerWrapper>
           </div>
           <div css={styles.returnsButton}>
             <ShimmerWrapper height={34} width={280} isLoading={loading}>
-              <Button onClick={NOOB} size="full-width" type="primary">
+              {LoggedIn? (
+                <Button onClick={NOOB} size="full-width" type="primary">
                 CALCULATE RETURNS
               </Button>
+              ): (
+                <div css={styles.loginSignupButtons}>
+                <Button size="medium" type="secondary" onClick={NOOB} style={{width: utils.remConverter(132)}}>LOGIN</Button>
+                <Button size="medium" type="primary" onClick={NOOB} style={{width: utils.remConverter(132)}}>SIGNUP</Button>
+              </div>
+              )}
             </ShimmerWrapper>
           </div>
         </div>

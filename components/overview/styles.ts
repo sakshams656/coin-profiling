@@ -38,7 +38,7 @@ export const coinBanner = css({
   alignItems: "center",
   width: "100%",
   padding: utils.remConverter(24),
-  backgroundColor: colors.Zeb_BG_Blue,
+  background: colors.Zeb_Gradient_Dark_Blue,
   borderRadius: utils.remConverter(8),
   maxHeight: utils.remConverter(110),
   marginBottom: utils.remConverter(16), 
@@ -255,4 +255,11 @@ export const coinsInfoBox = css({
   display: "flex",
   flexDirection: "column",
   gap: utils.remConverter(8)
+})
+
+export const loginSignupButtons = css({
+  display: "flex",
+  justifyContent: "space-between",
+  position: "sticky",
+  bottom:16,
 })

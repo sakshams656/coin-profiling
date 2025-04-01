@@ -82,7 +82,8 @@ import ic_search_grey from "./Icons/search_grey.svg";
 import ic_cross from "./Icons/cross.svg";
 import ic_investmentIcon from "./illustrations/investmentIcon.png";
 import ic_no_search from "./illustrations/no-search.png";
-import ic_tb_gradient from './illustrations/trading_banner_gradient.png'
+import ic_tb_gradient from './illustrations/trading_banner_gradient.png';
+import i_logout from './illustrations/i_logout.png';
 
 
 const AssetsImg = {
@@ -168,7 +169,7 @@ const AssetsImg = {
   ic_cross_blue,
   ic_clock_white,
   ic_category_white,
-
+  i_logout
 };
 
 export default AssetsImg;
