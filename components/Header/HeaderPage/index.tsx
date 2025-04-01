@@ -44,7 +44,7 @@ interface Article {
   content: string | null;
 }
 
-const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
+const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const [isPopperOpen, setIsPopperOpen] = useState(false);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
   const [search, setSearch] = useState("");
@@ -89,7 +89,7 @@ const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
                 {article.title}
               </div>
               {hoveredIndex === index && (
-                  <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
+                <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
               )}
             </div>
             <div css={articleFooter}>
@@ -111,10 +111,7 @@ const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
               </span>
               <Image src={AssetsImg.ic_seperator} alt="Separator" />
               <span style={{ display: "flex" }}>
-                <Icon
-                  name="icon icon-calendar"
-                  style={icons}
-                />
+                <Icon name="icon icon-calendar" style={icons} />
                 {new Date(article.publishedAt)
                   .toLocaleDateString("en-GB", {
                     day: "2-digit",
@@ -137,12 +134,12 @@ const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
           try {
             const data = await getCryptoNews();
             dispatch({ type: "SET_BLOGS", payload: data });
-            setFilteredArticles(data); 
+            setFilteredArticles(data);
           } catch (error) {
             console.error("Error fetching articles:", error);
           }
         } else {
-          setFilteredArticles(articles); 
+          setFilteredArticles(articles);
         }
       }
     };
@@ -152,19 +149,21 @@ const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
 
   const handleStarClick = () => {
     const newState = !isStarFilled;
-    
+
     setIsStarFilled(newState);
 
     const toastType = ToastType.success;
     const toastData = {
-      title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
+      title: newState
+        ? "Coin added to Favourites!"
+        : "Coin removed from Favourites",
       description: newState
         ? `${coinSymbol} has been added to your favourites.`
         : `${coinSymbol} has been removed from your favourites.`,
       type: toastType,
       duration: 3000,
     };
-    generateToast(toastData); 
+    generateToast(toastData);
   };
 
   useEffect(() => {
@@ -338,7 +337,7 @@ const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
             <button
               css={iconButton}
               ref={shareButtonRef}
-              onClick={() => setIsPopperOpen((prev) => !prev)}
+              onClick={toggleShareMenu}
             >
               <Image
                 src={AssetsImg.ic_share}
