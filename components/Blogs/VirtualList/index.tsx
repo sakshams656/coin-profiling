@@ -20,7 +20,7 @@ const VirtualList = ({
 
   const [visibleRange, setVisibleRange] = useState({
     startRow: 0,
-    endRow: Math.ceil(height / rowHeight) + 0 // Initial viewport + buffer
+    endRow: Math.ceil(height / rowHeight) + 0
   });
   
   const handleScroll = () => {
@@ -29,7 +29,7 @@ const VirtualList = ({
     const { scrollTop } = containerRef.current;
     const startRow = Math.floor(scrollTop / rowHeight);
     const visibleRows = Math.ceil(height / rowHeight);
-    const bufferRows = 0; // Additional rows to render above/below viewport
+    const bufferRows = 0; 
     
     const endRow = Math.min(startRow + visibleRows + bufferRows, totalRows);
     
@@ -43,7 +43,6 @@ const VirtualList = ({
     const container = containerRef.current;
     if (container) {
       container.addEventListener("scroll", handleScroll);
-      // Initial render
       handleScroll();
     }
     
@@ -72,9 +71,9 @@ const VirtualList = ({
         position: "relative"
       }}
     >
-      {/* Total height spacer */}
+
       <div style={{ height: totalHeight, position: "relative" }}>
-        {/* Positioned container for visible items */}
+
         <div
           style={{
             position: "absolute",

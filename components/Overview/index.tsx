@@ -352,7 +352,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
 
       <div css={styles.contentWrapper}>
         <div css={styles.leftContainer}>
-        <PerformanceGraph percentageChange24h={coinData.change} />
+        <PerformanceGraph percentageChange24h={coinData.change} coinSymbol={coinSymbol}/>
 
           <Statistics
             coinLogo={coinLogo}

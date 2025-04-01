@@ -2,7 +2,7 @@ import { chart } from "@actions/OverviewAPIs";
 
 export const fetchData = async (
   duration: string = "1",
-  fromCurrency: string = "btc",
+  fromCurrency:string,
   toCurrency: string = "inr"
 ) => {
   try {

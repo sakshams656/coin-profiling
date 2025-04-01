@@ -9,31 +9,25 @@ import { chartContainer, header, innerChartContainer, performanceGraphContainer,
 
 interface PerformanceGraphProps {
   percentageChange24h: string;
+  coinSymbol:string
 }
 
 
-const PerformanceGraph: React.FC<PerformanceGraphProps> = ({ percentageChange24h }) => {
+const PerformanceGraph: React.FC<PerformanceGraphProps> = ({ percentageChange24h ,coinSymbol}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [timePeriod, setTimePeriod] = useState("24H");
   const [chartInstance, setChartInstance] = useState<any>(null);
   const [seriesInstance, setSeriesInstance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  // const [percentageChange24h, setPercentChange24h] = useState<string | null>(null);
   const [chartData, setChartData] = useState<Array<{ time: string; value: number }>>([]);
   const [currentPrice, setCurrentPrice] = useState<number | null>(null);
   
-  const fronCurrency = "btc";
   const toCurrency = "inr";
-  const coin_symbol = "btc";
 
   useEffect(() => {
     const fetchChartData = async () => {
       try {
         setLoading(true);
-        // const response = await info(coin_symbol);
-        // const change = response.data[coin_symbol.toUpperCase()][0].quote.USD.percent_change_24h;
-        // const formattedChange = `${change > 0 ? "↑" : "↓"} ${Math.abs(change).toFixed(2)}%`;
-        // setPercentChange24h(formattedChange);
 
         let duration = "1";
         switch (timePeriod) {
@@ -48,7 +42,7 @@ const PerformanceGraph: React.FC<PerformanceGraphProps> = ({ percentageChange24h
             break;
         }
 
-        const data = await fetchData(duration, fronCurrency, toCurrency);
+        const data = await fetchData(duration, coinSymbol, toCurrency);
         const uniqueData = data.reduce((acc: { time: string; value: number }[], current) => {
           if (!acc.find((item) => item.time === current.time)) acc.push(current);
           return acc;

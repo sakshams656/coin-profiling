@@ -3,12 +3,16 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Tabs, Popper, colors, InputDropDown, Icon } from "zebpay-ui";
 import { css } from "@emotion/react";
-import { header, headerButton, iconButton, tabs } from "./styles";
+import { header, headerButton, iconButton, icons, tabs } from "./styles";
 import NOOB from "@constants/noob";
 import Image from "next/image";
 import AssetsImg from "@public/images";
-import dummyArticles from "../../Blogs/dummyData/dummyArticles";
-import NofilterBlogs from "../NoFilterBlogs";
+import { ToastType } from "@components/Shared/GenerateToast";
+import { generateToast } from "@components/Shared";
+
+import NoArticles from "../NoArticles";
+import Dropdown from "../Dropdown/Dropdown";
+
 import {
   articleFooter,
   articleImage,
@@ -40,27 +44,35 @@ interface Article {
   content: string | null;
 }
 
-
-const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
+const Header = ({ selectedTab, setSelectedTab,coinSymbol }: HeaderProps) => {
   const [isPopperOpen, setIsPopperOpen] = useState(false);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
   const [search, setSearch] = useState("");
-  // const [articles, setArticles] = useState<Article[]>();
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [clickedArticles, setClickedArticles] = useState<Article[]>([]);
-  // const [isDropDownOpen,setIsDropDownOpen]=useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+  const [isStarFilled, setIsStarFilled] = useState(false);
+  const calculateReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const words = content.split(/\s+/g).length;
+    return Math.ceil(words / wordsPerMinute);
+  };
 
   const dispatch = useDispatch();
-  
+
   const articles = useSelector((state) => state.articles);
+
+  const toggleShareMenu = () => {
+    setIsShareMenuOpen((prev) => !prev);
+  };
 
   const articleOptions: OptionsType[] = filteredArticles.map(
     (article, index) => ({
       value: index,
       label: (
         <div
-          // style={{paddingRight:"10px"}}
           css={Card}
           key={index}
           onMouseEnter={() => setHoveredIndex(index)}
@@ -77,17 +89,31 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                 {article.title}
               </div>
               {hoveredIndex === index && (
-                <>
                   <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
-                </>
               )}
             </div>
             <div css={articleFooter}>
-              {" "}
+              <span
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  src={AssetsImg.ic_clock_blue}
+                  alt="clock"
+                  width={14}
+                  height={14}
+                  css={icons}
+                />
+                {calculateReadingTime(article.content)} min read
+              </span>
+              <Image src={AssetsImg.ic_seperator} alt="Separator" />
               <span style={{ display: "flex" }}>
                 <Icon
                   name="icon icon-calendar"
-                  style={{ marginRight: "0.5rem" }}
+                  style={icons}
                 />
                 {new Date(article.publishedAt)
                   .toLocaleDateString("en-GB", {
@@ -97,8 +123,6 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                   })
                   .replace(",", "")}
               </span>
-              {/* <Image src={AssetsImg.ic_seperator} alt="Separator" />
-              <Image src={AssetsImg.ic_views} alt="Views" /><span> {article.totalViews} </span> */}
             </div>
           </div>
         </div>
@@ -107,17 +131,61 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
   );
 
   useEffect(() => {
-    if(selectedTab==="news"||selectedTab==="blogs"){}
-    if (!articles || articles.length === 0) {
-      getCryptoNews().then((data) => {
-        dispatch({ type: "SET_BLOGS", payload: data });
-        // setLoading(false);
-      });
-    } 
-    // else {
-      // setLoading(false);
-    // }
-  },[dispatch,selectedTab]);
+    const fetchArticles = async () => {
+      if (selectedTab === "news" || selectedTab === "blogs") {
+        if (!articles || articles.length === 0) {
+          try {
+            const data = await getCryptoNews();
+            dispatch({ type: "SET_BLOGS", payload: data });
+            setFilteredArticles(data); 
+          } catch (error) {
+            console.error("Error fetching articles:", error);
+          }
+        } else {
+          setFilteredArticles(articles); 
+        }
+      }
+    };
+
+    fetchArticles();
+  }, [dispatch, selectedTab]);
+
+  const handleStarClick = () => {
+    const newState = !isStarFilled;
+    
+    setIsStarFilled(newState);
+
+    const toastType = ToastType.success;
+    const toastData = {
+      title: newState ? "Coin added to Favourites!" : "Coin removed from Favourites",
+      description: newState
+        ? `${coinSymbol} has been added to your favourites.`
+        : `${coinSymbol} has been removed from your favourites.`,
+      type: toastType,
+      duration: 3000,
+    };
+    generateToast(toastData); 
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(event.target as Node) &&
+        shareButtonRef.current &&
+        !shareButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsShareMenuOpen(false);
+      }
+    };
+
+    if (isShareMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isShareMenuOpen]);
 
   useEffect(() => {
     const storedClickedArticles = JSON.parse(
@@ -126,18 +194,13 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     setClickedArticles(storedClickedArticles);
   }, []);
 
-
   useEffect(() => {
     const fetchArticles = async () => {
       if (search.trim() === "") {
         if (clickedArticles.length > 0) {
           setFilteredArticles(clickedArticles);
-        } else {
-          setFilteredArticles(
-            [...(articles || [])].sort(
-              (a, b) => Number(b.totalViews || 0) - Number(a.totalViews || 0)
-            )
-          );
+        } else if (articles && articles.length > 0) {
+          setFilteredArticles(articles);
         }
       } else {
         try {
@@ -148,11 +211,9 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
         }
       }
     };
-  
+
     fetchArticles();
   }, [search, clickedArticles, articles]);
-  
-  
 
   const handleArticleClick = (article: Article) => {
     const updatedClickedArticles = [
@@ -166,6 +227,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
     );
     window.open(article.url, "_blank");
   };
+
   const NofilterBlogsWrapper = () => {
     return (
       <div
@@ -174,7 +236,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
           e.stopPropagation();
         }}
       >
-        <NofilterBlogs setSearch={setSearch} />
+        <NoArticles setSearch={setSearch} selectedTab={selectedTab} />
       </div>
     );
   };
@@ -218,7 +280,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
                   ? "Search Results:"
                   : clickedArticles.length > 0
                     ? "Recent Search:"
-                    : "Trending Blogs:"
+                    : `Trending ${selectedTab}:`
                 : ""
             }
             toggleInputSearch
@@ -252,22 +314,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
               width: "450px",
               "& > div": {
                 height: "368px",
-                // overflowY: "auto",
-                // scrollbarColor: "black transparent",
               },
-              // "& > div > div": {//   paddingRight: "19px",
-              // },
-
-              // "&>div::-webkit-scrollbar":{
-              //   width:"8px",
-              // },
-              // "&>div::-webkit-scrollbar-thumb":{
-              //   backgroundColor:"black",
-              //   borderRadius:"4px",
-              // },
-              // "&>div::-webkit-scrollbar-track":{
-              //   backgroundColor:"transparent",
-              // },
               ...(filteredArticles.length === 0 && {
                 "& div:hover": {
                   backgroundColor: "#181837",
@@ -280,7 +327,7 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
         )}
         {selectedTab === "overview" && (
           <>
-            <button css={iconButton} onClick={NOOB}>
+            <button css={iconButton} onClick={handleStarClick}>
               <Image
                 src={AssetsImg.ic_header_star}
                 alt="Star Icon"
@@ -302,6 +349,12 @@ const Header = ({ selectedTab, setSelectedTab }: HeaderProps) => {
             </button>
           </>
         )}
+        <Dropdown
+          isOpen={isShareMenuOpen}
+          onClose={() => setIsShareMenuOpen(false)}
+          shareMenuRef={shareMenuRef}
+        />
+
         <Button onClick={NOOB} size="medium" type="primary">
           TRADE COIN_NAME
         </Button>

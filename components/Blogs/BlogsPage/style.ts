@@ -74,7 +74,9 @@ export const header = css({
 
 export const outsideSection=css({
   paddingRight:utils.remConverter(4),
-  overflowX:"hidden"
+  overflowX:"hidden",
+  height: "100%",
+  width: "100%",
 })
 
 export const section = (isScrolled: boolean) =>
@@ -151,7 +153,7 @@ export const innerDiv = css({
 
 export const NoBlogFound = css({
   width: "100%",
-  minHeight: "60vh",
+  height:"100%",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

@@ -5,7 +5,7 @@ import AssetsImg from "@public/images";
 import { Button } from "zebpay-ui";
 import { noResultsContainer,noResultsTitle,noResultsSubtitle } from "./style";
 
-const NoFilterBlogs = ({ setSearch }: { setSearch: (value: string) => void }) => {
+const NoFilterBlogs = ({ setSearch ,selectedTab}: { setSearch: (value: string) => void ,selectedTab:string}) => {
   return (
     <div css={noResultsContainer}>
       <Image
@@ -14,7 +14,7 @@ const NoFilterBlogs = ({ setSearch }: { setSearch: (value: string) => void }) =>
         width={100}
         height={100}
       />
-      <div css={noResultsTitle}>No Blogs Found</div>
+      <div css={noResultsTitle}>No {selectedTab.slice(0,1).toUpperCase()+selectedTab.slice(1)} Found</div>
       <div css={noResultsSubtitle}>Try searching with a different term</div>
       <Button onClick={() => {setSearch("")}} size="medium" type="secondary">
         RESET SEARCH

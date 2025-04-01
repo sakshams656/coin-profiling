@@ -137,6 +137,7 @@ const BlogsPage: React.FC = () => {
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
   const filtersContainerRef = useRef<HTMLDivElement>(null);
+  const [indices,setIndices]=useState([0,6]);
 
   const dispatch = useDispatch();
 
@@ -191,19 +192,20 @@ const BlogsPage: React.FC = () => {
       : []),
   ];
 
-  useEffect(()=>{
-    const updateDimensions=()=>{
-      if(sectionRef.current){
-        setSectionHeight(sectionRef.current.clientHeight);
-        setSectionWidth(sectionRef.current.clientWidth);
-      }
-    };
-    updateDimensions();
-    window.addEventListener('resize',updateDimensions);
-    return () => {
-      window.removeEventListener('resize', updateDimensions);
-    };
-  },[])
+  // useEffect(()=>{
+  //   const updateDimensions=()=>{
+  //     if(sectionRef.current){
+  //       setSectionHeight(sectionRef.current.clientHeight);
+  //       setSectionWidth(sectionRef.current.clientWidth);
+  //     }
+  //     console.log("height is : ",sectionHeight);
+  //   };
+  //   updateDimensions();
+  //   window.addEventListener('resize',updateDimensions);
+  //   return () => {
+  //     window.removeEventListener('resize', updateDimensions);
+  //   };
+  // },[])
 
   useLayoutEffect(() => {
     const container = filtersContainerRef.current;
@@ -320,8 +322,23 @@ const BlogsPage: React.FC = () => {
 
     const handleScroll = () => {
       if (sectionElement) {
-        const isSectionScrolled = sectionElement.scrollTop > 0;
-        setIsScrolled(isSectionScrolled);
+
+        const itemHeight = 300; 
+        const itemsPerRow = 3;  
+        
+        const scrollTop = sectionElement.scrollTop;
+        const viewportHeight = sectionElement.clientHeight;
+        
+
+        const bufferSize = 2 * itemsPerRow;
+        const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 1);
+        const endRow = Math.ceil((scrollTop + viewportHeight) / itemHeight) + 1;
+        
+        const newStartIndex = startRow * itemsPerRow;
+        const newEndIndex = Math.min(filteredArticles.length, endRow * itemsPerRow + bufferSize);
+        
+        setIndices([newStartIndex, newEndIndex]);
+        setIsScrolled(scrollTop > 0);
       }
     };
 
@@ -389,6 +406,10 @@ const BlogsPage: React.FC = () => {
 
     setFilteredArticles(filtered);
   }, [selectedCategories, selectedDurations, dateRange, articles, sortBy]);
+
+  useEffect(()=>{
+    console.log()
+  })
 
   return (
     <div css={main}>
@@ -486,6 +507,29 @@ const BlogsPage: React.FC = () => {
                     <NoBlogsFound onReset={handleReset} />
                   </div>
                 ) : (
+                  // filteredArticles.slice(indices[0],indices[1]).map((article, index) => (
+                  //   <ArticleCard
+                  //     key={index}
+                  //     title={article.title}
+                  //     link={article.url}
+                  //     imageUrl={article.urlToImage}
+                  //     date={
+                  //       isValidDate(article.publishedAt)
+                  //         ? new Date(article.publishedAt).toLocaleDateString(
+                  //             "en-GB",
+                  //             {
+                  //               day: "2-digit",
+                  //               month: "short",
+                  //               year: "numeric",
+                  //             }
+                  //           )
+                  //         : "Unknown Date"
+                  //     }
+                  //     // totalViews={article.totalViews}
+                  //     category={getDomain(article.url)}
+                  //     description={article.content}
+                  //   />
+                  // ))
                   filteredArticles.map((article, index) => (
                     <ArticleCard
                       key={index}
