@@ -13,7 +13,7 @@ interface CoinInfoProps {
   symbol: string;
 }
 
-const CoinInfo: React.FC<CoinInfoProps> = ({ launchDate, description, symbol }) => {
+const CoinInfo: React.FC<CoinInfoProps> = ({ symbol }) => {
   const tabs = {
     about: `About ${symbol}`,
     howWorks: `How ${symbol} works`,
