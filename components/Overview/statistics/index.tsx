@@ -18,26 +18,17 @@ interface StatisticsProps {
     totalSupply: string;
     circulatingSupply: string;
   }; 
+   chartStats :{
+    ltp: number;
+    high24h: number;
+    low24h: number;
+  }
 }
 
-const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
+const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats ,chartStats}) => {
   const [animationDone, setAnimationDone] = useState(false);
   const coinData = dummyCoinData; 
   const [loading, setLoading] = useState(true);
-  const [data,setData]=useState(dummyCoinData);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await real_data();
-        setData(data);
-
-      } catch (error) {
-        console.error("Error fetching crypto data:", error);
-      }
-    };
-    fetchData(); 
-  }, []); 
 
   useEffect(() => {
     setTimeout(() => {
@@ -64,7 +55,7 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
           <ShimmerWrapper height={24} width={300} isLoading={loading}>
             <div css={styles.performanceTitle}>Performance 
               <div css={styles.statsTitle}>
-              (LTP - {coinData.performance.ltp})
+              (LTP - {chartStats.ltp})
               </div>
               </div>
           </ShimmerWrapper>
@@ -87,10 +78,10 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats }) => {
               </div>
               <div css={styles.statsSubRow}>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Red }}>
-                  {data.performance.low24h}
+                  {chartStats.low24h}
                 </div>
                 <div css={styles.statsValue} style={{ color: colors.Zeb_Solid_Green }}>
-                  {data.performance.high24h}
+                  {chartStats.high24h}
                 </div>
               </div>
             </div>

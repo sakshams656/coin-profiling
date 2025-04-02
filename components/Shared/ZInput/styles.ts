@@ -48,6 +48,7 @@ export const inputGroup = css({
   position: "relative",
   display:"flex",
   flexDirection:"row",
+  justifyContent:"space-between"
 });
 
 export const focusedInputGroup = (isMobile?: boolean) =>
@@ -108,6 +109,9 @@ export const formControlRounded = css({
 
 export const inputGroupText = (isMobile?: boolean) => {
   return css({
+    padding: `${utils.remConverter(10)}`,
+    display:"flex",
+    paddingLeft: utils.remConverter(28),
     padding: `${utils.remConverter(10.5)}`,
     paddingLeft: utils.remConverter(28),
     background: isMobile
@@ -119,6 +123,7 @@ export const inputGroupText = (isMobile?: boolean) => {
     color: isMobile ? colors.Zeb_Solid_Grey_02 : colors.Zeb_Solid_White
   });
 };
+
 export const touchedAppendix = (isMobile?: boolean) => {
   return css({ color: isMobile ? colors.Zeb_Solid_Dark_Blue : "" });
 };

@@ -43,4 +43,6 @@ export const articleHeader = css({
   display: "flex",
   width: "100%",
   justifyContent: "space-between",
+  alignItems: "center",
 });
+

@@ -2,17 +2,19 @@ import Image from "next/image";
 import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
-import Statistics from "./Statistics/Statistics";
+
+import Statistics from "./Statistics";
 import AssetsImg from "@public/images";
 import CoinInfo from "./CoinInformation/CoinInfo";
-import PerformanceGraph from "./Graph/PerformanceGraph";
+import PerformanceGraph from "./Graph";
 import CryptoCategories from "./Categories/CryptoCategories";
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
-import { data as fetchCoinData, info as fetchCoinInfo } from "../../actions/OverviewAPIs"; 
 import LoggedOutScreen from "./LoggedOut";
+import { data as fetchCoinData, info as fetchCoinInfo, chart as fetchChartInfo} from "@actions/OverviewAPIs";
+
 
 interface InputTargetProps {
   value: string | number;
@@ -45,6 +47,12 @@ interface CoinData {
   description: string;
 }
 
+interface ChartStats {
+  ltp: string;
+  high24h: string;
+  low24h: string;
+}
+
 interface OverviewProps {
   coinSymbol: string;
 }
@@ -55,6 +63,52 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
   const LoggedIn = false;
+  const [chartStats, setChartStats] = useState<ChartStats>({
+    ltp: "0",
+    high24h: "0",
+    low24h: "0",
+  });
+
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (!coinSymbol) return;
+      try {
+        const chartResponse = await fetchChartInfo(
+          "1", 
+          coinSymbol.toLowerCase(), 
+          "inr"
+        );
+  
+        if (chartResponse?.data && chartResponse.data.length > 0) {
+          const prices = chartResponse.data.map(point => point.y);
+          const stats: ChartStats = {
+            ltp: `₹${prices[prices.length - 1].toFixed(2)}`,
+            high24h: `₹${Math.max(...prices).toFixed(2)}`,
+            low24h: `₹${Math.min(...prices).toFixed(2)}`
+          };
+  
+          setChartStats(stats);
+        }
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+  
+        setChartStats({
+          ltp: `₹${parseFloat(coinData.price.replace('₹', '').replace(',', '')).toFixed(2)}`,
+          high24h: "₹0.00",
+          low24h: "₹0.00"
+        });
+      }
+    };
+  
+    if (coinSymbol && !loading) {
+      fetchChartData();
+    }
+  }, [coinSymbol, loading]);
+  
+
+  
+  
 
   const [coinData, setCoinData] = useState<CoinData>({
     name: "Unknown Coin",
@@ -81,6 +135,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     launchDate: null,
     description: "No description available",
   });
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -292,10 +347,12 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
 
       <div css={styles.contentWrapper}>
         <div css={styles.leftContainer}>
-          <PerformanceGraph />
+        <PerformanceGraph percentageChange24h={coinData.change} coinSymbol={coinSymbol}/>
+
           <Statistics
             coinLogo={coinLogo}
             marketStats={coinData.marketStats}
+            chartStats={chartStats}
           />
           <CoinInfo
             launchDate={coinData.launchDate}
