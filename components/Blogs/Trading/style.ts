@@ -5,18 +5,15 @@ import { typography, colors, utils } from "zebpay-ui";
 
 
 export const ButtonStyle = css({
-  // flex: 1,
-  display: "flex",
-  // width:"100%",
-  justifyContent: "space-between",
-  // alignItems: "center",
 
-  // maxWidth: utils.remConverter(160),
-  // height: "auto",
+  display: "flex",
+
+  justifyContent: "space-between",
+
   background: "none",
   border: "none",
   cursor: "pointer",
-  // padding:"20px",
+
   "@media (max-width: 768px)": {
     maxWidth: utils.remConverter(30),
   },
@@ -115,7 +112,6 @@ export const buttonGroup = css({
   width:"100%",
   justifyContent: "space-between",
   gap: utils.remConverter(8),
-  // alignSelf: "stretch",
   "@media (max-width: 768px)": {
     gap: utils.remConverter(8),
     justifyContent: "center",

@@ -9,9 +9,8 @@ import Image from "next/image";
 import AssetsImg from "@public/images";
 import { ToastType } from "@components/Shared/GenerateToast";
 import { generateToast } from "@components/Shared";
-
 import NoArticles from "../NoArticles";
-import Dropdown from "../Dropdown/Dropdown";
+import Dropdown from "../Dropdown";
 
 import {
   articleFooter,
@@ -93,23 +92,27 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
               )}
             </div>
             <div css={articleFooter}>
-              <span
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  src={AssetsImg.ic_clock_blue}
-                  alt="clock"
-                  width={14}
-                  height={14}
-                  css={icons}
-                />
-                {calculateReadingTime(article.content)} min read
-              </span>
-              <Image src={AssetsImg.ic_seperator} alt="Separator" />
+              {selectedTab === "news" && (
+                <>
+                  <span
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Image
+                      src={AssetsImg.ic_clock_blue}
+                      alt="clock"
+                      width={14}
+                      height={14}
+                      css={icons}
+                    />
+                    {calculateReadingTime(article.content)} min read
+                  </span>
+                  <Image src={AssetsImg.ic_seperator} alt="Separator" />
+                </>
+              )}
               <span style={{ display: "flex" }}>
                 <Icon name="icon icon-calendar" style={icons} />
                 {new Date(article.publishedAt)
@@ -133,7 +136,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
         if (!articles || articles.length === 0) {
           try {
             const data = await getCryptoNews();
-            dispatch({ type: "SET_BLOGS", payload: data });
+            dispatch({ type: "SET_ARTICLES", payload: data });
             setFilteredArticles(data);
           } catch (error) {
             console.error("Error fetching articles:", error);

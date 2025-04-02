@@ -1,9 +1,8 @@
 import React from 'react';
 import BlogsPage from './BlogsPage';
-import NewsPage from './BlogsPage';
 import "../../styles/shared/global.ts";
 import { Provider } from 'react-redux';
-import store from './Store/store';
+import store from '../../Store';
 
 const Blogs = () => {
   return (

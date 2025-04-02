@@ -4,10 +4,10 @@ import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
 
-import Statistics from "./Statistics/Statistics";
+import Statistics from "./Statistics";
 import AssetsImg from "@public/images";
 import CoinInfo from "./CoinInformation/CoinInfo";
-import PerformanceGraph from "./Graph/PerformanceGraph";
+import PerformanceGraph from "./Graph";
 import CryptoCategories from "./Categories/CryptoCategories";
 import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";

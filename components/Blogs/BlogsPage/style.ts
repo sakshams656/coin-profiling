@@ -164,6 +164,7 @@ export const InsideSection = css({
   flexWrap: "wrap",
   gap: utils.remConverter(16),
   width: "100%",
+  height:"100%"
 });
 
 export const appButton = css({
@@ -183,7 +184,6 @@ export const button = css({
 
 export const headerBelow = css({
   display: "flex",
-  // paddingLeft: utils.remConverter(16),
   overflowX: "hidden",
   whiteSpace: "nowrap",
   overflowY: "hidden",
@@ -191,7 +191,6 @@ export const headerBelow = css({
   scrollbarWidth: "none",
   alignItems: "stretch",
   justifyContent: "space-between",
-  // paddingRight: utils.remConverter(17.6),
 });
 
 export const categoryWrapper = css({

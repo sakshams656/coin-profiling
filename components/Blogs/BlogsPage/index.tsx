@@ -9,7 +9,6 @@ import { Button, Shimmer } from "zebpay-ui";
 import Image from "next/image";
 import { getCryptoNews } from "../api/apiService";
 import { useDispatch, useSelector } from "react-redux";
-import VirtualList from "../VirtualList";
 
 import {
   main,
@@ -119,7 +118,7 @@ const getDomain = (url: string) => {
 };
 
 const BlogsPage: React.FC = () => {
-  // const [articles, setArticles] = useState<Article[]>([]);
+
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -191,21 +190,6 @@ const BlogsPage: React.FC = () => {
         ]
       : []),
   ];
-
-  // useEffect(()=>{
-  //   const updateDimensions=()=>{
-  //     if(sectionRef.current){
-  //       setSectionHeight(sectionRef.current.clientHeight);
-  //       setSectionWidth(sectionRef.current.clientWidth);
-  //     }
-  //     console.log("height is : ",sectionHeight);
-  //   };
-  //   updateDimensions();
-  //   window.addEventListener('resize',updateDimensions);
-  //   return () => {
-  //     window.removeEventListener('resize', updateDimensions);
-  //   };
-  // },[])
 
   useLayoutEffect(() => {
     const container = filtersContainerRef.current;
@@ -309,7 +293,7 @@ const BlogsPage: React.FC = () => {
   useEffect(() => {
     if (articles.length === 0) {
       getCryptoNews().then((data) => {
-        dispatch({ type: "SET_BLOGS", payload: data });
+        dispatch({ type: "SET_ARTICLES", payload: data });
         setLoading(false);
       });
     } else {
@@ -507,29 +491,6 @@ const BlogsPage: React.FC = () => {
                     <NoBlogsFound onReset={handleReset} />
                   </div>
                 ) : (
-                  // filteredArticles.slice(indices[0],indices[1]).map((article, index) => (
-                  //   <ArticleCard
-                  //     key={index}
-                  //     title={article.title}
-                  //     link={article.url}
-                  //     imageUrl={article.urlToImage}
-                  //     date={
-                  //       isValidDate(article.publishedAt)
-                  //         ? new Date(article.publishedAt).toLocaleDateString(
-                  //             "en-GB",
-                  //             {
-                  //               day: "2-digit",
-                  //               month: "short",
-                  //               year: "numeric",
-                  //             }
-                  //           )
-                  //         : "Unknown Date"
-                  //     }
-                  //     // totalViews={article.totalViews}
-                  //     category={getDomain(article.url)}
-                  //     description={article.content}
-                  //   />
-                  // ))
                   filteredArticles.map((article, index) => (
                     <ArticleCard
                       key={index}
@@ -548,12 +509,11 @@ const BlogsPage: React.FC = () => {
                             )
                           : "Unknown Date"
                       }
-                      // totalViews={article.totalViews}
                       category={getDomain(article.url)}
                       description={article.content}
                     />
                   ))
-                  // <VirtualList list={filteredArticles} height={sectionHeight} width={sectionWidth} articleHeight={sectionHeight/2} articleWidth={sectionWidth/3}/>
+                  
                 )}
               </div>
             )}

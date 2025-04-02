@@ -6,7 +6,7 @@ const initialState={
 
 const blogReducer=(state=initialState,action)=>{
     switch(action.type){
-        case "SET_BLOGS":
+        case "SET_ARTICLES":
             return {...state,articles:action.payload};
         default:
             return state;

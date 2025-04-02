@@ -61,9 +61,9 @@ export const newsHeader = css({
 });
 
 export const heading = css({
-  // display:"flex",
+
   color: colors.Zeb_Solid_White,
-  // justifyContent:"space-between",
+
   fontFeatureSettings: `"clig" off, "liga" off`,
   fontSize: utils.remConverter(16),
   fontStyle: "normal",
@@ -92,25 +92,8 @@ export const quote = css({
 });
 
 export const Form = css({
-  // display: "flex",
-  // flexDirection: "column",
-  // alignItems: "flex-start",
-  // gap: utils.remConverter(8),
-  // marginBottom: utils.remConverter(28),
-  // paddingTop: utils.remConverter(16),
-  // width:"100%",
+  width:"100%",
 
-  // "@media (max-width: 768px)": {
-  //   height: "auto",
-  //   padding: utils.remConverter(16),
-  //   marginBottom: `${utils.remConverter(16)} !important`,
-  // },
-  // "@media (max-width: 480px)": {
-  //   flexDirection: "column",
-  //   alignItems: "center",
-  //   gap: utils.remConverter(8),
-  //   marginBottom: `${utils.remConverter(16)} !important`,
-  // },
 });
 
 export const input=css({

@@ -39,9 +39,10 @@ export const articleImage = css({
   borderRadius: utils.remConverter(4),
 });
 
-export const articleHeader = css`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items:center;
-`;
+export const articleHeader = css({
+  display: "flex",
+  width: "100%",
+  justifyContent: "space-between",
+  alignItems: "center",
+});
+
