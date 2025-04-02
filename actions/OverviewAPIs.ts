@@ -1,14 +1,9 @@
 import axios from "@utils/axios";
-import { COINMARKETCAP_LATEST, COINMARKETCAP_INFO, ZEBSTAGE_CATEGORIES,GRAPH,NEWS_LATEST } from "@constants/api";
+import { COINMARKETCAP_LATEST, COINMARKETCAP_INFO, ZEBSTAGE_CATEGORIES,GRAPH } from "@constants/api";
 import { DataApiResponse, InfoApiResponse } from "@typings/api/shared/Overview";
 import {ChartResponse} from "@typings/api/shared/coinMarket";
-import {NewsArticle} from "@typings/api/shared/news";
 
 const API_KEY = process.env.NEXT_PUBLIC_CMC_API_KEY; 
-const BASE_URL = 'https://newsapi.org/v2/everything';
-const NEWS_API_KEY = '1047c9daebe448f6bffbff139e9c9017'; 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 2000;
 
 export const data = async (p0: { symbol: string }): Promise<DataApiResponse> => {
   try {
@@ -91,29 +86,4 @@ export const fetchZebstageCategories = async (): Promise<any> => {
       throw error;
     }
   }
-
-  // export const getCryptoNews = async (searchTerm: string = ''): Promise<NewsArticle[]> => {
-  //   try {
-  //     const response = await axios({
-  //       url: NEWS_LATEST,
-  //       method: "GET",
-  //       headers: {
-  //         Accept: "application/json",
-  //       },
-  //       params: {
-  //         q: searchTerm || '(cryptocurrency OR crypto OR blockchain OR bitcoin OR ethereum)',
-  //         sortBy: "publishedAt",
-  //         language: "en",
-  //         domains: "wsj.com,forbes.com,bloomberg.com,coindesk.com,cointelegraph.com,zebpay.com",
-  //         pageSize: 100,
-  //         apiKey: NEWS_API_KEY,
-  //       },
-  //     });
-  
-  //     return response.data.articles as NewsArticle[];
-  //   } catch (error) {
-  //     console.error("Error fetching cryptocurrency news:", error);
-  //     throw error;
-  //   }
-  // };
   

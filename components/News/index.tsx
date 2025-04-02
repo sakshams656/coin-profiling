@@ -231,7 +231,6 @@ const NewsPage: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchNews();
   }, []);
 
@@ -290,8 +289,8 @@ const NewsPage: React.FC = () => {
   const handleResetFilters = () => {
     const resetFilters: Filters = { publishers: [], durations: [], dateRange: null };
     setActiveFilters(resetFilters);
-    setFilteredArticles(articles); // Reset filtered articles to original list
-    setResetTrigger((prev) => prev + 1); // Trigger reset in FilterSidePanel
+    setFilteredArticles(articles); 
+    setResetTrigger((prev) => prev + 1); 
   };
 
   const handleRemoveFilter = (type: keyof Filters, value: string) => {

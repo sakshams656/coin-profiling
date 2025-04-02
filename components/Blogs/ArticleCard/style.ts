@@ -1,10 +1,9 @@
 
 import { css } from "@emotion/react";
-import { typography, colors, utils } from "zebpay-ui";
+import { colors, utils } from "zebpay-ui";
 
 export const CardContainer = css({
   display: "flex",
-  // height: "14%",
   flexDirection: "column",
   alignItems: "center",
   padding: utils.remConverter(12),
