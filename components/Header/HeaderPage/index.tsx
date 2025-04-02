@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Tabs, Popper, colors, InputDropDown, Icon } from "zebpay-ui";
+import { Button, Tabs, Popper, colors, InputDropDown, Icon, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 import { header, headerButton, iconButton, icons, tabs } from "./styles";
 import NOOB from "@constants/noob";
@@ -24,6 +24,7 @@ import { getCryptoNews } from "../api/apiService";
 interface HeaderProps {
   selectedTab: string;
   setSelectedTab: (tab: string) => void;
+  coinSymbol: string; 
 }
 export type OptionsType = {
   label: JSX.Element;
@@ -357,8 +358,8 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
           shareMenuRef={shareMenuRef}
         />
 
-        <Button onClick={NOOB} size="medium" type="primary">
-          TRADE COIN_NAME
+        <Button onClick={NOOB} size="small" type="primary" style={{width: utils.remConverter(150)}}>
+          TRADE {coinSymbol}
         </Button>
       </div>
     </div>
