@@ -1,7 +1,6 @@
-/** @jsxImportSource @emotion/react */
 
 import { css } from "@emotion/react";
-import { typography, colors, utils } from "zebpay-ui";
+import { utils } from "zebpay-ui";
 
 
 export const dropdownContainer = css({

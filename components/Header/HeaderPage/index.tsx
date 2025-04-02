@@ -1,7 +1,6 @@
-/** @jsxImportSource @emotion/react */
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Tabs, Popper, colors, InputDropDown, Icon, utils } from "zebpay-ui";
+import { Button, Tabs, colors, InputDropDown, Icon, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 import { header, headerButton, iconButton, icons, tabs } from "./styles";
 import NOOB from "@constants/noob";
