@@ -118,15 +118,14 @@ const styles = {
 
   statsValue: css({
     color: colors.Zeb_Solid_White,
-    fontSize: utils.remConverter(16),
-    fontWeight: 400,
+    fontSize: utils.remConverter(14),
+    fontWeight: 600,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     marginTop: utils.remConverter(16)
   }),
 
-  /* 🚀 Bitcoin Animation */
   bitcoinIconBase: css({
     position: "absolute",
     bottom: "-80%",

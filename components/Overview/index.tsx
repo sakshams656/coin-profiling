@@ -295,6 +295,15 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     <div css={styles.container} ref={containerRef}>
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
+        <div css={styles.backgroundPattern}>
+            <Image
+              src={AssetsImg.i_banner_pattern}
+              alt="Background Pattern"
+              layout="fill"
+              objectFit="cover"
+              quality={100}
+            />
+          </div>
           <div css={styles.coinInfo}>
             <Image src={coinLogo} alt="coin" width={56} height={56} priority onError={() => console.error("Image failed to load:", coinLogo)} />
             <div css={styles.coinsInfoBox}>

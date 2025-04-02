@@ -32,6 +32,7 @@ export const container = css({
 });
 
 export const coinBanner = css({
+  position: "relative",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -41,6 +42,14 @@ export const coinBanner = css({
   borderRadius: utils.remConverter(8),
   maxHeight: utils.remConverter(110),
   marginBottom: utils.remConverter(16), 
+});
+
+export const backgroundPattern = css({
+  position: "absolute",
+  top: 0,
+  left: "50%", 
+  width: "50%", 
+  height: "100%",
 });
 
 export const coinInfo = css({
