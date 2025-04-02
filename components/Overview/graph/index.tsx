@@ -1,43 +1,34 @@
-/** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState } from "react";
 import { AreaSeries, createChart, ColorType } from "lightweight-charts";
-
-import { colors, Tabs , Tags, utils } from "zebpay-ui";
-import * as styles from "./styles";
-import { dummyData1M, dummyData1W, dummyData1Y, dummyData24h ,fetchData} from "../../../Data/DummyChartData";
-
-
-import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
+import { colors, Tabs, Tags } from "zebpay-ui";
 import { css } from "@emotion/react";
-import { info } from "@actions/overviewApi";
 
-const PerformanceGraph: React.FC = () => {
+import { fetchData } from "../../../Data/DummyChartData";
+import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
+import { chartContainer, header, innerChartContainer, performanceGraphContainer, title } from "./styles";
+
+interface PerformanceGraphProps {
+  percentageChange24h: string;
+  coinSymbol:string
+}
+
+
+const PerformanceGraph: React.FC<PerformanceGraphProps> = ({ percentageChange24h ,coinSymbol}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [timePeriod, setTimePeriod] = useState("24H");
   const [chartInstance, setChartInstance] = useState<any>(null);
   const [seriesInstance, setSeriesInstance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [percentageChange24h, setPercentChange24h] = useState<string | null>(null);
   const [chartData, setChartData] = useState<Array<{ time: string; value: number }>>([]);
-
-  useEffect(() => {
-    const fetchDataAsync = async () => {
-      try {
-        const response = await info();
-        const change = response.data["BTC"][0].quote.USD.percent_change_24h;
-        const formattedChange = `${change > 0 ? "↑" : "↓"} ${Math.abs(change).toFixed(2)}%`;
-        setPercentChange24h(formattedChange);
-      } catch (error) {
-        console.error("Error fetching percentage change:", error);
-      }
-    };
-    fetchDataAsync();
-  }, []);
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
+  
+  const toCurrency = "inr";
 
   useEffect(() => {
     const fetchChartData = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
+
         let duration = "1";
         switch (timePeriod) {
           case "3D":
@@ -50,11 +41,17 @@ const PerformanceGraph: React.FC = () => {
             duration = "30";
             break;
         }
-        const data = await fetchData(duration);
+
+        const data = await fetchData(duration, coinSymbol, toCurrency);
         const uniqueData = data.reduce((acc: { time: string; value: number }[], current) => {
           if (!acc.find((item) => item.time === current.time)) acc.push(current);
           return acc;
         }, []);
+        
+        if (uniqueData.length > 0) {
+          setCurrentPrice(uniqueData[uniqueData.length - 1].value);
+        }
+        
         setChartData(uniqueData);
       } catch (error) {
         console.error("Error fetching chart data:", error);
@@ -62,6 +59,7 @@ const PerformanceGraph: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchChartData();
   }, [timePeriod]);
 
@@ -71,7 +69,7 @@ const PerformanceGraph: React.FC = () => {
     const chart = createChart(chartContainerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: colors.Zeb_Solid_Dark_Blue },
-        textColor: colors.Zeb_Solid_White,
+        textColor: "#C0C0EE",
       },
       width: chartContainerRef.current.clientWidth,
       height: 200,
@@ -79,27 +77,35 @@ const PerformanceGraph: React.FC = () => {
         vertLines: { color: colors.Zeb_Solid_Dark_Blue },
         horzLines: { color: colors.Zeb_Transparent_4 },
       },
-      crosshair:{
-        vertLine:false,
-        horzLine:false,
+      crosshair: {
+        vertLine: {
+          visible: true,
+          labelVisible: true,
+          color: colors.Zeb_Solid_Green,
+        },
+        horzLine: {
+          visible: true,
+          labelVisible: true,
+          color: colors.Zeb_Solid_Green,
+        },
       },
       timeScale: {
         borderColor: colors.Zeb_Transparent_4,
+        timeVisible: true,  
+        secondsVisible: false,
       },
-
-      priceScale: {
+      rightPriceScale: {
         visible: false,
         borderVisible: false, 
-        
       },
-
     });
 
-    const series = chart.addSeries(AreaSeries,{
+    const series = chart.addSeries(AreaSeries, {
       lineColor: colors.Zeb_Solid_Green,
       topColor: "rgba(46, 204, 113, 0.4)",
       bottomColor: "rgba(46, 204, 113, 0.1)",
-      
+      lastValueVisible: false,
+      priceLineVisible: false,
     });
 
     setChartInstance(chart);
@@ -110,8 +116,8 @@ const PerformanceGraph: React.FC = () => {
         chart.applyOptions({ width: chartContainerRef.current.clientWidth });
       }
     };
-    window.addEventListener("resize", handleResize);
 
+    window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
       if (chart) {
@@ -124,33 +130,28 @@ const PerformanceGraph: React.FC = () => {
 
   useEffect(() => {
     if (!seriesInstance || !chartInstance) return; 
-    seriesInstance.setData(chartData);
+    
+
+    const formattedData = chartData.map(item => ({
+      time: new Date(item.time).getTime() / 1000, 
+      value: item.value
+    }));
+
+    seriesInstance.setData(formattedData);
     chartInstance.timeScale().fitContent();
   }, [chartData, seriesInstance, chartInstance]);
 
   return (
-
-    <div css={styles.performanceGraphContainer}>
-      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({marginBottom: "1rem"})}>
-        <div css={styles.header}>
-          <span css={styles.title}>Performance</span>
-          <Tags
-            size="medium"
-            style={{
-              name: '1pzk433',
-              styles: 'width:100px'
-            }}
-            type="success"
-            css={{borderRadius: utils.remConverter(4)}}
-          >
-             {percentageChange24h} | 24H
-          </Tags>
-
+    <div css={performanceGraphContainer}>
+      <ShimmerWrapper height={40} width={200} isLoading={loading} style={css({ marginBottom: "1rem" })}>
+        <div css={header}>
+          <span css={title}>Performance</span>
+          <Tags type="success">{percentageChange24h} | 24H</Tags>
         </div>
       </ShimmerWrapper>
       <ShimmerWrapper height={263} width={1000} isLoading={loading}>
-        <div css={styles.innerChartContainer}>
-          <div css={styles.chartContainer} ref={chartContainerRef} />
+        <div css={innerChartContainer}>
+          <div css={chartContainer} ref={chartContainerRef} />
           <Tabs
             onChange={(tab) => setTimePeriod(tab)}
             selectedTab={timePeriod}

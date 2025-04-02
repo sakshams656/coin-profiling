@@ -1,13 +1,14 @@
 import React from 'react';
-import NewsPage from './BlogsPage';
+import BlogsPage from './BlogsPage';
 import "../../styles/shared/global.ts";
-import { utils,typography } from 'zebpay-ui';
+import { Provider } from 'react-redux';
+import store from '../../Store';
 
 const Blogs = () => {
   return (
-    <div >
-      <NewsPage />
-    </div>
+    <Provider store={store} >
+      <BlogsPage />
+    </Provider>
   );
 };
 

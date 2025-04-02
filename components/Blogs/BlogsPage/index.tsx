@@ -7,6 +7,8 @@ import Tradingbanner from "../Trading";
 import NoBlogsFound from "../NoBlogsFound";
 import { Button, Shimmer } from "zebpay-ui";
 import Image from "next/image";
+import { getCryptoNews } from "../api/apiService";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   main,
@@ -25,8 +27,13 @@ import {
   categoryText,
   closeIcon,
   headerBelow,
+  outsideSection,
+  iconBox,
+  headerRight,
 } from "./style";
+
 import AssetsImg from "@public/images";
+import Dropdown from "../DropDown";
 
 interface Article {
   title: string;
@@ -34,8 +41,13 @@ interface Article {
   urlToImage: string;
   publishedAt: string;
   content: string;
-  category: string;
-  totalViews: string;
+}
+
+interface FilterItem {
+  type: "category" | "duration" | "date";
+  value: string;
+  icon: string | null;
+  onRemove: () => void;
 }
 
 interface FilterItem {
@@ -96,8 +108,17 @@ const isWithinDateRange = (date: string, range: string): boolean => {
   return true;
 };
 
-const NewsPage: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+const getDomain = (url: string) => {
+  try {
+    const { hostname } = new URL(url);
+    return hostname.startsWith("www.") ? hostname.slice(4) : hostname;
+  } catch {
+    return "Unknown";
+  }
+};
+
+const BlogsPage: React.FC = () => {
+
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -109,31 +130,36 @@ const NewsPage: React.FC = () => {
   const [iconsPanelKey, setIconsPanelKey] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [sectionHeight,setSectionHeight]=useState(600);
+  const [sectionWidth,setSectionWidth]=useState(1200);
 
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
   const filtersContainerRef = useRef<HTMLDivElement>(null);
+  const [indices,setIndices]=useState([0,6]);
+
+  const dispatch = useDispatch();
+
+  const articles = useSelector((state) => state.articles);
+
+  const getSuffix = (day: number) => {
+    const suffixes = ["th", "st", "nd", "rd"];
+    const position = day % 100;
+    return suffixes[(position - 20) % 10] || suffixes[position] || suffixes[0];
+  };
 
   const formatDateWithSuffix = (dateStr: string) => {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return "Invalid Date";
 
     const day = date.getDate();
-    const suffix =
-      day === 1 || day === 21 || day === 31
-        ? "st"
-        : day === 2 || day === 22
-          ? "nd"
-          : day === 3 || day === 23
-            ? "rd"
-            : "th";
+    const suffix = getSuffix(day);
 
     return `${day}${suffix} ${date.toLocaleDateString("en-GB", {
       month: "short",
       year: "numeric",
     })}`;
   };
-
 
   const allFilters: FilterItem[] = [
     ...selectedCategories.map((category) => ({
@@ -164,8 +190,6 @@ const NewsPage: React.FC = () => {
         ]
       : []),
   ];
-
-
 
   useLayoutEffect(() => {
     const container = filtersContainerRef.current;
@@ -267,27 +291,38 @@ const NewsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setArticles(dummyArticles);
-        setFilteredArticles(dummyArticles);
-        setTimeout(() => setLoading(false), 1000);
-      } catch (err) {
-        console.error("Error fetching cryptocurrency news:", err);
-        setError("Failed to fetch news.");
+    if (articles.length === 0) {
+      getCryptoNews().then((data) => {
+        dispatch({ type: "SET_ARTICLES", payload: data });
         setLoading(false);
-      }
-    };
-    fetchNews();
-  }, []);
+      });
+    } else {
+      setLoading(false);
+    }
+  },[dispatch,articles.length]);
 
   useEffect(() => {
     const sectionElement = sectionRef.current;
 
     const handleScroll = () => {
       if (sectionElement) {
-        const isSectionScrolled = sectionElement.scrollTop > 0;
-        setIsScrolled(isSectionScrolled);
+
+        const itemHeight = 300; 
+        const itemsPerRow = 3;  
+        
+        const scrollTop = sectionElement.scrollTop;
+        const viewportHeight = sectionElement.clientHeight;
+        
+
+        const bufferSize = 2 * itemsPerRow;
+        const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 1);
+        const endRow = Math.ceil((scrollTop + viewportHeight) / itemHeight) + 1;
+        
+        const newStartIndex = startRow * itemsPerRow;
+        const newEndIndex = Math.min(filteredArticles.length, endRow * itemsPerRow + bufferSize);
+        
+        setIndices([newStartIndex, newEndIndex]);
+        setIsScrolled(scrollTop > 0);
       }
     };
 
@@ -356,23 +391,32 @@ const NewsPage: React.FC = () => {
     setFilteredArticles(filtered);
   }, [selectedCategories, selectedDurations, dateRange, articles, sortBy]);
 
+  useEffect(()=>{
+    console.log()
+  })
+
   return (
     <div css={main}>
       <div css={container}>
         <div css={headerFrame(isScrolled, allFilters.length > 0)}>
           <div css={header}>
             <div css={news}>Crypto Blogs</div>
-            <IconsPanel
-              key={iconsPanelKey}
-              onCategoryChange={handleCategoryChange}
-              onDurationChange={handleDurationChange}
-              onDateRangeChange={handleDateRangeChange}
-              onSortChange={handleSortChange}
-              onReset={handleReset}
-              selectedCategories={selectedCategories}
-              selectedDurations={selectedDurations}
-              selectedDateRange={dateRange}
-            />
+            <div css={headerRight}>
+              <IconsPanel
+                key={iconsPanelKey}
+                onCategoryChange={handleCategoryChange}
+                onDurationChange={handleDurationChange}
+                onDateRangeChange={handleDateRangeChange}
+                onSortChange={handleSortChange}
+                onReset={handleReset}
+                selectedCategories={selectedCategories}
+                selectedDurations={selectedDurations}
+                selectedDateRange={dateRange}
+              />
+              <div css={iconBox} style={{ cursor: "pointer" }}>
+                <Dropdown onSortChange={handleSortChange} />
+              </div>
+            </div>
           </div>
           {allFilters.length > 0 && (
             <div css={headerBelow} ref={filtersContainerRef}>
@@ -414,7 +458,7 @@ const NewsPage: React.FC = () => {
                     />
                   </button>
                 )}
-                <div data-reset-button style={{marginLeft:"auto"}} >
+                <div data-reset-button style={{ marginLeft: "auto" }}>
                   <Button onClick={handleReset} size="small" type="secondary">
                     Reset
                   </Button>
@@ -423,55 +467,57 @@ const NewsPage: React.FC = () => {
             </div>
           )}
         </div>
-        <div css={section} ref={sectionRef}>
-          {error ? (
-            <div>{error}</div>
-          ) : (
-            <div css={InsideSection}>
-              {loading ? (
-                Array.from({ length: 12 }).map((_, index) => (
-                  <ArticleCard
-                    key={index}
-                    title={<Shimmer height={18} width={300} />}
-                    link=""
-                    imageUrl=""
-                    date={<Shimmer height={20} width={120} />}
-                    totalViews={<Shimmer height={20} width={120} />}
-                    category={<Shimmer height={24} width={150} />}
-                    description={<Shimmer height={38} width={300} />}
-                  />
-                ))
-              ) : filteredArticles.length === 0 ? (
-                <div css={NoBlogFound}>
-                  <NoBlogsFound onReset={handleReset} />
-                </div>
-              ) : (
-                filteredArticles.map((article, index) => (
-                  <ArticleCard
-                    key={index}
-                    title={article.title}
-                    link={article.url}
-                    imageUrl={article.urlToImage}
-                    date={
-                      isValidDate(article.publishedAt)
-                        ? new Date(article.publishedAt).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )
-                        : "Unknown Date"
-                    }
-                    totalViews={article.totalViews}
-                    category={article.category}
-                    description={article.content}
-                  />
-                ))
-              )}
-            </div>
-          )}
+        <div css={outsideSection}>
+          <div css={section(isScrolled)} ref={sectionRef}>
+            {error ? (
+              <div>{error}</div>
+            ) : (
+              <div css={InsideSection}>
+                {loading ? (
+                  Array.from({ length: 12 }).map((_, index) => (
+                    <ArticleCard
+                      key={index}
+                      title={<Shimmer height={18} width={300} />}
+                      link=""
+                      imageUrl=""
+                      date={<Shimmer height={20} width={120} />}
+                      totalViews={<Shimmer height={20} width={120} />}
+                      category={<Shimmer height={24} width={150} />}
+                      description={<Shimmer height={38} width={300} />}
+                    />
+                  ))
+                ) : filteredArticles.length === 0 ? (
+                  <div css={NoBlogFound}>
+                    <NoBlogsFound onReset={handleReset} />
+                  </div>
+                ) : (
+                  filteredArticles.map((article, index) => (
+                    <ArticleCard
+                      key={index}
+                      title={article.title}
+                      link={article.url}
+                      imageUrl={article.urlToImage}
+                      date={
+                        isValidDate(article.publishedAt)
+                          ? new Date(article.publishedAt).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )
+                          : "Unknown Date"
+                      }
+                      category={getDomain(article.url)}
+                      description={article.content}
+                    />
+                  ))
+                  
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div css={innerDiv}>
@@ -484,4 +530,4 @@ const NewsPage: React.FC = () => {
   );
 };
 
-export default NewsPage;
+export default BlogsPage;

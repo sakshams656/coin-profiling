@@ -39,27 +39,28 @@ export const container = css({
 export const headerFrame = (isScrolled, hasFilters) =>
   css({
     display: "flex",
-    paddingTop: utils.remConverter(16),
+    padding: `${utils.remConverter(16)} ${utils.remConverter(16)}  ${utils.remConverter(16)}  ${utils.remConverter(16)} `,
+    justifyContent: "space-between",
     flexDirection: "column",
     alignItems: "flex-start",
     gap: utils.remConverter(16),
-    // width: "100%",
+    width: "100%",
     alignSelf: "stretch",
     background: colors.Zeb_Solid_Dark_Blue,
     position: "sticky",
     top: 0,
-    borderRadius: utils.remConverter(8),
+
+    borderRadius: `${utils.remConverter(8)} ${utils.remConverter(8)} 0 0`,
     ...(isScrolled
       ? {
-          paddingBottom: utils.remConverter(9.6),
           boxShadow: `0px ${utils.remConverter(8)} ${utils.remConverter(8)} -${utils.remConverter(4)} #0C0C1D`,
         }
       : hasFilters
-      ? {
-          paddingBottom: utils.remConverter(9.6),
-          borderBottom: `${utils.remConverter(1)} solid #222245`,
-        }
-      : {}),
+        ? {
+            paddingBottom: utils.remConverter(9.6),
+            borderBottom: `${utils.remConverter(1)} solid #222245`,
+          }
+        : {}),
     "@media (max-width: 768px)": {
       gap: utils.remConverter(8),
     },
@@ -67,47 +68,43 @@ export const headerFrame = (isScrolled, hasFilters) =>
 
 export const header = css({
   display: "flex",
-  width:"100%",
+  width: "100%",
   justifyContent: "space-between",
-  paddingLeft: utils.remConverter(16),
-  alignItems: "center",
-  alignSelf: "stretch",
-  "@media (max-width: 768px)": {
-    flexDirection: "column",
-    gap: utils.remConverter(8),
-    padding: `0 ${utils.remConverter(8)}`,
-  },
 });
 
-export const section = css({
-  display: "flex",
-  flexWrap: "wrap",
+export const outsideSection=css({
+  paddingRight:utils.remConverter(4),
+  overflowX:"hidden",
   height: "100%",
   width: "100%",
-  padding: utils.remConverter(16),
-  paddingBottom: utils.remConverter(16),
-  flexDirection: "column",
-  alignItems: "center",
-  borderRadius: utils.remConverter(4),
-  background: colors.Zeb_Solid_Dark_Blue,
-  overflowY: "auto",
-  overflowX: "hidden",
-  paddingRight: utils.remConverter(12),
-  "&::-webkit-scrollbar": {
-    width: utils.remConverter(4),
-  },
-  "&::-webkit-scrollbar-track": {
-    background: "transparent",
-  },
-  "&::-webkit-scrollbar-thumb": {
-    background: colors.Zeb_Solid_Dark_Grey,
-    borderRadius: utils.remConverter(18),
-  },
-  "@media (max-width: 768px)": {
+})
+
+export const section = (isScrolled: boolean) =>
+  css({
+    display: "flex",
+    flexWrap: "wrap",
+    height: "100%",
     width: "100%",
-    height: "inherit",
-  },
-});
+    padding: ` 0 ${utils.remConverter(8)} 0 ${utils.remConverter(16)}  `,
+    flexDirection: "column",
+    alignItems: "center",
+    borderRadius: utils.remConverter(4),
+    background: colors.Zeb_Solid_Dark_Blue,
+    overflowY: "auto",
+    overflowX: "hidden",
+
+      "&::-webkit-scrollbar": {
+      width: utils.remConverter(4),
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "transparent",
+      margin:"4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: isScrolled? colors.Zeb_Solid_Dark_Grey:"transparent",
+      borderRadius: utils.remConverter(18),
+    },
+  });
 
 export const news = css({
   display: "flex",
@@ -126,6 +123,10 @@ export const innerCard = css({
   alignItems: "flex-start",
   gap: utils.remConverter(16),
   flexShrink: 0,
+  overflowY: "auto",
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
   "@media (max-width: 768px)": {
     width: "25%",
     height: "100%",
@@ -152,7 +153,7 @@ export const innerDiv = css({
 
 export const NoBlogFound = css({
   width: "100%",
-  minHeight: "60vh",
+  height:"100%",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -163,6 +164,7 @@ export const InsideSection = css({
   flexWrap: "wrap",
   gap: utils.remConverter(16),
   width: "100%",
+  height:"100%"
 });
 
 export const appButton = css({
@@ -182,7 +184,6 @@ export const button = css({
 
 export const headerBelow = css({
   display: "flex",
-  paddingLeft: utils.remConverter(16),
   overflowX: "hidden",
   whiteSpace: "nowrap",
   overflowY: "hidden",
@@ -190,7 +191,6 @@ export const headerBelow = css({
   scrollbarWidth: "none",
   alignItems: "stretch",
   justifyContent: "space-between",
-  paddingRight: utils.remConverter(17.6),
 });
 
 export const categoryWrapper = css({
@@ -203,7 +203,7 @@ export const categoryWrapper = css({
 export const selectedCategoriesContainer = css({
   display: "flex",
   gap: utils.remConverter(12),
-  width:"100%",
+  width: "100%",
   overflow: "hidden",
 });
 
@@ -235,3 +235,14 @@ export const closeIcon = css({
   cursor: "pointer",
   flexGrow: 1,
 });
+
+export const iconBox = css({
+  padding: utils.remConverter(8),
+  borderRadius: utils.remConverter(8),
+  background: colors.Zeb_Solid_BG_Blue,
+});
+
+export const headerRight=css({
+  display:"flex",
+  gap:utils.remConverter(20)
+})

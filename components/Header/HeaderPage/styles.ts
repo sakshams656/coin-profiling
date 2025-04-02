@@ -53,3 +53,7 @@ export const iconButton = css({
     padding: utils.remConverter(6),
   },
 });
+
+export const icons=css({
+  marginRight:utils.remConverter(8)
+})

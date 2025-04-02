@@ -8,7 +8,9 @@ import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { getOrCreateStore } from "@utils/redux/createStore";
 
-const store = getOrCreateStore();
+import store from '../Store';
+
+// const store = getOrCreateStore();
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>

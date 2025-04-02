@@ -269,6 +269,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
       : dateRangeLabels[state.tempDateRange] || " - ";
 
   return (
+
     <div css={filterAndUpdownFrame}>
       <div
         css={iconBox}
@@ -276,9 +277,6 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
         style={{ cursor: "pointer" }}
       >
         <Icon name="icon icon-filter" style={icon} />
-      </div>
-      <div css={iconBox} style={{ cursor: "pointer" }}>
-        <Dropdown onSortChange={onSortChange} />
       </div>
       <SidePanel
         onBack={() => dispatch({ type: "TOGGLE_PANEL", payload: false })}
@@ -538,6 +536,7 @@ const IconsPanel: React.FC<IconsPanelProps> = ({
         </div>
       </SidePanel>
     </div>
+
   );
 };
 

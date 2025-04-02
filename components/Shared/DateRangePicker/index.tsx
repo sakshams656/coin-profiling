@@ -289,7 +289,9 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           value={
             startDateValue ? dateFormat(startDateValue, inputDateFormat) : ""
           }
-          appendix={<img src={AssetsImg.ic_calendar.src} alt="Calendar icon" />}
+          appendix={<img 
+            src={AssetsImg.ic_calendar.src} alt="Calendar icon" />
+          }
           onClick={() => {
             setCalendarOpen(true);
             setEndDateOpen(false);
