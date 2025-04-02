@@ -571,17 +571,10 @@ const NewsPage: React.FC = () => {
               )}
             </div>
           </div>
-          <div css={styles.tradingBanner}>
+          <div css={styles.tradingBanner(loading)}>
             {LoggedIn ? (<div css={styles.frame}>
               <div css={styles.anotherFrame}>
                 <ShimmerWrapper isLoading={loading} height={70} width={70} typeLightdDark>
-                  <Image
-                    src={AssetsImg.ic_tb_gradient}
-                    alt="Background Pattern"
-                    layout="fill"
-                    objectFit="cover"
-                    quality={100}
-                  />
                   <div css={styles.zebpayImageDiv}>
                     <Image src={AssetsImg.ic_zebpayCoin} alt="zeb coin" />
                   </div>

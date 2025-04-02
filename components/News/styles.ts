@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import AssetsImg from "@public/images";
 import { relative } from "path";
 import { typography, colors, utils } from "zebpay-ui";
 
@@ -480,25 +481,31 @@ export const headerFrame = (isScrolled: boolean) =>
     },
   });
 
-export const tradingBanner = css({
-  position: "relative",
-  display: "flex",
-  width: "100%",
-  padding: utils.remConverter(12),
-  flexDirection: "column",
-  alignItems: "flex-start",
-  gap: utils.remConverter(4),
-  flexShrink: "0",
-  borderRadius: utils.remConverter(8),
-  background: colors.Zeb_Gradient_Dark_Blue,
-  "@media (max-width: 75rem)": {
-    padding: utils.remConverter(16),
-  },
-  "@media (max-width: 48rem)": {
-    height: "auto",
-    padding: utils.remConverter(16),
-  },
-});
+  export const tradingBanner = (isLoading: boolean) =>
+    css({
+      display: "flex",
+      width: "100%",
+      padding: utils.remConverter(12),
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: utils.remConverter(4),
+      flexShrink: "0",
+      borderRadius: utils.remConverter(8),
+      background: isLoading
+        ? colors.Zeb_Gradient_Dark_Blue
+        : `${colors.Zeb_Gradient_Dark_Blue}, url(${AssetsImg.ic_tb_gradient.src})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      backgroundBlendMode: "soft-light",
+      "@media (max-width: 75rem)": {
+        padding: utils.remConverter(16),
+      },
+      "@media (max-width: 48rem)": {
+        height: "auto",
+        padding: utils.remConverter(16),
+      },
+    }); 
 
 export const buttonGroup = css({
   display: "flex",
