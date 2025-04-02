@@ -24,6 +24,7 @@ import { getCryptoNews } from "../api/apiService";
 interface HeaderProps {
   selectedTab: string;
   setSelectedTab: (tab: string) => void;
+  coinSymbol:string;
 }
 export type OptionsType = {
   label: JSX.Element;
@@ -43,7 +44,7 @@ interface Article {
   content: string | null;
 }
 
-const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
+const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const [isPopperOpen, setIsPopperOpen] = useState(false);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
   const [search, setSearch] = useState("");
@@ -364,4 +365,4 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     </div>
   );
 };
-export default Header;
+export default HeaderPage;
