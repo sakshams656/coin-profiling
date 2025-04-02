@@ -115,7 +115,7 @@ const NewsPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
-  const LoggedIn = false;
+  const LoggedIn = true;
 
   const [activeFilters, setActiveFilters] = useState<Filters>({
     publishers: [],
