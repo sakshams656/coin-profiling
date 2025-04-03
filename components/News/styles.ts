@@ -1,6 +1,5 @@
 import { css } from "@emotion/react";
 import AssetsImg from "@public/images";
-import { relative } from "path";
 import { typography, colors, utils } from "zebpay-ui";
 
 export const header = css({
@@ -71,22 +70,27 @@ export const updown = css({
   },
 });
 
-export const newsletter = css({
-  display: "flex",
-  width: "inherit",
-  height: utils.remConverter(136),
-  padding: utils.remConverter(12),
-  paddingBottom: utils.remConverter(16),
-  alignItems: "center",
-  gap: utils.remConverter(4),
-  flex: "1 0 0",
-  minHeight: utils.remConverter(356),
-  borderRadius: utils.remConverter(8),
-  background: colors.Zeb_Solid_BG_Blue,
-
-  "&::-webkit-scrollbar": {
-    display: "none",
-  },
+export const newsletter = (showNewContent) =>
+  css({
+    display: "flex",
+    width: "inherit",
+    height: utils.remConverter(136),
+    padding: utils.remConverter(12),
+    paddingBottom: utils.remConverter(16),
+    alignItems: "center",
+    gap: utils.remConverter(4),
+    flex: "1 0 0",
+    minHeight: utils.remConverter(356),
+    borderRadius: utils.remConverter(8),
+    backgroundColor: colors.Zeb_Solid_BG_Blue,
+    backgroundImage: showNewContent ? `url(${AssetsImg.ic_zebra.src})` : "none",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "bottom right",
+    backgroundBlendMode: "soft-light",
+    
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
 
   scrollbarWidth: "none",
 
@@ -96,7 +100,7 @@ export const newsletter = css({
     paddingBottom: utils.remConverter(16),
     maxHeight: utils.remConverter(136),
   },
-});
+  });
 
 export const newsChild = css({
   display: "flex",

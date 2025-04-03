@@ -519,7 +519,7 @@ const NewsPage: React.FC = () => {
       </div>
       <div css={styles.innerDiv}>
         <div css={styles.innerCard}>
-          <div css={styles.newsletter}>
+          <div css={styles.newsletter(showNewContent)}>
             <div css={styles.newsChild}>
               {showNewContent ? (
                 <div>
@@ -534,11 +534,6 @@ const NewsPage: React.FC = () => {
                   <ShimmerWrapper isLoading={loading} height={48} width={300} mode="dark">
                     <div css={styles.subText}>
                       Thank you for subscribing! You'll now receive the latest crypto news and updates straight to your inbox
-                    </div>
-                  </ShimmerWrapper>
-                  <ShimmerWrapper isLoading={loading} height={120} width={120} mode="dark">
-                    <div css={styles.zebpayZebra}>
-                      <Image src={AssetsImg.ic_zebra} alt="zebra" />
                     </div>
                   </ShimmerWrapper>
                 </div>
