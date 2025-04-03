@@ -653,43 +653,40 @@ const PerformanceGraph: React.FC<PerformanceGraphProps> = ({
 
   return (
     <div css={performanceGraphContainer}>
-      <ShimmerWrapper
-        height={40}
-        width={200}
-        isLoading={loading}
-        style={css({ marginBottom: "1rem" })}
-      >
         <div css={header}>
-          <span css={title}>Performance</span>
-          <Tags
-            type={
-              isPercentagePositive(currentPercentageChange)
-                ? "success"
-                : "error"
-            }
-          >
-            {currentPercentageChange} | {getTagsLabel()}
-          </Tags>
+          <ShimmerWrapper height={24} width={102} isLoading={loading} style={css({marginRight: utils.remConverter(4)})}>
+            <span css={title}>Performance</span>
+          </ShimmerWrapper>
+          <ShimmerWrapper height={24} width={102} isLoading={loading}>
+            <Tags type="success">{percentageChange24h} | 24H</Tags>
+          </ShimmerWrapper>
         </div>
-      </ShimmerWrapper>
 
-      <ShimmerWrapper height={263} width={1000} isLoading={loading}>
         <div css={innerChartContainer}>
-          <div ref={chartContainerRef} css={container} />
+          <ShimmerWrapper height={200} width={1000} isLoading={loading} style={css({marginBottom: utils.remConverter(16)})}>
+            <div css={chartContainer} ref={chartContainerRef} />
+          </ShimmerWrapper>
 
-          <Tabs
-            onChange={(tab) => setTimePeriod(tab)}
-            selectedTab={timePeriod}
-            tabsList={[
-              { tab: "24H", title: "24H" },
-              { tab: "3D", title: "3D" },
-              { tab: "1W", title: "1W" },
-              { tab: "1M", title: "1M" },
-            ]}
-            type="secondary"
-          />
+          <div css={css({ display: "flex", gap: utils.remConverter(12)})}>
+            {["24H", "3D", "1W", "1M"].map((tab, index) => (
+              <ShimmerWrapper key={index} height={26} width={241} isLoading={loading} children={undefined} />
+            ))}
+          </div>
+
+          {!loading && (
+            <Tabs
+              onChange={(tab) => setTimePeriod(tab)}
+              selectedTab={timePeriod}
+              tabsList={[
+                { tab: "24H", title: "24H" },
+                { tab: "3D", title: "3D" },
+                { tab: "1W", title: "1W" },
+                { tab: "1M", title: "1M" },
+              ]}
+              type="secondary"
+            />
+          )}
         </div>
-      </ShimmerWrapper>
     </div>
   );
 };

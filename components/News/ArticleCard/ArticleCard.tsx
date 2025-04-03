@@ -34,7 +34,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         <div css={styles.cardImageStyle}>
           <ShimmerWrapper isLoading={loading} height={108} width={100}>
             {imageUrl && (
-              <Image src={imageUrl} alt="image" height={104} width={100}/>
+              <img src={imageUrl} alt="image" height={104} width={100}/>
             )}
           </ShimmerWrapper>
         </div>

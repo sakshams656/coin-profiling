@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Tabs, Popper, colors, InputDropDown, Icon } from "zebpay-ui";
+import { Button, Tabs, colors, InputDropDown, Icon, utils } from "zebpay-ui";
 import { css } from "@emotion/react";
-import { header, headerButton, iconButton, icons, tabs } from "./styles";
+import * as styles from "./styles";
 import NOOB from "@constants/noob";
 import Image from "next/image";
 import AssetsImg from "@public/images";
@@ -11,14 +11,7 @@ import { generateToast } from "@components/Shared";
 import NoArticles from "../NoArticles";
 import Dropdown from "../Dropdown";
 
-import {
-  articleFooter,
-  articleImage,
-  articleInfo,
-  articleTitle,
-  Card,
-  articleHeader,
-} from "../Search/style";
+import * as searchStyle from "../Search/style";
 import { getCryptoNews } from "../api/apiService";
 
 interface HeaderProps {
@@ -76,7 +69,7 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
     value: index,
     label: (
       <div
-        css={Card}
+        css={searchStyle.Card}
         key={index}
         onMouseEnter={() => setHoveredIndex(index)}
         onMouseLeave={() => setHoveredIndex(null)}
@@ -84,18 +77,18 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
         <img
           src={article.urlToImage}
           alt={article.title}
-          css={articleImage}
+          css={searchStyle.articleImage}
         />
-        <div css={articleInfo}>
-          <div css={articleHeader}>
-            <div css={articleTitle} title={article.title}>
+        <div css={searchStyle.articleInfo}>
+          <div css={searchStyle.articleHeader}>
+            <div css={searchStyle.articleTitle} title={article.title}>
               {article.title}
             </div>
             {hoveredIndex === index && (
               <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
             )}
           </div>
-          <div css={articleFooter}>
+          <div css={searchStyle.articleFooter}>
             {selectedTab === "news" && (
               <>
                 <span
@@ -110,7 +103,7 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
                     alt="clock"
                     width={14}
                     height={14}
-                    css={icons}
+                    css={styles.icons}
                   />
                   {calculateReadingTime(article.content)} min read
                 </span>
@@ -118,7 +111,7 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
               </>
             )}
             <span style={{ display: "flex" }}>
-              <Icon name="icon icon-calendar" style={icons} />
+              <Icon name="icon icon-calendar" style={styles.icons} />
               {new Date(article.publishedAt)
                 .toLocaleDateString("en-GB", {
                   day: "2-digit",
@@ -260,8 +253,8 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
   };
 
   return (
-    <div css={header}>
-      <div css={tabs}>
+    <div css={styles.header}>
+      <div css={styles.tabs}>
         <Tabs
           dropdownPlaceHolder="Select a Tab"
           onChange={(tab: string) => setSelectedTab(tab)}
@@ -277,7 +270,7 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
           type="primary"
         />
       </div>
-      <div css={headerButton}>
+      <div css={styles.headerButton}>
         {["news", "blogs"].includes(selectedTab) && (
           <InputDropDown
             onDropdownClick={handleInputFocus}
@@ -338,16 +331,16 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
         )}
         {selectedTab === "overview" && (
           <>
-            <button css={iconButton} onClick={handleStarClick}>
+            <button css={styles.iconButton} onClick={handleStarClick}>
               <Image
-                src={AssetsImg.ic_header_star}
+                src= {isStarFilled? AssetsImg.ic_star_filled :  AssetsImg.ic_header_star}
                 alt="Star Icon"
                 width={18}
                 height={18}
               />
             </button>
             <button
-              css={iconButton}
+              css={styles.iconButton}
               ref={shareButtonRef}
               onClick={toggleShareMenu}
             >
@@ -366,7 +359,7 @@ const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) =>
           shareMenuRef={shareMenuRef}
         />
 
-        <Button onClick={NOOB} size="medium" type="primary">
+        <Button onClick={NOOB} size="small" type="primary" style={{width: utils.remConverter(150)}}>
           TRADE {coinSymbol}
         </Button>
       </div>

@@ -32,15 +32,24 @@ export const container = css({
 });
 
 export const coinBanner = css({
+  position: "relative",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   width: "100%",
   padding: utils.remConverter(24),
-  backgroundColor: colors.Zeb_BG_Blue,
+  background: colors.Zeb_Gradient_Dark_Blue,
   borderRadius: utils.remConverter(8),
   maxHeight: utils.remConverter(110),
   marginBottom: utils.remConverter(16), 
+});
+
+export const backgroundPattern = css({
+  position: "absolute",
+  top: 0,
+  left: "50%", 
+  width: "50%", 
+  height: "100%",
 });
 
 export const coinInfo = css({
@@ -107,7 +116,7 @@ export const rightContainer = css({
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   position: "sticky",
-  top: 0,
+  top: -8,
   minWidth: utils.remConverter(310),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),
@@ -213,7 +222,6 @@ export const investedAmountValue = css({
   fontWeight: 400,
 });
 
-// Styles for ShimmerWrapper margins
 export const inputMarginBottom = css({
   marginBottom: utils.remConverter(16),
 });
@@ -254,4 +262,11 @@ export const coinsInfoBox = css({
   display: "flex",
   flexDirection: "column",
   gap: utils.remConverter(8)
+})
+
+export const loginSignupButtons = css({
+  display: "flex",
+  justifyContent: "space-between",
+  position: "sticky",
+  bottom:16,
 })

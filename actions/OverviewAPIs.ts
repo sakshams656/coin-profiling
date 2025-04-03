@@ -86,5 +86,4 @@ export const fetchZebstageCategories = async (): Promise<any> => {
       throw error;
     }
   }
-
   
