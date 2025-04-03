@@ -1,10 +1,12 @@
 import React from 'react';
 import "../../styles/shared/global.ts";
+import Header from './HeaderPage/index.jsx';
+import NOOB from '@constants/noob.js';
 
-const Blogs = () => {
+const HeaderPage = () => {
   return (
-      <Header />
+      <Header selectedTab={''} setSelectedTab={NOOB} coinSymbol={''} />
   );
 };
 
-export default Blogs;
+export default HeaderPage;

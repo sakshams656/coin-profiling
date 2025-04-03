@@ -1,11 +1,8 @@
 import Header from "@components/Header/HeaderPage";
 import NewsPage from "@components/News";
 import Overview from "@components/Overview";
-
-
 import Blogs from "@components/Blogs";
 import { main, headerWrapper } from "./styles"; 
-
 import React, { useState } from "react";
 import { Divider } from "zebpay-ui";
 

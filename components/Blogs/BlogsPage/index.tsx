@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import ArticleCard from "../ArticleCard";
 import IconsPanel from "../IconsPanel";
-import dummyArticles from "../dummyData/dummyArticles";
 import NewsLetter from "../BlogsLetter";
 import Tradingbanner from "../Trading";
 import NoBlogsFound from "../NoBlogsFound";

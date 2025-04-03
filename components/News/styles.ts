@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import AssetsImg from "@public/images";
 import { typography, colors, utils } from "zebpay-ui";
 
 export const header = css({
@@ -69,22 +70,27 @@ export const updown = css({
   },
 });
 
-export const newsletter = css({
-  display: "flex",
-  width: "inherit",
-  height: utils.remConverter(136),
-  padding: utils.remConverter(12),
-  paddingBottom: utils.remConverter(16),
-  alignItems: "center",
-  gap: utils.remConverter(4),
-  flex: "1 0 0",
-  minHeight: utils.remConverter(356),
-  borderRadius: utils.remConverter(8),
-  background: colors.Zeb_Solid_BG_Blue,
-
-  "&::-webkit-scrollbar": {
-    display: "none",
-  },
+export const newsletter = (showNewContent) =>
+  css({
+    display: "flex",
+    width: "inherit",
+    height: utils.remConverter(136),
+    padding: utils.remConverter(12),
+    paddingBottom: utils.remConverter(16),
+    alignItems: "center",
+    gap: utils.remConverter(4),
+    flex: "1 0 0",
+    minHeight: utils.remConverter(356),
+    borderRadius: utils.remConverter(8),
+    backgroundColor: colors.Zeb_Solid_BG_Blue,
+    backgroundImage: showNewContent ? `url(${AssetsImg.ic_zebra.src})` : "none",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "bottom right",
+    backgroundBlendMode: "soft-light",
+    
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
 
   scrollbarWidth: "none",
 
@@ -94,7 +100,7 @@ export const newsletter = css({
     paddingBottom: utils.remConverter(16),
     maxHeight: utils.remConverter(136),
   },
-});
+  });
 
 export const newsChild = css({
   display: "flex",
@@ -463,7 +469,6 @@ export const headerFrame = (isScrolled: boolean) =>
     alignItems: "flex-start",
     borderRadius: utils.remConverter(8),
     background: colors.Zeb_Solid_Dark_Blue,
-    maxWidth: utils.remConverter(312),
     "&::-webkit-scrollbar": {
       width: 0, 
     },
@@ -480,28 +485,35 @@ export const headerFrame = (isScrolled: boolean) =>
     },
   });
 
-export const tradingBanner = css({
-  display: "flex",
-  width: "100%",
-  padding: utils.remConverter(12),
-  flexDirection: "column",
-  alignItems: "flex-start",
-  gap: utils.remConverter(4),
-  flexShrink: "0",
-  borderRadius: utils.remConverter(8),
-  background: colors.Zeb_Gradient_Dark_Blue,
-  "@media (max-width: 75rem)": {
-    padding: utils.remConverter(16),
-  },
-  "@media (max-width: 48rem)": {
-    height: "auto",
-    padding: utils.remConverter(16),
-  },
-});
+  export const tradingBanner = (isLoading: boolean) =>
+    css({
+      display: "flex",
+      width: "100%",
+      padding: utils.remConverter(12),
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: utils.remConverter(4),
+      flexShrink: "0",
+      borderRadius: utils.remConverter(8),
+      background: isLoading
+        ? colors.Zeb_Gradient_Dark_Blue
+        : `${colors.Zeb_Gradient_Dark_Blue}, url(${AssetsImg.ic_tb_gradient.src})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      backgroundBlendMode: "soft-light",
+      "@media (max-width: 75rem)": {
+        padding: utils.remConverter(16),
+      },
+      "@media (max-width: 48rem)": {
+        height: "auto",
+        padding: utils.remConverter(16),
+      },
+    }); 
 
 export const buttonGroup = css({
   display: "flex",
-  justifyContent: "space-around",
+  justifyContent: "space-between",
   alignItems: "flex-start",
   gap: utils.remConverter(12),
   alignSelf: "stretch",
@@ -515,11 +527,12 @@ export const buttonGroup = css({
 
 export const appButton = css({
   display: "flex",
+  justifyContent: "center",
   backgroundColor: colors.Zeb_Solid_BG_Blue,
   borderRadius: utils.remConverter(4),
   padding: `${utils.remConverter(6.4)} ${utils.remConverter(28)}`,
   width: "100%",
-  maxWidth: utils.remConverter(121),
+  maxWidth: utils.remConverter(130),
   maxHeight: utils.remConverter(32),
   border: `${utils.remConverter(1)} solid #A6A6A6`,
   cursor: "pointer",

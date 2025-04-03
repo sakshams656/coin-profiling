@@ -82,8 +82,10 @@ import ic_search_grey from "./Icons/search_grey.svg";
 import ic_cross from "./Icons/cross.svg";
 import ic_investmentIcon from "./illustrations/investmentIcon.png";
 import ic_no_search from "./illustrations/no-search.png";
-import ic_tb_gradient from './illustrations/trading_banner_gradient.png'
-import i_mail from "./illustrations/mail.png"
+import ic_tb_gradient from './illustrations/trading_banner_gradient.png';
+import i_logout from './illustrations/i_logout.png';
+import i_mail from "./illustrations/mail.png";
+import i_banner_pattern from "./illustrations/coin-banner-pattern.png";
 
 const AssetsImg = {
   i_zebpay_logo,
@@ -150,16 +152,13 @@ const AssetsImg = {
   ic_rank,
   ic_calendar_white,
   ic_document_white,
-
   ic_app_store,
   ic_arrow_down,
   ic_category,
   ic_date,
   ic_duration,
   ic_google_play,
-
   ic_no_blogs_found,
-
   ic_subscribed,
   ic_views,
   ic_zebpay,
@@ -168,7 +167,8 @@ const AssetsImg = {
   ic_cross_blue,
   ic_clock_white,
   ic_category_white,
-
+  i_logout,
+  i_banner_pattern
 };
 
 export default AssetsImg;

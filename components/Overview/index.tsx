@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
@@ -13,6 +12,7 @@ import NOOB from "@constants/noob";
 import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
+import LoggedOutScreen from "./LoggedOut";
 import { data as fetchCoinData, info as fetchCoinInfo, chart as fetchChartInfo} from "@actions/OverviewAPIs";
 
 
@@ -42,7 +42,7 @@ interface CoinData {
     totalSupply: string;
     circulatingSupply: string;
   };
-  trading: any; 
+  trading: any;
   launchDate: string | null;
   description: string;
 }
@@ -62,6 +62,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
+  const LoggedIn = false;
   const [chartStats, setChartStats] = useState<ChartStats>({
     ltp: "0",
     high24h: "0",
@@ -147,8 +148,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           fetchCoinData({ symbol: coinSymbol }),
         ]);
 
-        const coinInfo = infoResponse.data?.[coinSymbol]?.[0];
-        const coinMeta = dataResponse.data?.[coinSymbol]?.[0];
+        const coinInfo = infoResponse.data[coinSymbol]?.[0];
+        const coinMeta = dataResponse.data[coinSymbol]?.[0];
 
         if (!coinInfo || !coinInfo.quote || !coinInfo.quote.INR || !coinMeta) {
           throw new Error("Invalid API response: Missing required data");
@@ -276,8 +277,6 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     };
   }, []);
 
-  
-
   const handleAmountChange = (target: InputTargetProps) => {
     setAmountInvested(target.value);
   };
@@ -296,8 +295,16 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     <div css={styles.container} ref={containerRef}>
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
+        <div css={styles.backgroundPattern}>
+            <Image
+              src={AssetsImg.i_banner_pattern}
+              alt="Background Pattern"
+              layout="fill"
+              objectFit="cover"
+              quality={100}
+            />
+          </div>
           <div css={styles.coinInfo}>
-
             <Image src={coinLogo} alt="coin" width={56} height={56} priority onError={() => console.error("Image failed to load:", coinLogo)} />
             <div css={styles.coinsInfoBox}>
               <span css={styles.coinName}>{coinData.name}</span>
@@ -327,16 +334,13 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                 >
                   {coinData.rank}
                 </Tags>
-
               </div>
             </div>
           </div>
         </ShimmerWrapper>
 
         <div css={styles.statsContainer}>
-
           {coinData.stats.map((stat, index) => (
-
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
                 <Image src={stat.icon} alt={stat.label} width={44} height={44} />
@@ -430,29 +434,40 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             </div>
 
             <ShimmerWrapper height={106} width={280} isLoading={loading} style={styles.labelMarginBottom}>
-              <div css={styles.investmentBox}>
-                <div css={styles.investmentBoxContent}>
-                  <div css={styles.percentageBox}>
-                    <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
-                    <div>
-                      <p css={styles.IBlabel}>Current Value</p>
-                      <p css={styles.IBvalue}>₹0.00</p>
+              {LoggedIn ? (
+                <div css={styles.investmentBox}>
+                  <div css={styles.investmentBoxContent}>
+                    <div css={styles.percentageBox}>
+                      <Image src={AssetsImg.ic_investmentIcon} alt="Investment Icon" width={63} height={63} />
+                      <div>
+                        <p css={styles.IBlabel}>Current Value</p>
+                        <p css={styles.IBvalue}>₹0.00</p>
+                      </div>
                     </div>
+                    <Tags type={"default"}>- 0.00%</Tags>
                   </div>
-                  <Tags type={"default"}>- 0.00%</Tags>
+                  <Divider spacing={2} />
+                  <p css={styles.investedAmountText}>
+                    Invested Amount: <span css={styles.investedAmountValue}>₹0.00</span>
+                  </p>
                 </div>
-                <Divider spacing={2} />
-                <p css={styles.investedAmountText}>
-                  Invested Amount: <span css={styles.investedAmountValue}>₹0.00</span>
-                </p>
-              </div>
+              ) : (
+                <LoggedOutScreen />
+              )}
             </ShimmerWrapper>
           </div>
           <div css={styles.returnsButton}>
             <ShimmerWrapper height={34} width={280} isLoading={loading}>
-              <Button onClick={NOOB} size="full-width" type="primary">
-                CALCULATE RETURNS
-              </Button>
+              {LoggedIn ? (
+                <Button onClick={NOOB} size="full-width" type="primary">
+                  CALCULATE RETURNS
+                </Button>
+              ) : (
+                <div css={styles.loginSignupButtons}>
+                  <Button size="medium" type="secondary" onClick={NOOB} style={{width: utils.remConverter(132)}}>LOGIN</Button>
+                  <Button size="medium" type="primary" onClick={NOOB} style={{width: utils.remConverter(132)}}>SIGNUP</Button>
+                </div>
+              )}
             </ShimmerWrapper>
           </div>
         </div>

@@ -9,6 +9,8 @@ import EmailSubscription from "./emailSubscription/EmailSubcription";
 import { Button, utils } from "zebpay-ui";
 import Image from "next/image";
 import AssetsImg from "@public/images";
+import LoggedOutBanner from "./LoggedOut";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Article {
   title: string;
@@ -103,7 +105,6 @@ const isInDateRange = (publishedAt: string, range: string | null) => {
 const isValidDate = (date: string): boolean => !isNaN(Date.parse(date));
 
 const NewsPage: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -114,12 +115,22 @@ const NewsPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleTags, setVisibleTags] = useState(0);
   const [overflowCount, setOverflowCount] = useState(0);
+  const LoggedIn = true;
 
   const [activeFilters, setActiveFilters] = useState<Filters>({
     publishers: [],
     durations: [],
     dateRange: null,
   });
+
+  const [resetTrigger, setResetTrigger] = useState(0);
+  const [isSorterOpen, setIsSorterOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("Latest");
+  const sorterRef = useRef<HTMLDivElement>(null);
+  const sorterButtonRef = useRef<HTMLButtonElement>(null);
+
+  const dispatch = useDispatch();
+  const articles = useSelector((state) => state.articles);
 
   const activeFiltersArray: FilterItem[] = [
     ...activeFilters.publishers.map((value) => ({ type: "publishers" as const, value })),
@@ -209,39 +220,26 @@ const NewsPage: React.FC = () => {
     setOverflowCount(remaining > 0 ? remaining + (visibleCount > 0 ? 1 : 0) : 0);
   }, [activeFiltersArray.length]);
 
-  const [resetTrigger, setResetTrigger] = useState(0);
-
-  const [isSorterOpen, setIsSorterOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("Latest");
-  const sorterRef = useRef<HTMLDivElement>(null);
-  const sorterButtonRef = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const fetchedArticles = await getCryptoNews();
-        setArticles(fetchedArticles);
-        setFilteredArticles(fetchedArticles);
+    if (articles.length === 0) {
+      getCryptoNews().then((data) => {
+        dispatch({ type: "SET_ARTICLES", payload: data });
         setLoading(false);
-      } catch (err) {
+      }).catch((err) => {
         console.error("Error fetching cryptocurrency news:", err);
         setError("Failed to fetch news.");
         setLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [dispatch, articles.length]);
 
   useEffect(() => {
     const handleScroll = () => {
       const element = sectionRef.current;
       if (element) {
-        if (element.scrollTop > 0) {
-          element.classList.add("scrolled");
-        } else {
-          element.classList.remove("scrolled");
-        }
+        setIsScrolled(element.scrollTop > 0);
       }
     };
 
@@ -280,16 +278,18 @@ const NewsPage: React.FC = () => {
     setFilteredArticles(filtered);
   };
 
+  useEffect(() => {
+    applyFilters(activeFilters);
+  }, [articles, activeFilters]);
+
   const handleApplyFilters = (newFilters: Filters) => {
     setActiveFilters(newFilters);
-    applyFilters(newFilters);
   };
 
   const handleResetFilters = () => {
     const resetFilters: Filters = { publishers: [], durations: [], dateRange: null };
     setActiveFilters(resetFilters);
-    setFilteredArticles(articles); // Reset filtered articles to original list
-    setResetTrigger((prev) => prev + 1); // Trigger reset in FilterSidePanel
+    setResetTrigger((prev) => prev + 1);
   };
 
   const handleRemoveFilter = (type: keyof Filters, value: string) => {
@@ -298,7 +298,6 @@ const NewsPage: React.FC = () => {
       [type]: type === "dateRange" ? null : activeFilters[type].filter((v) => v !== value),
     };
     setActiveFilters(updatedFilters);
-    applyFilters(updatedFilters);
   };
 
   const handleRemoveHiddenFilters = () => {
@@ -316,7 +315,6 @@ const NewsPage: React.FC = () => {
     });
 
     setActiveFilters(updatedFilters);
-    applyFilters(updatedFilters);
   };
 
   const handleSortSelect = (option: string) => {
@@ -521,7 +519,7 @@ const NewsPage: React.FC = () => {
       </div>
       <div css={styles.innerDiv}>
         <div css={styles.innerCard}>
-          <div css={styles.newsletter}>
+          <div css={styles.newsletter(showNewContent)}>
             <div css={styles.newsChild}>
               {showNewContent ? (
                 <div>
@@ -538,18 +536,13 @@ const NewsPage: React.FC = () => {
                       Thank you for subscribing! You'll now receive the latest crypto news and updates straight to your inbox
                     </div>
                   </ShimmerWrapper>
-                  <ShimmerWrapper isLoading={loading} height={120} width={120} mode="dark">
-                    <div css={styles.zebpayZebra}>
-                      <Image src={AssetsImg.ic_zebra} alt="zebra" />
-                    </div>
-                  </ShimmerWrapper>
                 </div>
               ) : (
                 <>
                   <div css={styles.newsHeader}>
                     <ShimmerWrapper isLoading={loading} height={80} width={80} mode="dark">
                       <div css={styles.mailIcon}>
-                        <Image src={AssetsImg.ic_mail} alt="mail" />
+                        <Image src={AssetsImg.i_mail} alt="mail" />
                       </div>
                     </ShimmerWrapper>
                     <ShimmerWrapper isLoading={loading} height={28} width={220} mode="dark">
@@ -570,9 +563,8 @@ const NewsPage: React.FC = () => {
               )}
             </div>
           </div>
-          <div css={styles.tradingBanner}>
-            <div></div>
-            <div css={styles.frame}>
+          <div css={styles.tradingBanner(loading)}>
+            {LoggedIn ? (<div css={styles.frame}>
               <div css={styles.anotherFrame}>
                 <ShimmerWrapper isLoading={loading} height={70} width={70} typeLightdDark>
                   <div css={styles.zebpayImageDiv}>
@@ -602,7 +594,8 @@ const NewsPage: React.FC = () => {
                   </button>
                 </ShimmerWrapper>
               </div>
-            </div>
+            </div>):(<><LoggedOutBanner loading={loading}/></>
+                )}  
           </div>
         </div>
       </div>

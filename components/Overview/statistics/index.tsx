@@ -1,6 +1,5 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from "react";
-import { utils, colors, Divider, Tooltip } from "zebpay-ui";
+import { colors, Divider, Tooltip } from "zebpay-ui";
 import AssetsImg from "@public/images";
 import Image from "next/image";
 import { dummyCoinData } from "../../../Data/DummyCoinData";
