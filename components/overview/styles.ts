@@ -116,7 +116,7 @@ export const rightContainer = css({
   borderRadius: utils.remConverter(8),
   color: colors.Zeb_Solid_White,
   position: "sticky",
-  top: 0,
+  top: -8,
   minWidth: utils.remConverter(310),
   maxWidth: utils.remConverter(312),
   marginBottom: utils.remConverter(24),

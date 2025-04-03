@@ -20,10 +20,7 @@ const styles = {
     borderRadius: utils.remConverter(8),
     width: "100%",
     boxShadow: `0 ${utils.remConverter(4)} ${utils.remConverter(8)} 0 rgba(0, 0, 0, 0.1)`,
-    "@media (max-width: 48rem)": {
-      padding: utils.remConverter(16),
-      gap: utils.remConverter(12),
-    },
+
   }),
 
   title: css({
@@ -39,9 +36,6 @@ const styles = {
     display: "flex",
     gap: utils.remConverter(16),
     width: "100%",
-    "@media (max-width: 48rem)": {
-      flexDirection: "column",
-    },
   }),
   largeCard: css({  width: "66.8%",}),smallCard: css({  width: "15%",}),
 
@@ -59,9 +53,6 @@ const styles = {
     display: "flex",
     gap: utils.remConverter(16),
     width: "100%",
-    "@media (max-width: 48rem)": {
-      flexDirection: "column",
-    },
   }),
 
   statsCard: css({
