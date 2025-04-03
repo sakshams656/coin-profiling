@@ -7,7 +7,8 @@ import {
   IChartApi,
   ISeriesApi,
 } from "lightweight-charts";
-import { colors, Tabs, Tags } from "zebpay-ui";
+
+import { colors, Tabs, Tags,utils } from "zebpay-ui";
 import { css } from "@emotion/react";
 
 import { fetchData } from "../../../Data/DummyChartData";
@@ -19,7 +20,7 @@ import {
   innerChartContainer,
   performanceGraphContainer,
   title,
-  container,
+  container
 } from "./styles";
 
 interface PerformanceGraphProps {
@@ -653,7 +654,27 @@ const PerformanceGraph: React.FC<PerformanceGraphProps> = ({
 
   return (
     <div css={performanceGraphContainer}>
+      {/* <ShimmerWrapper
+        height={40}
+        width={200}
+        isLoading={loading}
+        style={css({ marginBottom: "1rem" })}
+      >
         <div css={header}>
+          <span css={title}>Performance</span>
+          <Tags
+            type={
+              isPercentagePositive(currentPercentageChange)
+                ? "success"
+                : "error"
+            }
+          >
+            {currentPercentageChange} | {getTagsLabel()}
+          </Tags>
+        </div>
+      </ShimmerWrapper> */}
+
+<div css={header}>
           <ShimmerWrapper height={24} width={102} isLoading={loading} style={css({marginRight: utils.remConverter(4)})}>
             <span css={title}>Performance</span>
           </ShimmerWrapper>
@@ -662,10 +683,12 @@ const PerformanceGraph: React.FC<PerformanceGraphProps> = ({
           </ShimmerWrapper>
         </div>
 
+      {/* <ShimmerWrapper height={263} width={1000} isLoading={loading}> */}
         <div css={innerChartContainer}>
-          <ShimmerWrapper height={200} width={1000} isLoading={loading} style={css({marginBottom: utils.remConverter(16)})}>
-            <div css={chartContainer} ref={chartContainerRef} />
+        <ShimmerWrapper height={200} width={1000} isLoading={loading} style={css({marginBottom: utils.remConverter(16)})}>
+        <div ref={chartContainerRef} css={container} />
           </ShimmerWrapper>
+          
 
           <div css={css({ display: "flex", gap: utils.remConverter(12)})}>
             {["24H", "3D", "1W", "1M"].map((tab, index) => (
@@ -687,6 +710,7 @@ const PerformanceGraph: React.FC<PerformanceGraphProps> = ({
             />
           )}
         </div>
+      {/* </ShimmerWrapper> */}
     </div>
   );
 };
