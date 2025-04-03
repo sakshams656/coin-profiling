@@ -7,7 +7,6 @@ export const container = css({
   padding: utils.remConverter(36),
   paddingTop: utils.remConverter(24),
   paddingBottom: utils.remConverter(0),
-  //marginTop: utils.remConverter(60),
   marginBottom: 0,
   height: `calc(100vh - ${utils.remConverter(60)})`,
   overflowY: "auto",
