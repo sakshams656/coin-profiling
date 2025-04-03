@@ -1,12 +1,15 @@
-import React from 'react';
+import React from "react";
 import "../../styles/shared/global.ts";
-import Header from './HeaderPage/index.jsx';
-import NOOB from '@constants/noob.js';
+import HeaderPage from "./HeaderPage";
 
-const HeaderPage = () => {
-  return (
-      <Header selectedTab={''} setSelectedTab={NOOB} coinSymbol={''} />
-  );
+interface HeaderProps {
+  selectedTab: string;
+  setSelectedTab: (tab: string) => void;
+  coinSymbol: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ selectedTab, setSelectedTab, coinSymbol }) => {
+  return <HeaderPage selectedTab={selectedTab} setSelectedTab={setSelectedTab} coinSymbol={coinSymbol} />;
 };
 
-export default HeaderPage;
+export default Header;

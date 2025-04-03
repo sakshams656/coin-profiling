@@ -91,5 +91,75 @@ export const tooltipDateTimeStyle = css({
 });
 
 
+export const dynamicStyles = {
+  tooltip: {
+    position: "absolute",
+    background: "#181837",
+    color: "white",
+    padding: `${utils.remConverter(4)} ${utils.remConverter(8)}`,
+    borderRadius: `${utils.remConverter(6)}`,
+    border: `1px solid ${colors.Zeb_Solid_Bright_Blue}`,
+    pointerEvents: "none",
+    zIndex: "1000",
+    fontWeight: "400",
+    display: "none",
+    letterSpacing: "0.4px",
+    fontSize: `${utils.remConverter(12)}`,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.2)",
+    textAlign: "center",
+    lineHeight: `${utils.remConverter(18)}`,
+    minWidth: `${utils.remConverter(120)}`,
+    fontFamily: "Lato"
+  },
+  valueBox: {
+    position: "absolute",
+    background: "rgba(24, 24, 55, 0.9)",
+    color: colors.Zeb_Solid_White,
+    padding: `${utils.remConverter(6)} ${utils.remConverter(10)}`,
+    borderRadius: `${utils.remConverter(6)}`,
+    border: `1px solid ${colors.Zeb_Solid_Bright_Blue}`,
+    pointerEvents: "none",
+    zIndex: "999",
+    fontWeight: "400",
+    fontSize: `${utils.remConverter(12)}`,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.2)",
+    display: "none",
+    fontFamily: "Lato",
+    transform: "translateX(-50%)"
+  },
+  blueDot: {
+    position: "absolute",
+    width: `${utils.remConverter(8)}`,
+    height: `${utils.remConverter(8)}`,
+    background: "#338FFF",
+    borderRadius: "50%",
+    zIndex: "1000",
+    display: "block"
+  },
+  overlay: {
+    position: "absolute",
+    top: "0",
+    bottom: "0",
+    background: "rgba(24, 24, 55, 0.5)",
+    pointerEvents: "none",
+    zIndex: "500",
+    display: "none"
+  },
+  canvas: {
+    position: "absolute",
+    top: "0",
+    left: "0",
+    pointerEvents: "none",
+    zIndex: "600"
+  },
+};
+
+
+export const container=()=>css({
+  position: 'relative',
+  background: colors.Zeb_Solid_Dark_Blue,
+  borderRadius: '8px',
+  overflow: 'hidden'
+})
 
 

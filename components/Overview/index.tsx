@@ -1,7 +1,15 @@
 import Image from "next/image";
 import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
-import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
+import {
+  Button,
+  Divider,
+  Input,
+  InputDropDown,
+  Tabs,
+  Tags,
+  utils,
+} from "zebpay-ui";
 
 import Statistics from "./Statistics";
 import AssetsImg from "@public/images";
@@ -26,7 +34,10 @@ interface CoinData {
   symbol: string;
   logo: string;
   price: string;
-  change: string;
+  percent_change_24h: string;
+  percent_change_3d: string;
+  percent_change_7d: string;
+  percent_change_30d: string;
   isPositive: boolean;
   rank: string;
   stats: Array<{
@@ -69,46 +80,41 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     low24h: "0",
   });
 
-
   useEffect(() => {
     const fetchChartData = async () => {
       if (!coinSymbol) return;
       try {
         const chartResponse = await fetchChartInfo(
-          "1", 
-          coinSymbol.toLowerCase(), 
+          "1",
+          coinSymbol.toLowerCase(),
           "inr"
         );
-  
+
         if (chartResponse?.data && chartResponse.data.length > 0) {
-          const prices = chartResponse.data.map(point => point.y);
+          const prices = chartResponse.data.map((point) => point.y);
           const stats: ChartStats = {
             ltp: `₹${prices[prices.length - 1].toFixed(2)}`,
             high24h: `₹${Math.max(...prices).toFixed(2)}`,
-            low24h: `₹${Math.min(...prices).toFixed(2)}`
+            low24h: `₹${Math.min(...prices).toFixed(2)}`,
           };
-  
+
           setChartStats(stats);
         }
       } catch (error) {
         console.error("Error fetching chart data:", error);
-  
+
         setChartStats({
-          ltp: `₹${parseFloat(coinData.price.replace('₹', '').replace(',', '')).toFixed(2)}`,
+          ltp: `₹${parseFloat(coinData.price.replace("₹", "").replace(",", "")).toFixed(2)}`,
           high24h: "₹0.00",
-          low24h: "₹0.00"
+          low24h: "₹0.00",
         });
       }
     };
-  
+
     if (coinSymbol && !loading) {
       fetchChartData();
     }
   }, [coinSymbol, loading]);
-  
-
-  
-  
 
   const [coinData, setCoinData] = useState<CoinData>({
     name: "Unknown Coin",
@@ -159,8 +165,18 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           if (!isoDateString) return null;
           const date = new Date(isoDateString);
           const months = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ];
           const day = date.getDate().toString().padStart(2, "0");
           const month = months[date.getMonth()];
@@ -175,13 +191,29 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           price: coinInfo.quote.INR.price
             ? `₹${coinInfo.quote.INR.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
             : "₹0.00",
-          change: coinInfo.quote.INR.percent_change_24h !== undefined
-            ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_24h).toFixed(2)}%`
-            : "↑ 0.00%",
-          isPositive: coinInfo.quote.INR.percent_change_24h !== undefined
-            ? coinInfo.quote.INR.percent_change_24h > 0
-            : true,
-          rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
+          percent_change_24h:
+            coinInfo.quote.INR.percent_change_24h !== undefined
+              ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_24h).toFixed(2)}%`
+              : "↑ 0.00%",
+          percent_change_3d:
+            coinInfo.quote.INR.percent_change_3d !== undefined
+              ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_3d).toFixed(2)}%`
+              : "↑ 0.00%",
+          percent_change_7d:
+            coinInfo.quote.INR.percent_change_7d !== undefined
+              ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_7d).toFixed(2)}%`
+              : "↑ 0.00%",
+          percent_change_30d:
+            coinInfo.quote.INR.percent_change_30d !== undefined
+              ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_30d).toFixed(2)}%`
+              : "↑ 0.00%",
+          isPositive:
+            coinInfo.quote.INR.percent_change_24h !== undefined
+              ? coinInfo.quote.INR.percent_change_24h > 0
+              : true,
+          rank: coinInfo.cmc_rank
+            ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}`
+            : "# 00",
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
             {
@@ -191,7 +223,11 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                 ? `${coinInfo.quote.INR.market_cap_dominance.toFixed(2)}%`
                 : "0.00%",
             },
-            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+            {
+              icon: AssetsImg.ic_star,
+              label: "Marked as Fav",
+              value: "35.00%",
+            },
           ],
           marketStats: {
             marketCap: coinInfo.quote.INR.market_cap
@@ -231,8 +267,16 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           rank: "# 00",
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
-            { icon: AssetsImg.ic_lineschart, label: "Mkt Dominance", value: "0.00%" },
-            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+            {
+              icon: AssetsImg.ic_lineschart,
+              label: "Mkt Dominance",
+              value: "0.00%",
+            },
+            {
+              icon: AssetsImg.ic_star,
+              label: "Marked as Fav",
+              value: "35.00%",
+            },
           ],
           marketStats: {
             marketCap: "N/A",
@@ -314,23 +358,23 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                   isStroke
                   size="medium"
                   style={{
-                    name: '1pzk433',
-                    styles: 'width:100px'
+                    name: "1pzk433",
+                    styles: "width:100px",
                   }}
                   type={coinData.isPositive ? "success" : "error"}
                   css={{ borderRadius: utils.remConverter(4) }}
                 >
-                  {coinData.change}
+                  {coinData.percent_change_24h}
                 </Tags>
                 <Tags
                   isStroke
                   size="medium"
                   style={{
-                    name: '1pzk433',
-                    styles: 'width:100px'
+                    name: "1pzk433",
+                    styles: "width:100px",
                   }}
                   type="default"
-                  css={{borderRadius: utils.remConverter(4)}}
+                  css={{ borderRadius: utils.remConverter(4) }}
                 >
                   {coinData.rank}
                 </Tags>
@@ -343,7 +387,12 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           {coinData.stats.map((stat, index) => (
             <ShimmerWrapper height={70} width={166} isLoading={loading} typeLightdDark key={index}>
               <div css={styles.statCard}>
-                <Image src={stat.icon} alt={stat.label} width={44} height={44} />
+                <Image
+                  src={stat.icon}
+                  alt={stat.label}
+                  width={44}
+                  height={44}
+                />
                 <div css={styles.statInfo}>
                   <span>{stat.label}</span>
                   <span css={styles.statValue}>{stat.value}</span>
@@ -356,7 +405,13 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
 
       <div css={styles.contentWrapper}>
         <div css={styles.leftContainer}>
-        <PerformanceGraph percentageChange24h={coinData.change} coinSymbol={coinSymbol}/>
+          <PerformanceGraph
+            percentageChange24h={coinData.percent_change_24h}
+            percentageChange3d={coinData.percent_change_3d}
+            percentageChange7d={coinData.percent_change_7d}
+            percentageChange30d={coinData.percent_change_30d}
+            coinSymbol={coinSymbol}
+          />
 
           <Statistics
             coinLogo={coinLogo}
@@ -376,7 +431,12 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
               <div css={styles.returnsTitle}>Returns Calculator</div>
             </ShimmerWrapper>
             <div css={styles.formContainer}>
-              <ShimmerWrapper height={40} width={245} isLoading={loading} style={styles.inputMarginBottom}>
+              <ShimmerWrapper
+                height={40}
+                width={245}
+                isLoading={loading}
+                style={styles.inputMarginBottom}
+              >
                 <Input
                   label="Amount Invested"
                   placeholder="Enter Amount"
@@ -388,11 +448,23 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                 />
               </ShimmerWrapper>
 
-              <ShimmerWrapper height={24} width={140} isLoading={loading} style={styles.labelMarginBottom}>
-                <span css={styles.investmentFrequencyLabel}>Investment Frequency</span>
+              <ShimmerWrapper
+                height={24}
+                width={140}
+                isLoading={loading}
+                style={styles.labelMarginBottom}
+              >
+                <span css={styles.investmentFrequencyLabel}>
+                  Investment Frequency
+                </span>
               </ShimmerWrapper>
 
-              <ShimmerWrapper height={40} width={245} isLoading={loading} style={styles.labelMarginBottom}>
+              <ShimmerWrapper
+                height={40}
+                width={245}
+                isLoading={loading}
+                style={styles.labelMarginBottom}
+              >
                 <InputDropDown
                   placeholder="Select Frequency"
                   options={[
@@ -412,7 +484,12 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
               </ShimmerWrapper>
 
               <div css={{ marginTop: utils.remConverter(16) }}>
-                <ShimmerWrapper height={24} width={140} isLoading={loading} style={styles.labelMarginBottom}>
+                <ShimmerWrapper
+                  height={24}
+                  width={140}
+                  isLoading={loading}
+                  style={styles.labelMarginBottom}
+                >
                   <span css={styles.overThePastLabel}>Over the Past</span>
                 </ShimmerWrapper>
 

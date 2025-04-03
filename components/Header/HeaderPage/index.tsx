@@ -13,15 +13,18 @@ import Dropdown from "../Dropdown";
 
 import * as searchStyle from "../Search/style";
 import { getCryptoNews } from "../api/apiService";
+
 interface HeaderProps {
   selectedTab: string;
   setSelectedTab: (tab: string) => void;
-  coinSymbol: string; 
+  coinSymbol: string;
 }
+
 export type OptionsType = {
   label: JSX.Element;
   value: string | number;
 };
+
 interface Article {
   source: {
     id: string | null;
@@ -36,16 +39,19 @@ interface Article {
   content: string | null;
 }
 
-const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
+const HeaderPage = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   const [isPopperOpen, setIsPopperOpen] = useState(false);
   const shareButtonRef = useRef<HTMLButtonElement>(null);
   const [search, setSearch] = useState("");
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
+  const [displayedArticles, setDisplayedArticles] = useState<Article[]>([]);
   const [clickedArticles, setClickedArticles] = useState<Article[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
   const shareMenuRef = useRef<HTMLDivElement>(null);
   const [isStarFilled, setIsStarFilled] = useState(false);
+  const [displayMode, setDisplayMode] = useState<"search" | "recent" | "trending">("trending");
+
   const calculateReadingTime = (content: string) => {
     const wordsPerMinute = 200;
     const words = content.split(/\s+/g).length;
@@ -53,99 +59,119 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
   };
 
   const dispatch = useDispatch();
-
   const articles = useSelector((state) => state.articles);
 
   const toggleShareMenu = () => {
     setIsShareMenuOpen((prev) => !prev);
   };
 
-  const articleOptions: OptionsType[] = filteredArticles.map(
-    (article, index) => ({
-      value: index,
-      label: (
-        <div
-          css={searchStyle.Card}
-          key={index}
-          onMouseEnter={() => setHoveredIndex(index)}
-          onMouseLeave={() => setHoveredIndex(null)}
-        >
-          <img
-            src={article.urlToImage}
-            alt={article.title}
-            css={searchStyle.articleImage}
-          />
-          <div css={searchStyle.articleInfo}>
-            <div css={searchStyle.articleHeader}>
-              <div css={searchStyle.articleTitle} title={article.title}>
-                {article.title}
-              </div>
-              {hoveredIndex === index && (
-                <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
-              )}
+  const createArticleOption = (article: Article, index: number) => ({
+    value: index,
+    label: (
+      <div
+        css={searchStyle.Card}
+        key={index}
+        onMouseEnter={() => setHoveredIndex(index)}
+        onMouseLeave={() => setHoveredIndex(null)}
+      >
+        <img
+          src={article.urlToImage}
+          alt={article.title}
+          css={searchStyle.articleImage}
+        />
+        <div css={searchStyle.articleInfo}>
+          <div css={searchStyle.articleHeader}>
+            <div css={searchStyle.articleTitle} title={article.title}>
+              {article.title}
             </div>
-            <div css={searchStyle.articleFooter}>
-              {selectedTab === "news" && (
-                <>
-                  <span
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      src={AssetsImg.ic_clock_blue}
-                      alt="clock"
-                      width={14}
-                      height={14}
-                      css={styles.icons}
-                    />
-                    {calculateReadingTime(article.content)} min read
-                  </span>
-                  <Image src={AssetsImg.ic_seperator} alt="Separator" />
-                </>
-              )}
-              <span style={{ display: "flex" }}>
-                <Icon name="icon icon-calendar" style={styles.icons} />
-                {new Date(article.publishedAt)
-                  .toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
-                  .replace(",", "")}
-              </span>
-            </div>
+            {hoveredIndex === index && (
+              <Image src={AssetsImg.ic_arrow_right} alt="Arrow" />
+            )}
+          </div>
+          <div css={searchStyle.articleFooter}>
+            {selectedTab === "news" && (
+              <>
+                <span
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    src={AssetsImg.ic_clock_blue}
+                    alt="clock"
+                    width={14}
+                    height={14}
+                    css={styles.icons}
+                  />
+                  {calculateReadingTime(article.content)} min read
+                </span>
+                <Image src={AssetsImg.ic_seperator} alt="Separator" />
+              </>
+            )}
+            <span style={{ display: "flex" }}>
+              <Icon name="icon icon-calendar" style={styles.icons} />
+              {new Date(article.publishedAt)
+                .toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+                .replace(",", "")}
+            </span>
           </div>
         </div>
-      ),
-    })
-  );
+      </div>
+    ),
+  });
+
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      if (selectedTab === "news" || selectedTab === "blogs") {
-        if (!articles || articles.length === 0) {
-          try {
-            const data = await getCryptoNews();
-            dispatch({ type: "SET_ARTICLES", payload: data });
-            setFilteredArticles(data);
-          } catch (error) {
-            console.error("Error fetching articles:", error);
-          }
-        } else {
-          setFilteredArticles(articles);
-        }
-      }
-    };
+    const storedClickedArticles = JSON.parse(
+      localStorage.getItem("clickedArticles") || "[]"
+    );
+    setClickedArticles(storedClickedArticles);
 
-    fetchArticles();
-  }, [dispatch, selectedTab]);
+    if (search.trim() !== "") {
+      setDisplayMode("search");
+      const filtered = articles.filter((article: Article) =>
+        article.title.toLowerCase().includes(search.toLowerCase()) ||
+        (article.description && article.description.toLowerCase().includes(search.toLowerCase())) ||
+        (article.content && article.content.toLowerCase().includes(search.toLowerCase()))
+      );
+      setFilteredArticles(filtered);
+      setDisplayedArticles(filtered);
+    } else if (storedClickedArticles.length > 0) {
+
+      setDisplayMode("recent");
+      setDisplayedArticles(storedClickedArticles);
+    } else {
+
+      setDisplayMode("trending");
+      setDisplayedArticles(articles);
+    }
+  }, [search, articles]);
+
+  const fetchArticles = async () => {
+    if (!articles || articles.length === 0) {
+      try {
+        const data = await getCryptoNews();
+        setFilteredArticles(data);
+      } catch (error) {
+        console.error("Error Fetching Articles", error);
+      }
+    }
+  };
+
+  const handleInputFocus = () => {
+    if (filteredArticles.length === 0) {
+      fetchArticles();
+    }
+  };
 
   const handleStarClick = () => {
     const newState = !isStarFilled;
-
     setIsStarFilled(newState);
 
     const toastType = ToastType.success;
@@ -182,34 +208,6 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     };
   }, [isShareMenuOpen]);
 
-  useEffect(() => {
-    const storedClickedArticles = JSON.parse(
-      localStorage.getItem("clickedArticles") || "[]"
-    );
-    setClickedArticles(storedClickedArticles);
-  }, []);
-
-  useEffect(() => {
-    const fetchArticles = async () => {
-      if (search.trim() === "") {
-        if (clickedArticles.length > 0) {
-          setFilteredArticles(clickedArticles);
-        } else if (articles && articles.length > 0) {
-          setFilteredArticles(articles);
-        }
-      } else {
-        try {
-          const fetchedArticles = await getCryptoNews(search);
-          setFilteredArticles(fetchedArticles);
-        } catch (error) {
-          console.error("Error fetching articles:", error);
-        }
-      }
-    };
-
-    fetchArticles();
-  }, [search, clickedArticles, articles]);
-
   const handleArticleClick = (article: Article) => {
     const updatedClickedArticles = [
       ...clickedArticles.filter((a) => a.title !== article.title),
@@ -236,6 +234,24 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     );
   };
 
+
+  const articleOptions: OptionsType[] = displayedArticles.map(
+    (article, index) => createArticleOption(article, index)
+  );
+
+
+  const getContentHeading = () => {
+    if (displayedArticles.length === 0) return "";
+    
+    if (search.trim() !== "") {
+      return "Search Results:";
+    } else if (clickedArticles.length > 0) {
+      return "Recent Search:";
+    } else {
+      return `Trending ${selectedTab}:`;
+    }
+  };
+
   return (
     <div css={styles.header}>
       <div css={styles.tabs}>
@@ -257,6 +273,7 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
       <div css={styles.headerButton}>
         {["news", "blogs"].includes(selectedTab) && (
           <InputDropDown
+            onDropdownClick={handleInputFocus}
             customStyles={css({
               input: { backgroundColor: colors.Zeb_Solid_Dark_Blue },
               "div>div": {
@@ -269,19 +286,11 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
               width: "280px",
             })}
             minimumInputDirection="right"
-            contentHeading={
-              filteredArticles.length > 0
-                ? search.trim() !== ""
-                  ? "Search Results:"
-                  : clickedArticles.length > 0
-                    ? "Recent Search:"
-                    : `Trending ${selectedTab}:`
-                : ""
-            }
+            contentHeading={getContentHeading()}
             toggleInputSearch
-            placeholder="Search Blogs"
+            placeholder={`Search ${selectedTab.charAt(0).toUpperCase() + selectedTab.slice(1)}`}
             options={
-              filteredArticles.length > 0
+              displayedArticles.length > 0
                 ? articleOptions
                 : [
                     {
@@ -291,10 +300,10 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
                   ]
             }
             onChange={(value) => {
-              if (filteredArticles.length === 0 || value === "NoFilterBlogs") {
+              if (displayedArticles.length === 0 || value === "NoFilterBlogs") {
                 return;
               }
-              const selectedArticle = filteredArticles[value];
+              const selectedArticle = displayedArticles[value];
               handleArticleClick(selectedArticle);
             }}
             maxRows={4}
@@ -304,13 +313,13 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
               onChange: (value) => setSearch(value),
               onClear: () => setSearch(""),
             }}
-            rowHeight={filteredArticles.length > 0 ? 75 : 346}
+            rowHeight={displayedArticles.length > 0 ? 75 : 346}
             customDropDownStyle={{
               width: "450px",
               "& > div": {
                 height: "368px",
               },
-              ...(filteredArticles.length === 0 && {
+              ...(displayedArticles.length === 0 && {
                 "& div:hover": {
                   backgroundColor: "#181837",
                   borderRadius: ".5rem",
@@ -357,4 +366,5 @@ const Header = ({ selectedTab, setSelectedTab, coinSymbol }: HeaderProps) => {
     </div>
   );
 };
-export default Header;
+
+export default HeaderPage;
