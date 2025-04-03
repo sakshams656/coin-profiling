@@ -12,8 +12,9 @@ const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) =>
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isTyping, setIsTyping] = useState(false); 
 
-  const debouncedEmail = useDebounce(email, 1000); 
+  const debouncedEmail = useDebounce(email, 1000);
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +27,7 @@ const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) =>
     } else {
       setIsValidEmail(validateEmail(debouncedEmail));
     }
+    setIsTyping(false); 
   }, [debouncedEmail]);
 
   const handleSubmit = () => {
@@ -48,8 +50,11 @@ const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) =>
   const handleInputChange = (target: { value: string }) => {
     const value = target.value;
     setEmail(value);
+    setIsTyping(true); 
     setIsValidEmail(true);
   };
+  
+  const isButtonDisabled = loading || isTyping || (!email.trim() ? false : !isValidEmail);
 
   return (
     <div css={styles.form}>
@@ -78,7 +83,7 @@ const EmailSubscription: React.FC<EmailSubscriptionProps> = ({ onSubscribe }) =>
         size="full-width"
         type="primary"
         loading={loading}
-        disabled={loading || (!email.trim() ? false : !isValidEmail)}
+        disabled={isButtonDisabled}
       >
         Subscribe
       </Button>
