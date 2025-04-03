@@ -509,7 +509,7 @@ export const headerFrame = (isScrolled: boolean) =>
 
 export const buttonGroup = css({
   display: "flex",
-  justifyContent: "space-around",
+  justifyContent: "space-between",
   alignItems: "flex-start",
   gap: utils.remConverter(12),
   alignSelf: "stretch",
@@ -523,11 +523,12 @@ export const buttonGroup = css({
 
 export const appButton = css({
   display: "flex",
+  justifyContent: "center",
   backgroundColor: colors.Zeb_Solid_BG_Blue,
   borderRadius: utils.remConverter(4),
   padding: `${utils.remConverter(6.4)} ${utils.remConverter(28)}`,
   width: "100%",
-  maxWidth: utils.remConverter(121),
+  maxWidth: utils.remConverter(130),
   maxHeight: utils.remConverter(32),
   border: `${utils.remConverter(1)} solid #A6A6A6`,
   cursor: "pointer",
