@@ -55,7 +55,7 @@ const PerformanceGraph: React.FC<PerformanceGraphProps> = ({ percentageChange24h
       } catch (error) {
         console.error("Error fetching chart data:", error);
       } finally {
-        setLoading(true);
+        setLoading(false);
       }
     };
 
