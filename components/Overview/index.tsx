@@ -2,7 +2,6 @@ import Image from "next/image";
 import * as styles from "./styles";
 import { dummyCoinData } from "../../Data/DummyCoinData";
 import { Button, Divider, Input, InputDropDown, Tabs, Tags, utils } from "zebpay-ui";
-
 import Statistics from "./Statistics";
 import AssetsImg from "@public/images";
 import CoinInfo from "./CoinInformation/CoinInfo";
@@ -13,8 +12,7 @@ import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
 import LoggedOutScreen from "./LoggedOut";
-import { data as fetchCoinData, info as fetchCoinInfo, chart as fetchChartInfo} from "@actions/OverviewAPIs";
-
+import { data as fetchCoinData, info as fetchCoinInfo, chart as fetchChartInfo } from "@actions/OverviewAPIs";
 
 interface InputTargetProps {
   value: string | number;
@@ -62,53 +60,12 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const [amountInvested, setAmountInvested] = useState<string | number>("");
   const [investmentFrequency, setInvestmentFrequency] = useState<string>("");
   const [timePeriod, setTimePeriod] = useState<string>("6M");
-  const LoggedIn = false;
+  const LoggedIn = true;
   const [chartStats, setChartStats] = useState<ChartStats>({
     ltp: "0",
     high24h: "0",
     low24h: "0",
   });
-
-
-  useEffect(() => {
-    const fetchChartData = async () => {
-      if (!coinSymbol) return;
-      try {
-        const chartResponse = await fetchChartInfo(
-          "1", 
-          coinSymbol.toLowerCase(), 
-          "inr"
-        );
-  
-        if (chartResponse?.data && chartResponse.data.length > 0) {
-          const prices = chartResponse.data.map(point => point.y);
-          const stats: ChartStats = {
-            ltp: `₹${prices[prices.length - 1].toFixed(2)}`,
-            high24h: `₹${Math.max(...prices).toFixed(2)}`,
-            low24h: `₹${Math.min(...prices).toFixed(2)}`
-          };
-  
-          setChartStats(stats);
-        }
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-  
-        setChartStats({
-          ltp: `₹${parseFloat(coinData.price.replace('₹', '').replace(',', '')).toFixed(2)}`,
-          high24h: "₹0.00",
-          low24h: "₹0.00"
-        });
-      }
-    };
-  
-    if (coinSymbol && !loading) {
-      fetchChartData();
-    }
-  }, [coinSymbol, loading]);
-  
-
-  
-  
 
   const [coinData, setCoinData] = useState<CoinData>({
     name: "Unknown Coin",
@@ -139,6 +96,36 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const fetchChartData = async () => {
+      if (!coinSymbol) return;
+      try {
+        const chartResponse = await fetchChartInfo("1", coinSymbol.toLowerCase(), "inr");
+
+        if (chartResponse?.data && chartResponse.data.length > 0) {
+          const prices = chartResponse.data.map((point: { y: number }) => point.y);
+          const stats: ChartStats = {
+            ltp: `₹${prices[prices.length - 1].toFixed(2)}`,
+            high24h: `₹${Math.max(...prices).toFixed(2)}`,
+            low24h: `₹${Math.min(...prices).toFixed(2)}`,
+          };
+          setChartStats(stats);
+        }
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+        setChartStats({
+          ltp: "₹0.00",
+          high24h: "₹0.00",
+          low24h: "₹0.00",
+        });
+      }
+    };
+
+    if (coinSymbol && !loading) {
+      fetchChartData();
+    }
+  }, [coinSymbol, loading]);
+
+  useEffect(() => {
     const fetchData = async () => {
       if (!coinSymbol) return;
 
@@ -148,16 +135,9 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           fetchCoinData({ symbol: coinSymbol }),
         ]);
 
-        const coinInfo = infoResponse.data[coinSymbol]?.[0];
-        const coinMeta = dataResponse.data[coinSymbol]?.[0];
-
-        if (!coinInfo || !coinInfo.quote || !coinInfo.quote.INR || !coinMeta) {
-          throw new Error("Invalid API response: Missing required data");
-        }
-
-        const formatDate = (isoDateString: string | null) => {
-          if (!isoDateString) return null;
-          const date = new Date(isoDateString);
+        const formatDate = (dateStr: string): string | null => {
+          if (!dateStr || dateStr === "N/A") return null;
+          const date = new Date(dateStr);
           const months = [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
@@ -169,53 +149,33 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         };
 
         setCoinData({
-          name: coinMeta.name || "Unknown Coin",
-          symbol: coinMeta.symbol || "Unknown",
-          logo: coinMeta.logo || AssetsImg.ic_btc_coin,
-          price: coinInfo.quote.INR.price
-            ? `₹${coinInfo.quote.INR.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
-            : "₹0.00",
-          change: coinInfo.quote.INR.percent_change_24h !== undefined
-            ? `${coinInfo.quote.INR.percent_change_24h > 0 ? "↑" : "↓"} ${Math.abs(coinInfo.quote.INR.percent_change_24h).toFixed(2)}%`
-            : "↑ 0.00%",
-          isPositive: coinInfo.quote.INR.percent_change_24h !== undefined
-            ? coinInfo.quote.INR.percent_change_24h > 0
-            : true,
-          rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
+          name: dataResponse.CoinName,
+          symbol: coinSymbol,
+          logo: coinSymbol === "BTC" ? AssetsImg.ic_btc_coin : AssetsImg.ic_btc_coin,
+          price: `₹${(dataResponse.Statistics.MarketCap / dataResponse.Statistics.CirculatingSupply).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`,
+          change: "↑ 0.00%", // Dummy change since new API doesn't provide percent_change_24h
+          isPositive: true,  // Dummy value since new API doesn't provide percent_change_24h
+          rank: `# ${dataResponse.CoinRank.toString().padStart(2, "0")}`,
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
             {
               icon: AssetsImg.ic_lineschart,
               label: "Mkt Dominance",
-              value: coinInfo.quote.INR.market_cap_dominance
-                ? `${coinInfo.quote.INR.market_cap_dominance.toFixed(2)}%`
-                : "0.00%",
+              value: `${dataResponse.MktDominance.toFixed(2)}%`,
             },
-            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: "35.00%" },
+            { icon: AssetsImg.ic_star, label: "Marked as Fav", value: `${dataResponse.MarkedAsFav.toFixed(2)}%` },
           ],
           marketStats: {
-            marketCap: coinInfo.quote.INR.market_cap
-              ? `₹ ${coinInfo.quote.INR.market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
-              : "N/A",
-            fullyDilutedCap: coinInfo.quote.INR.fully_diluted_market_cap
-              ? `₹ ${coinInfo.quote.INR.fully_diluted_market_cap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
-              : "N/A",
-            volume24h: coinInfo.quote.INR.volume_24h
-              ? `₹ ${coinInfo.quote.INR.volume_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
-              : "N/A",
-            maxSupply: coinInfo.max_supply
-              ? coinInfo.max_supply.toLocaleString("en-US")
-              : "N/A",
-            totalSupply: coinInfo.total_supply
-              ? coinInfo.total_supply.toLocaleString("en-US")
-              : "N/A",
-            circulatingSupply: coinInfo.circulating_supply
-              ? coinInfo.circulating_supply.toLocaleString("en-US")
-              : "N/A",
+            marketCap: `₹ ${dataResponse.Statistics.MarketCap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`,
+            fullyDilutedCap: `₹ ${dataResponse.Statistics.FullyDilutedMarketCap.toLocaleString("en-US", { maximumFractionDigits: 2 })}`,
+            volume24h: `₹ ${dataResponse.Statistics.Vol_24h.toLocaleString("en-US", { maximumFractionDigits: 2 })}`,
+            maxSupply: dataResponse.Statistics.MaxSupply.toLocaleString("en-US"),
+            totalSupply: dataResponse.Statistics.TotalCoinSupply.toLocaleString("en-US"),
+            circulatingSupply: dataResponse.Statistics.CirculatingSupply.toLocaleString("en-US"),
           },
           trading: dummyCoinData.trading,
-          launchDate: formatDate(coinMeta.date_launched),
-          description: coinMeta.description || "No description available",
+          launchDate: formatDate(infoResponse.Launched),
+          description: infoResponse.Info[0]?.Description || "No description available",
         });
 
         setLoading(false);
@@ -295,7 +255,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     <div css={styles.container} ref={containerRef}>
       <div css={styles.coinBanner}>
         <ShimmerWrapper height={60} width={340} isLoading={loading} typeLightdDark>
-        <div css={styles.backgroundPattern}>
+          <div css={styles.backgroundPattern}>
             <Image
               src={AssetsImg.i_banner_pattern}
               alt="Background Pattern"
@@ -368,7 +328,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             description={coinData.description}
             symbol={coinData.symbol}
           />
-          <CryptoCategories />
+          {/* <CryptoCategories /> */}
         </div>
         <div css={styles.rightContainer}>
           <div>

@@ -1,48 +1,43 @@
 import axios from "@utils/axios";
-import { COINMARKETCAP_LATEST, COINMARKETCAP_INFO, ZEBSTAGE_CATEGORIES,GRAPH } from "@constants/api";
-import { DataApiResponse, InfoApiResponse } from "@typings/api/shared/Overview";
+import { ZEBSTAGE_CATEGORIES,GRAPH } from "@constants/api";
+import { OverviewResponse, InfoResponse} from "@typings/api/shared/Overview";
 import {ChartResponse} from "@typings/api/shared/coinMarket";
+import { dummyInfoData, dummyOverviewData } from "../Data/DummyAPIdata";
 
 const API_KEY = process.env.NEXT_PUBLIC_CMC_API_KEY; 
 
-export const data = async (p0: { symbol: string }): Promise<DataApiResponse> => {
+export const data = async (p0: { symbol: string }): Promise<OverviewResponse> => {
   try {
-    const response = await axios({
-      url: COINMARKETCAP_INFO,
-      method: "GET",
-      headers: {
-        "X-CMC_PRO_API_KEY": API_KEY,
-        Accept: "application/json",
-      },
-      params: {
-        symbol: p0.symbol, 
-      },
-    });
-    return response.data as DataApiResponse;
+    // const response = await axios({
+    //   url: `coinprofile/overview/${p0.symbol}`,
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "application/json",
+    //   },
+    // });
+    // return response.data as OverviewResponse;
+
+    return dummyOverviewData(p0.symbol);
   } catch (error) {
-    console.error("Error fetching cryptocurrency info:", error);
+    console.error("Error fetching cryptocurrency overview:", error);
     throw error;
   }
 };
 
-export const info = async (p0: { symbol: string }): Promise<InfoApiResponse> => {
+export const info = async (p0: { symbol: string }): Promise<InfoResponse> => {
   try {
-    const response = await axios({
-      url: COINMARKETCAP_LATEST,
-      method: "GET",
-      headers: {
-        "X-CMC_PRO_API_KEY": API_KEY,
-        Accept: "application/json",
-      },
-      params: {
-        symbol: p0.symbol,
-        convert: 'INR', 
-      },
-    });
-    console.log("DATA :" ,response.data);
-    return response.data as InfoApiResponse;
+    // const response = await axios({
+    //   url: `coinprofile/info/${p0.symbol}`,
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "application/json",
+    //   },
+    // });
+    // return response.data as InfoResponse;
+
+    return dummyInfoData(p0.symbol);
   } catch (error) {
-    console.error("Error fetching cryptocurrency quotes:", error);
+    console.error("Error fetching cryptocurrency info:", error);
     throw error;
   }
 };
