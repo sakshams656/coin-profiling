@@ -109,7 +109,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         if (chartResponse?.data && chartResponse.data.length > 0) {
           const prices = chartResponse.data.map((point: { y: number }) => point.y);
           const stats: ChartStats = {
-            ltp: `₹${prices[prices.length - 1].toFixed(2)}`,
+            ltp: wsData.ltp,
             high24h: `₹${Math.max(...prices).toFixed(2)}`,
             low24h: `₹${Math.min(...prices).toFixed(2)}`,
           };
@@ -118,7 +118,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
       } catch (error) {
         console.error("Error fetching chart data:", error);
         setChartStats({
-          ltp: wsData.price,
+          ltp: wsData.ltp,
           high24h: "₹0.00",
           low24h: "₹0.00",
         });
@@ -319,7 +319,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
       <div css={styles.contentWrapper}>
         <div css={styles.leftContainer}>
           <PerformanceGraph percentageChange24h={coinData.change} coinSymbol={coinSymbol} />
-          <Statistics coinLogo={coinLogo} marketStats={coinData.marketStats} chartStats={chartStats} />
+          <Statistics coinLogo={coinLogo} marketStats={coinData.marketStats} chartStats={chartStats} wsLTP={wsData.ltp} />
           <CoinInfo
             launchDate={coinData.launchDate}
             description={coinData.description}

@@ -8,7 +8,7 @@ import ShimmerWrapper from "@components/Shared/ShimmerWrapper/ShimmerWrapper";
 import { css } from "@emotion/react";
 
 interface StatisticsProps {
-  coinLogo: string; 
+  coinLogo: string;
   marketStats: {
     marketCap: string;
     fullyDilutedCap: string;
@@ -16,17 +16,18 @@ interface StatisticsProps {
     maxSupply: string;
     totalSupply: string;
     circulatingSupply: string;
-  }; 
-   chartStats :{
+  };
+  chartStats: {
     ltp: number;
     high24h: number;
     low24h: number;
-  }
+  };
+  wsLTP: string; 
 }
 
-const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats ,chartStats}) => {
+const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats, chartStats, wsLTP }) => {
   const [animationDone, setAnimationDone] = useState(false);
-  const coinData = dummyCoinData; 
+  const coinData = dummyCoinData;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,9 +55,9 @@ const Statistics: React.FC<StatisticsProps> = ({ coinLogo, marketStats ,chartSta
           <ShimmerWrapper height={24} width={300} isLoading={loading}>
             <div css={styles.performanceTitle}>Performance 
               <div css={styles.statsTitle}>
-              (LTP - {chartStats.ltp})
+              (LTP - {wsLTP})
               </div>
-              </div>
+            </div>
           </ShimmerWrapper>
           <ShimmerWrapper height={67} width={600} isLoading={loading}>
             <div>

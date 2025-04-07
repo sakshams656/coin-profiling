@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 interface WebSocketData {
     price: string;
     change: string;
+    ltp: string
 }
 
 const useWebSocket = (coinSymbol: string): WebSocketData => {
   const [wsData, setWsData] = useState<WebSocketData>({
     price: "₹0.00",
     change: "↑ 0.00%",
+    ltp: "₹0.00"
   });
 
   useEffect(() => {
@@ -28,16 +30,21 @@ const useWebSocket = (coinSymbol: string): WebSocketData => {
         message.type === "qt-instant-trade-rate" &&
         message.data[`${coinSymbol.toUpperCase()}-INR`]
       ) {
-        const { BuyRate, PercentChange } = message.data[`${coinSymbol.toUpperCase()}-INR`];
+        const { BuyRate, PercentChange, LTP } = message.data[`${coinSymbol.toUpperCase()}-INR`];
         const formattedPrice = `₹${Number(BuyRate).toLocaleString("en-IN", {
           maximumFractionDigits: 2,
         })}`;
+
         const percentNum = parseFloat(PercentChange);
         const formattedChange = `${percentNum >= 0 ? "↑" : "↓"} ${Math.abs(percentNum).toFixed(2)}%`;
+        const formattedLTP = `₹${Number(LTP).toLocaleString("en-IN", {
+          maximumFractionDigits: 2,
+        })}`;
 
         setWsData({
           price: formattedPrice,
           change: formattedChange,
+          ltp: formattedLTP
         });
       }
     };
