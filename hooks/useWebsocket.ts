@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 
+interface WebSocketData {
+    price: string;
+    change: string;
+}
+
 const useWebSocket = (coinSymbol: string): WebSocketData => {
   const [wsData, setWsData] = useState<WebSocketData>({
     price: "₹0.00",
     change: "↑ 0.00%",
-    isPositive: true,
   });
 
   useEffect(() => {
@@ -29,13 +33,11 @@ const useWebSocket = (coinSymbol: string): WebSocketData => {
           maximumFractionDigits: 2,
         })}`;
         const percentNum = parseFloat(PercentChange);
-        const isPositive = percentNum >= 0;
-        const formattedChange = `${isPositive ? "↑" : "↓"} ${Math.abs(percentNum).toFixed(2)}%`;
+        const formattedChange = `${percentNum >= 0 ? "↑" : "↓"} ${Math.abs(percentNum).toFixed(2)}%`;
 
         setWsData({
           price: formattedPrice,
           change: formattedChange,
-          isPositive,
         });
       }
     };

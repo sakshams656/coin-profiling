@@ -41,7 +41,6 @@ interface CoinData {
   logo: string;
   price: string;
   change: string;
-  isPositive: boolean;
   rank: string;
   stats: Stat[];
   marketStats: MarketStats;
@@ -80,7 +79,6 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
     logo: AssetsImg.ic_btc_coin,
     price: "₹0.00",
     change: "↑ 0.00%",
-    isPositive: true,
     rank: "# 00",
     stats: [
       { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
@@ -167,9 +165,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
           name: coinMeta.name || "Unknown Coin",
           symbol: coinMeta.symbol || "Unknown",
           logo: coinMeta.logo || AssetsImg.ic_btc_coin,
-          price: wsData.price, 
-          change: wsData.change, 
-          isPositive: wsData.isPositive, 
+          price: wsData.price,
+          change: wsData.change,
           rank: coinInfo.cmc_rank ? `# ${coinInfo.cmc_rank.toString().padStart(2, "0")}` : "# 00",
           stats: [
             { icon: AssetsImg.ic_rank, label: "Coin Rating", value: "A+" },
@@ -212,9 +209,8 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
         console.error("Error fetching coin data:", error);
         setCoinData((prevData) => ({
           ...prevData,
-          price: wsData.price, 
-          change: wsData.change, 
-          isPositive: wsData.isPositive,
+          price: wsData.price,
+          change: wsData.change,
           description: "Unable to load description",
         }));
         setLoading(false);
@@ -261,6 +257,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
   };
 
   const coinLogo = coinData.logo;
+  const isPositive = coinData.change.startsWith("↑");
 
   return (
     <div css={styles.container} ref={containerRef}>
@@ -285,7 +282,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
                   isStroke
                   size="medium"
                   style={{ name: "1pzk433", styles: "width:100px" }}
-                  type={coinData.isPositive ? "success" : "error"}
+                  type={isPositive ? "success" : "error"}
                   css={{ borderRadius: utils.remConverter(4) }}
                 >
                   {coinData.change}

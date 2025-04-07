@@ -1,7 +1,6 @@
 interface WebSocketData {
     price: string;
     change: string;
-    isPositive: boolean;
   }
   
   interface WebSocketMessage {
