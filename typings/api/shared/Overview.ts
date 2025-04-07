@@ -23,18 +23,6 @@ export interface CoinInfo {
   };
 }
 
-export interface DataApiResponse {
-  data: {
-    [key: string]: {
-      name: string;
-      symbol: string;
-      logo: string;
-      description: string;
-      date_launched: string;
-    };
-  };
-}
-
 export interface QuoteData {
   price: number;
   percent_change_24h: number;
@@ -44,20 +32,35 @@ export interface QuoteData {
   volume_24h: number;
 }
 
-export interface InfoApiResponse {
-  data: {
-    [key: string]: {
-      id: number;
-      name: string;
-      symbol: string;
-      cmc_rank: number;
-      quote: {
-        USD: QuoteData;
-        INR: QuoteData; 
-      };
-      max_supply: number;
-      total_supply: number;
-      circulating_supply: number;
-    };
-  };
+// Zeb API
+
+export interface OverviewResponse {
+  CoinName: string;
+  CoinRank: number;
+  MktDominance: number;
+  MarkedAsFav: number;
+  Statistics: StatisticsStruct;
+}
+
+interface StatisticsStruct {
+  ActiveBuyers: number;
+  ActiveSellers: number;
+  MarketCap: number;
+  FullyDilutedMarketCap: number;
+  Vol_24h: number;
+  MaxSupply: number;
+  TotalCoinSupply: number;
+  CirculatingSupply: number;
+}
+
+export interface InfoResponse {
+  Launched: string;
+  Website: string;
+  Info: InfoStruct[];
+}
+
+interface InfoStruct {
+  Heading: string;
+  Description: string;
+  Source: string;
 }
