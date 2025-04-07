@@ -328,7 +328,7 @@ const Overview: React.FC<OverviewProps> = ({ coinSymbol }) => {
             description={coinData.description}
             symbol={coinData.symbol}
           />
-          <CryptoCategories />
+          {/* <CryptoCategories /> */}
         </div>
         <div css={styles.rightContainer}>
           <div>
