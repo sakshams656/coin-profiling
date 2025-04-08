@@ -1,5 +1,5 @@
 import axios from "@utils/axios";
-import { COINMARKETCAP_LATEST, COINMARKETCAP_INFO, ZEBSTAGE_CATEGORIES,GRAPH } from "@constants/api";
+import { COINMARKETCAP_LATEST, COINMARKETCAP_INFO, ZEBSTAGE_CATEGORIES,GRAPH} from "@constants/api";
 import { DataApiResponse, InfoApiResponse } from "@typings/api/shared/Overview";
 import {ChartResponse} from "@typings/api/shared/coinMarket";
 
